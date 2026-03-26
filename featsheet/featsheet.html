@@ -1,0 +1,676 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Mortalis – Feat Sheet Builder</title>
+  <style>
+    :root{
+      --bg:#0b0f14;
+      --text:#e8eef7;
+      --muted:#a9b6c7;
+      --accent:#00b3a6;
+      --line:#1f2a3a;
+      --danger:#ff5c6a;
+      --cardFeatTitleSize: 13px;
+      --cardFeatDescSize: 12.5px;
+
+        }
+
+    *{box-sizing:border-box}
+    body{
+      margin:0;
+      font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
+      background: radial-gradient(1200px 700px at 30% -10%, rgba(0,179,166,.18), transparent 60%),
+                  radial-gradient(900px 600px at 90% 0%, rgba(255,92,106,.10), transparent 55%),
+                  var(--bg);
+      color:var(--text);
+    }
+    .wrap{
+      max-width: 960px;
+      margin: 18px auto 60px;
+      padding: 0 14px;
+    }
+    header{
+      display:flex;
+      align-items:flex-start;
+      justify-content:space-between;
+      gap:12px;
+      padding:14px;
+      border:1px solid var(--line);
+      border-radius:14px;
+      background: linear-gradient(180deg, rgba(17,24,36,.92), rgba(15,22,33,.92));
+      position: sticky;
+      top: 10px;
+      z-index: 5;
+      backdrop-filter: blur(8px);
+    }
+    header h1{ margin:0; font-size:18px; letter-spacing:.3px; }
+    header .sub{ margin-top:6px; color:var(--muted); font-size:13px; line-height:1.35; }
+
+    .controls{
+      display:flex;
+      gap:8px;
+      align-items:center;
+      flex-wrap:wrap;
+      justify-content:flex-end;
+      min-width: 340px;
+    }
+    .pill{
+      border:1px solid var(--line);
+      border-radius:999px;
+      padding:7px 10px;
+      background: rgba(10,14,20,.55);
+      display:flex;
+      align-items:center;
+      gap:8px;
+      color:var(--muted);
+      font-size:13px;
+      white-space:nowrap;
+    }
+    select, input[type="text"]{
+      background: rgba(0,0,0,.2);
+      color: var(--text);
+      border:1px solid var(--line);
+      border-radius:10px;
+      padding:8px 10px;
+      outline:none;
+      font-size:13px;
+    }
+    input[type="text"]{ width: 220px; }
+    button{
+      cursor:pointer;
+      border:1px solid var(--line);
+      background: rgba(0,0,0,.18);
+      color: var(--text);
+      border-radius:12px;
+      padding:9px 11px;
+      font-size:13px;
+      transition: transform .04s ease, border-color .15s ease, background .15s ease;
+      user-select:none;
+    }
+    button:hover{ border-color: rgba(0,179,166,.55); }
+    button:active{ transform: translateY(1px); }
+    .btn-accent{
+      background: linear-gradient(180deg, rgba(0,179,166,.22), rgba(0,0,0,.12));
+      border-color: rgba(0,179,166,.45);
+    }
+    .btn-danger{
+      border-color: rgba(255,92,106,.55);
+      background: rgba(255,92,106,.10);
+    }
+    .btn-disabled{ opacity:.45; cursor:not-allowed; }
+
+    @media (max-width: 980px){
+      header{ position:static; }
+      .controls{ min-width:0; justify-content:flex-start; }
+      input[type="text"]{ width:100%; }
+    }
+
+    /* ---- Compact category list ---- */
+    .cats{
+      margin-top: 14px;
+      display:flex;
+      gap:12px;
+      align-items:flex-start;
+    }
+    .col{
+      flex:1;
+      display:flex;
+      flex-direction:column;
+      gap:12px;
+    }
+    @media (max-width: 980px){
+      .cats{ flex-direction:column; }
+    }
+
+    .cat{
+      border:1px solid var(--line);
+      border-radius:14px;
+      overflow:hidden;
+      background: rgba(17,24,36,.72);
+    }
+    .catHead{
+      padding: 10px 12px;
+      border-bottom:1px solid rgba(255,255,255,.08);
+      background: linear-gradient(180deg, rgba(0,179,166,.22), rgba(0,0,0,.12));
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:10px;
+    }
+    .catHead h2{
+      margin:0;
+      font-size:13.5px;
+      letter-spacing:.25px;
+      text-transform: uppercase;
+      opacity:.95;
+    }
+    .catHead .count{ color: var(--muted); font-size:12px; }
+
+    .featList{
+      padding: 6px;
+      display:grid;
+      gap: 6px;
+    }
+    .feat{
+      border:1px solid rgba(255,255,255,.10);
+      border-radius:12px;
+      padding: 8px 9px;
+      background: rgba(0,0,0,.12);
+      display:grid;
+      grid-template-columns: 1fr auto;
+      gap: 8px;
+      align-items:start;
+    }
+    .feat .nameRow{
+      display:flex;
+      gap:6px;
+      align-items:center;
+      flex-wrap:wrap;
+      margin-bottom:4px;
+    }
+    .feat .name{ font-weight:800; font-size:13px; }
+    .tag{
+      font-size:10.5px;
+      padding:2px 7px;
+      border-radius:999px;
+      border:1px solid rgba(255,255,255,.14);
+      color: var(--muted);
+      background: rgba(255,255,255,.03);
+      line-height: 1.2;
+      white-space:nowrap;
+    }
+    .tag.plus{ border-color: rgba(0,179,166,.45); color: rgba(140,255,242,.95); }
+    .tag.fp{ border-color: rgba(255,255,255,.14); }
+    .desc{
+      color: var(--muted);
+      font-size:12.25px;
+      line-height:1.3;
+      white-space:pre-wrap;
+    }
+    .chooseBtn{
+      min-width: 84px;
+      padding: 8px 10px;
+      border-radius: 12px;
+      justify-self:end;
+      margin-top: 1px;
+    }
+    .selectedGlow{
+      border-color: rgba(0,179,166,.55) !important;
+      box-shadow: 0 0 0 1px rgba(0,179,166,.10), 0 0 18px rgba(0,179,166,.10);
+    }
+
+    .note{
+      margin-top: 12px;
+      color: var(--muted);
+      font-size: 12px;
+      line-height: 1.4;
+      padding: 10px 12px;
+      border:1px dashed rgba(255,255,255,.18);
+      border-radius: 12px;
+      background: rgba(0,0,0,.12);
+    }
+    .toast{
+      margin-top:12px;
+      display:none;
+      padding:10px 12px;
+      border-radius:12px;
+      border:1px solid rgba(255,92,106,.45);
+      background: rgba(255,92,106,.10);
+      color: var(--text);
+      font-size: 13px;
+      white-space: pre-wrap;
+    }
+  
+    /* --- Card view (single-page toggle) --- */
+    .cardPage{
+      display:none;
+      max-width: 1000px;
+      margin: 18px auto 60px;
+      padding: 0 14px;
+    }
+    .cardTopbar{
+      display:flex;
+      justify-content:space-between;
+      align-items:center;
+      gap:10px;
+      padding:12px 14px;
+      border:1px solid var(--line);
+      border-radius:14px;
+      background: linear-gradient(180deg, rgba(17,24,36,.92), rgba(15,22,33,.92));
+      margin-bottom: 12px;
+    }
+    .cardTopbar .hint{
+      color: var(--muted);
+      font-size: 13px;
+      line-height: 1.35;
+    }
+    .cardWrap{
+      width: 820px;
+      height: 660px;
+      margin: 0 auto;
+      position: relative;
+      overflow: hidden;
+      border-radius: 16px;
+      background: #fff;
+      -webkit-print-color-adjust: exact;
+      print-color-adjust: exact;
+    }
+    .cardBgImg{
+      position:absolute;
+      inset:0;
+      width:100%;
+      height:100%;
+      object-fit:cover;
+      z-index:0;
+    }
+    
+    .cardWarbandTitle{
+      text-align:center;
+      font-size:17px;
+      font-weight:900;
+      color:#000;
+      margin:0 0 20px 0;
+    }
+    .cardTitleSpacer{
+      height:150px; /* adjust this to move title down */
+      flex:0 0 auto;
+    }
+
+
+    .cardContent{
+      position:relative;
+      z-index:2;
+      height:100%;
+      padding:70px; /* requested */
+      color:#000;   /* requested */
+      display:flex;
+      flex-direction:column;
+    }
+    .cardBody{
+      display:flex;
+      flex-direction:column;
+      gap:16px;
+      margin-top:0;
+      overflow:hidden;
+    }
+    .cardFeatBlock{
+      background: transparent; /* requested */
+      border: none;
+      padding: 0;
+    }
+    .cardFeatTitle{
+      font-weight: 900;
+      font-size: var(--cardFeatTitleSize);
+      margin: 0 0 6px 0;
+    }
+    .cardFeatDesc{
+      font-size: var(--cardFeatDescSize);
+      line-height: 1.35;
+      white-space: pre-wrap;
+    }
+
+    /* Print: only the card */
+    @media print{
+      body{ background:#fff; }
+      .wrap, header, .cats, .note, #toast { display:none !important; }
+      .cardPage{ display:block !important; }
+      .cardTopbar{ display:none !important; }
+      .cardWrap{ border: 0 !important; }
+    }
+
+  
+    /* --- Square card corners override --- */
+    .cardWrap{ border-radius:0 !important; }
+    .cardBgImg{ border-radius:0 !important; }
+
+  </style>
+</head>
+
+<body>
+  <div class="wrap" id="pickerPage">
+    <header>
+      <div>
+        <h1>Mortalis – Feat Picker & Feat Sheet</h1>
+        <div class="sub">
+          Pick up to <b>2–4 Feats</b> (set the cap). Generate opens a new tab with an <b>820×660</b> printable card.
+        </div>
+      </div>
+
+      <div class="controls">
+        <div class="pill">
+          <span>Max feats:</span>
+          <select id="maxFeats">
+            <option value="2">2</option>
+            <option value="3">3</option>
+            <option value="4" selected>4</option>
+          </select>
+        </div>
+
+        <input id="teamName" type="text" placeholder="Optional: Team name" />
+        <div class="pill" id="pickedInfo">Picked: 0 / 4</div>
+
+        <button class="btn-accent" id="btnGenerate">Generate Feat Sheet</button>
+        <button class="btn-danger" id="btnClear">Clear</button>
+      </div>
+    </header>
+
+    <div id="toast" class="toast"></div>
+    <div class="cats"><div class="col" id="colLeft"></div><div class="col" id="colRight"></div></div>
+
+    <div class="note">
+      Tip: Put <b>feat-card-bg.jpg</b> next to this HTML file (same folder) to use it as the printed card background.
+      In Chrome Print → More settings → enable <b>Background graphics</b> (usually needed for best results).
+    </div>
+  </div>
+
+
+  <!-- Card page (single-page toggle) -->
+  <div class="cardPage" id="cardPage" aria-hidden="true">
+    <div class="cardTopbar">
+      <div class="hint">
+        Tip: If your background image doesn’t print, in Chrome Print → More settings → enable <b>Background graphics</b>.
+      </div>
+      <div style="display:flex; gap:8px; flex-wrap:wrap; justify-content:flex-end;">
+        <button class="btn-accent" id="btnCardPrint">Print</button>
+        <button id="btnCardBack">Back</button>
+      </div>
+    </div>
+
+    <div class="cardWrap" role="document" aria-label="Feat sheet card">
+      <img class="cardBgImg" src="feat-card-bg.jpg" alt="">
+      <div class="cardContent">
+        <div class="cardTitleSpacer" aria-hidden="true"></div>
+        <div class="cardWarbandTitle" id="cardWarbandTitle"></div>
+        <div class="cardBody" id="cardBody"></div>
+      </div>
+    </div>
+  </div>
+
+<script>
+document.addEventListener("DOMContentLoaded", () => {
+  // Error surfacing (helps if something breaks)
+  function showToast(msg){
+    const t = document.getElementById("toast");
+    if(!t) return;
+    t.textContent = msg;
+    t.style.display = "block";
+    clearTimeout(showToast._t);
+    showToast._t = setTimeout(() => { t.style.display = "none"; }, 2600);
+  }
+  window.addEventListener("error", (e) => showToast("JS error: " + (e.message || "Unknown")));
+  window.addEventListener("unhandledrejection", (e) => showToast("JS error: " + ((e.reason && e.reason.message) ? e.reason.message : "Unhandled rejection")));
+
+  // Feat data (pages 24–30)
+  const FEATS = [
+    { category: "Movement", feats: [
+      { name:"Adrenaline Rush", plus:true, fp:1, text:`Use this Feat when a friendly Fighter is counteracting.\ It can perform an additional 1AP action for free during that counteraction, but both actions must be different.`},
+      { name:"Move like the wind", plus:true, fp:1, text:`Up to D3 friendly Fighters with the “Fast” ability can immediately perform a free Dash action in an order of your choice.\ This turn, each that does so cannot perform the Dash action during their activation.\ You cannot use this Feat during the first turn.`},
+      { name:"Like a blur", plus:false, fp:1, text:`Whenever an Enemy Fighter is shooting a friendly Fighter that performed a Reposition action during this turn, you can re-roll one of your Defence dice.`},
+      { name:"Move!", plus:true, fp:1, text:`Use this Feat when a friendly Fighter is activated.\ Until the end of that Fighter’s activation, add 1" to its Move stat.`},
+      { name:"Retrieve the Objectives!", plus:false, fp:1, text:`Select one objective marker.\ Whenever a friendly Fighter performs the Move or Charge action during its activation, you can use this rule.\ If you do, add 1" to its Move stat until the end of that activation, but it must end that move within 2" of that objective marker.`},
+    ]},
+    { category: "Shooting & Close Combat", feats: [
+      { name:"Crossfire", plus:true, fp:1, text:`Use this Feat after rolling your attack dice for a friendly Fighter, if it’s shooting an enemy Fighter that’s been shot by another friendly Fighter during this turn.\ You can re-roll any of your attack dice.`},
+      { name:"Extreme Agression", plus:false, fp:1, text:`Whenever a friendly Fighter is fighting in Close Combat, add 1 to the ATK stat of its Close Combat weapons.`},
+      { name:"Steady Shot", plus:false, fp:1, text:`Whenever a friendly Fighter is shooting during an activation in which it hasn’t performed a reposition, its ranged weapons have the Reroll (1) weapon rule.\ Note that Fighter isn’t restricted from performing an action that involves a reposition after shooting.`},
+      { name:"Rampage", plus:true, fp:1, text:`Use this Feat after a friendly Fighter performs the Close Combat action, if it's no longer within 1” of enemy Fighters.\ That friendly Fighter can immediately perform a free Charge action (even if it’s already performed the Charge action during that activation), but cannot move more than 3" during that action.`},
+      { name:"Come at me…", plus:false, fp:1, text:`Whenever a friendly Fighter is fighting a ready enemy Fighter, that friendly Fighter’s Close Combat weapons have the Reroll (SR) weapon rule.`},
+      { name:"Sadistic", plus:false, fp:1, text:`Whenever a friendly Fighter is shooting against or fighting against a wounded enemy Fighter (a Fighter that has taken 1 or more damage), that friendly Fighter’s weapons have the Reroll (1) weapon rule.`},
+      { name:"Precise Fighters", plus:false, fp:1, text:`Friendly Fighters’ Close Combat weapons have the Reroll (1) weapon rule.`},
+      { name:"Just… Die already!", plus:true, fp:1, text:`Use this Feat after rolling your attack dice for a friendly Fighter, if it’s shooting against or fighting in Close Combat against a wounded enemy Fighter (a Fighter that has taken 1 or more damage).\ You can re-roll any of your attack dice for that attack.`},
+      { name:"Don’t let them have it!", plus:true, fp:1, text:`Use this Feat after rolling your attack dice for a friendly Fighter, if it’s shooting against or fighting in Close Combat against an enemy Fighter that controls an objective marker or one of your mission markers.\ You can re-roll any of your attack dice.`},
+      { name:"Brute Force", plus:true, fp:1, text:`Use this Feat when a friendly Fighter attacks in Close Combat.\ Add 1 to both Dmg stats of that friendly Fighters’ Close Combat weapons.`},
+      { name:"Relentless Firepower", plus:false, fp:1, text:`Whenever a friendly Fighter is shooting a ready enemy Fighter, that friendly Fighter’s ranged weapons have the Reroll (SR) weapon rule.\ If the weapon already has that weapon rule, it has the Reroll (Any) weapon rule.`},
+      { name:"Brutal Charge", plus:false, fp:1, text:`Whenever a friendly Fighter is activated, if the first action it performs during that activation is the Charge action, when it ends its move during that action, you can inflict D3 damage on one enemy Fighter within 1”.`},
+      { name:"No hiding from me…", plus:false, fp:1, text:`Whenever you’re selecting a target for a friendly Fighter, enemy Fighters within 6" of it cannot use Light terrain for cover.`},
+      { name:"Incredible Aim", plus:true, fp:1, text:`Use this Feat when a friendly Fighter is performing the Shoot action with a Light/Medium/Special ranged weapon, and you’re selecting a valid target.\ Enemy Fighters Locked in Combat are now valid targets.`},
+      { name:"Ramp it up!", plus:true, fp:1, text:`Use this Feat during a friendly Fighter’s activation.\ Until the end of that activation, that Fighter can perform either a free Shoot or a free Close Combat action.`},
+      { name:"Poisonous Warfare", plus:true, fp:1, text:`Use this Feat during a friendly Fighter’s activation or counteraction, before or after it performs an action.\ One enemy Fighter within 3" of that Fighter gains a Poison token.`},
+      { name:"Zealous Charge", plus:false, fp:1, text:`Whenever a friendly Fighter is fighting in Close Combat during an activation in which it performed the Charge action, its Close Combat weapons have the Crits on 9+ weapon rule.`},
+      { name:"Hunt him down…", plus:false, fp:1, text:`Choose an enemy Fighter.\ For the rest of the turn, any to hit rolls against him (Close Combat or Shooting) gain Reroll (SR).`},
+      { name:"Unbearable Shrieks", plus:false, fp:1, text:`Whenever an enemy Fighter within 6" of a friendly Fighter is shooting or fighting in Close Combat, your opponent cannot re-roll their attack dice.`},
+      { name:"There you are…", plus:false, fp:1, text:`Whenever a friendly Fighter is shooting at a Spent Enemy Fighter, that friendly Fighter’s ranged weapons have the Reroll (SR) rule.`},
+      { name:"Strike him Down!", plus:false, fp:1, text:`A Fighter can make this reaction when a visible Enemy Fighter within 1" of them makes a Fall Back action, but before that fighter moves away.\ Roll a D12: On a 7+, allocate D6 Mortal Wounds to that enemy fighter.`},
+    ]},
+    { category:"Tactical", feats:[
+      { name:"Abyssal Stare", plus:true, fp:1, text:`Use this Feat during a friendly Fighter’s activation, before or after it performs an action.\ Select one enemy Fighter visible to and within 4" of that friendly Fighter.\ Until the end of turn, subtract 1 from that enemy Fighters’ AP stat.`},
+      { name:"Divine Intervention", plus:true, fp:1, text:`Use this Feat when your opponent would activate an enemy Fighter.\ Your opponent cannot activate that Fighter this activation, and must pick another.\ If there are no other enemy Fighters eligible to be activated, this Feat has no effect.\ This Feat can only be used once per game.`},
+      { name:"Tactical Genius", plus:false, fp:1, text:`Use this Feat at the start of the Turn, in Step 3/4 of the turn order.\ When rolling off to decide initiative or drawing a token, you can do one of the following:\ • Re-roll your dice / Put the token back and redraw.\ • Force your opponent to re-roll their dice.`},
+      { name:"Hold…", plus:true, fp:1, text:`Use this Feat when it’s your turn to activate a friendly Fighter.\ You can skip that activation.`},
+    ]},
+    { category:"Defense", feats:[
+      { name:"Protected by Fate", plus:true, fp:1, text:`Use this Feat when a Fighter is shooting a friendly Fighter.\ Change the attacker’s Critical Hits to Normal Hits. (Mortal Wounds still apply, though)`},
+      { name:"Dodge and Weave", plus:false, fp:1, text:`Whenever a Fighter is shooting a friendly Fighter, if you don’t have any benefits from Cover, you can retain one Defence dice as a normal success without rolling it.`},
+      { name:"Protect the Objective!", plus:false, fp:1, text:`Whenever a Fighter is shooting a friendly Fighter that’s within 3" of an objective marker, you can re-roll one of your Defence dice.`},
+      { name:"Healing Potions", plus:true, fp:1, text:`Use this Feat when a friendly Fighter is activated that’s not within 1” of enemy Fighters.\ That friendly Fighter regains up to D3+2 lost wounds.\ You cannot use this Feat for each friendly Fighter more than once per battle.`},
+      { name:"Brace!", plus:false, fp:1, text:`Whenever a Fighter is shooting against or fighting in Close Combat against a friendly Fighter that hasn't performed the Charge, Fall Back or Move action during this Turn,\ Normal and Critical Dmg of 4 or more inflicts 1 less damage on that friendly Fighter.`},
+      { name:"Take Cover!", plus:false, fp:1, text:`Whenever an enemy Fighter is shooting a friendly Fighter that’s more than 2" from enemy Fighters and has Heavy Cover, you can re-roll one of your Defence dice.`},
+      { name:"Tough as Nails", plus:false, fp:1, text:`Use this Feat the first time an attack dice inflicts damage on a friendly Fighter.\ You can halve that inflicted damage (rounding up, to a minimum of 2).`},
+      { name:"Faith is my armour!", plus:true, fp:1, text:`Use this Feat when an Enemy Fighter is shooting at a friendly Fighter, after rolling the Defence Dice.\ You can retain one of your normal successes as a critical success instead.`},
+    ]},
+    { category:"Other", feats:[
+      { name:"Maximum Effort!", plus:true, fp:1, text:`Use this Feat when a friendly Fighter is activated.\ Until the end of that Fighter’s activation, add 1 to its APL stat.`},
+      { name:"Terrifying", plus:false, fp:1, text:`Whenever an enemy Fighter is within 1” of friendly Fighters with HP of 14 or more, worsen the Hit stat of that enemy Fighter’s weapons by 1.`},
+      { name:"Incredible Coordination", plus:true, fp:1, text:`Use this Feat when a friendly Fighter is activated.\ Select one other ready friendly Fighter visible to and within 3" of that Fighter.\ When that first friendly Fighter is Spent, you can activate that other friendly Fighter before a new initiative token is drawn / your opponent activates.\ When that other Fighter is expended, your opponent then activates as normal.`},
+      { name:"Cursed Weapons", plus:true, fp:1, text:`Use this Feat when an enemy Fighter is shooting a friendly Fighter, before rolling To Hit.\ That Enemy Fighter’s ranged weapons have the Risky weapon rule until the end of that attack.`},
+      { name:"Final spite", plus:true, fp:1, text:`Use this Feat when a ready friendly Fighter is Slain, if it is not within 1” of enemy Fighters.\ Before it is removed from the Battlefield, it can immediately perform one free action.`},
+    ]},
+  ];
+
+  // State
+  let selected = [];
+  let max = 4;
+
+  function featId(cat, featName){ return cat + "::" + featName; }
+  function getFeatById(id){
+    const parts = id.split("::");
+    const cat = parts[0];
+    const name = parts.slice(1).join("::");
+    const c = FEATS.find(x => x.category === cat);
+    if(!c) return null;
+    const f = c.feats.find(y => y.name === name);
+    if(!f) return null;
+    return { category: cat, ...f };
+  }
+
+  const elLeft = document.getElementById("colLeft");
+  const elRight = document.getElementById("colRight");
+  const elMax = document.getElementById("maxFeats");
+  const elPickedInfo = document.getElementById("pickedInfo");
+  const teamName = document.getElementById("teamName");
+  const btnGenerate = document.getElementById("btnGenerate");
+  const btnClear = document.getElementById("btnClear");
+
+  function updateTop(){
+    elPickedInfo.textContent = "Picked: " + selected.length + " / " + max;
+    btnGenerate.classList.toggle("btn-disabled", selected.length === 0);
+  }
+
+  function toggleSelect(id){
+    const idx = selected.indexOf(id);
+    if(idx >= 0){
+      selected.splice(idx, 1);
+      render();
+      return;
+    }
+    if(selected.length >= max){
+      showToast("Max feats is " + max + ". Remove one first.");
+      return;
+    }
+    selected.push(id);
+    render();
+  }
+
+  function render(){
+    elLeft.innerHTML = "";
+    elRight.innerHTML = "";
+    FEATS.forEach(cat => {
+      const box = document.createElement("section");
+      box.className = "cat";
+
+      const head = document.createElement("div");
+      head.className = "catHead";
+
+      const h = document.createElement("h2");
+      h.textContent = cat.category;
+
+      const count = document.createElement("div");
+      count.className = "count";
+      count.textContent = String(cat.feats.length);
+
+      head.appendChild(h);
+      head.appendChild(count);
+
+      const list = document.createElement("div");
+      list.className = "featList";
+
+      cat.feats.forEach(f => {
+        const id = featId(cat.category, f.name);
+        const isSel = selected.includes(id);
+
+        const item = document.createElement("div");
+        item.className = "feat" + (isSel ? " selectedGlow" : "");
+
+        const left = document.createElement("div");
+
+        const nameRow = document.createElement("div");
+        nameRow.className = "nameRow";
+
+        const n = document.createElement("div");
+        n.className = "name";
+        n.textContent = f.name;
+
+        const tagFp = document.createElement("span");
+        tagFp.className = "tag fp";
+        tagFp.textContent = f.fp + " FP";
+
+        nameRow.appendChild(n);
+        nameRow.appendChild(tagFp);
+
+        if(f.plus){
+          const tagPlus = document.createElement("span");
+          tagPlus.className = "tag plus";
+          tagPlus.textContent = "+";
+          nameRow.appendChild(tagPlus);
+        }
+
+        const d = document.createElement("div");
+        d.className = "desc";
+        d.textContent = f.text;
+
+        left.appendChild(nameRow);
+        left.appendChild(d);
+
+        const btn = document.createElement("button");
+        btn.className = "chooseBtn " + (isSel ? "btn-danger" : "btn-accent");
+        btn.textContent = isSel ? "Remove" : "Choose";
+        btn.addEventListener("click", () => toggleSelect(id));
+
+        item.appendChild(left);
+        item.appendChild(btn);
+        list.appendChild(item);
+      });
+
+      box.appendChild(head);
+      box.appendChild(list);
+      if(["Movement","Tactical","Defense","Other"].includes(cat.category)){
+        elLeft.appendChild(box);
+      } else {
+        elRight.appendChild(box);
+      }
+    });
+
+    updateTop();
+  }
+
+  elMax.addEventListener("change", () => {
+    max = parseInt(elMax.value, 10);
+    if(selected.length > max){
+      selected = selected.slice(0, max);
+      showToast("Max set to " + max + ". Trimmed selection to fit.");
+    }
+    render();
+  });
+
+  btnClear.addEventListener("click", () => {
+    selected = [];
+    render();
+  });
+
+  function escapeHtml(str){
+    return String(str || "")
+      .split("&").join("&amp;")
+      .split("<").join("&lt;")
+      .split(">").join("&gt;")
+      .split('"').join("&quot;")
+      .split("'").join("&#039;");
+  }
+
+  function generateCardPage(){
+    const feats = selected.map(getFeatById).filter(Boolean);
+
+    // Populate warband title
+    const titleEl = document.getElementById("cardWarbandTitle");
+    const tn = (teamName && teamName.value) ? teamName.value.trim() : "";
+    titleEl.textContent = tn;
+
+    // Populate card with ONLY feat title + description
+    const cardBody = document.getElementById("cardBody");
+    cardBody.innerHTML = "";
+
+    if(feats.length === 0){
+      const empty = document.createElement("div");
+      empty.className = "cardFeatBlock";
+      empty.innerHTML = '<div class="cardFeatDesc">No feats selected.</div>';
+      cardBody.appendChild(empty);
+    } else {
+      feats.forEach(f => {
+        const block = document.createElement("div");
+        block.className = "cardFeatBlock";
+
+        const t = document.createElement("div");
+        t.className = "cardFeatTitle";
+        t.textContent = f.name;
+
+        const d = document.createElement("div");
+        d.className = "cardFeatDesc";
+        d.textContent = f.text; // already has spaces instead of \n in this file
+
+        block.appendChild(t);
+        block.appendChild(d);
+        cardBody.appendChild(block);
+      });
+    }
+
+    // Toggle to card view
+    document.getElementById("pickerPage").style.display = "none";
+    const cp = document.getElementById("cardPage");
+    cp.style.display = "block";
+    cp.setAttribute("aria-hidden", "false");
+  }
+
+  // Card buttons
+  document.getElementById("btnCardBack").addEventListener("click", () => {
+    document.getElementById("cardPage").style.display = "none";
+    document.getElementById("cardPage").setAttribute("aria-hidden", "true");
+    document.getElementById("pickerPage").style.display = "block";
+    window.scrollTo(0, 0);
+  });
+
+  document.getElementById("btnCardPrint").addEventListener("click", () => window.print());
+
+  btnGenerate.addEventListener("click", () => {
+    if(selected.length === 0){
+      showToast("Choose at least 1 feat first.");
+      return;
+    }
+    generateCardPage();
+  });
+
+  render();
+});
+</script>
+</body>
+</html>
