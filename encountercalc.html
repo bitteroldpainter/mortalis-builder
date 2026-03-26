@@ -1,0 +1,647 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Encounter 28 Combat Calculator</title>
+  <style>
+    :root { --bg:#0b0f14; --panel:#121a23; --muted:#8aa0b5; --text:#e8f0f7; --line:#223041; }
+    * { box-sizing:border-box; }
+    body {
+      margin:0; font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
+      background: linear-gradient(180deg, #070b10, #0b0f14 30%);
+      color: var(--text);
+    }
+    header { padding:20px 18px; border-bottom:1px solid var(--line); }
+    header h1 { margin:0; font-size:18px; letter-spacing:.2px; }
+    header p { margin:6px 0 0; color:var(--muted); font-size:13px; }
+
+    .wrap { max-width: 1100px; margin: 0 auto; padding: 16px; }
+    .grid { display:grid; grid-template-columns: 440px 1fr; gap: 14px; align-items:start; }
+    @media (max-width: 980px){ .grid{ grid-template-columns:1fr; } }
+
+    .card {
+      background: rgba(18,26,35,.92);
+      border:1px solid var(--line);
+      border-radius: 14px;
+      box-shadow: 0 12px 30px rgba(0,0,0,.25);
+      overflow:hidden;
+    }
+    .card .hd {
+      padding: 12px 14px;
+      border-bottom: 1px solid var(--line);
+      display:flex; align-items:center; justify-content:space-between;
+      gap: 10px;
+    }
+    .card .hd b { font-size:13px; letter-spacing:.2px; }
+    .card .bd { padding: 14px; }
+
+    .row { display:grid; grid-template-columns: 1fr 180px; gap: 10px; align-items:center; margin: 10px 0; }
+    .row label { font-size:13px; color: var(--text); }
+    .hint { display:block; color: var(--muted); font-size:12px; margin-top:2px; line-height: 1.25; }
+
+    input[type="number"], select {
+      width:100%;
+      background:#0b1119;
+      border:1px solid #263548;
+      color:var(--text);
+      padding:10px 10px;
+      border-radius: 10px;
+      font-size: 14px;
+      appearance: none;
+    }
+
+    .split {
+      display:grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+    }
+
+    .pillbar { display:flex; gap:8px; flex-wrap:wrap; margin-top: 10px; }
+    .pill {
+      border:1px solid var(--line);
+      border-radius: 999px;
+      padding: 6px 10px;
+      font-size: 12px;
+      color: var(--muted);
+      background: rgba(11,17,25,.6);
+      white-space: nowrap;
+    }
+    .pill b { color: var(--text); font-weight:600; }
+
+    .kpi {
+      display:grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+      margin-bottom: 10px;
+    }
+    .k {
+      background: rgba(11,17,25,.7);
+      border: 1px solid #223041;
+      border-radius: 12px;
+      padding: 12px;
+    }
+    .k .t { font-size:12px; color:var(--muted); margin-bottom: 6px; }
+    .k .v { font-size: 20px; font-weight: 700; letter-spacing:.2px; }
+
+    .table {
+      width:100%;
+      border-collapse: collapse;
+      font-size: 13px;
+      overflow:hidden;
+      border-radius: 10px;
+      border:1px solid var(--line);
+    }
+    .table th, .table td { padding: 10px 10px; border-bottom:1px solid var(--line); }
+    .table th { text-align:left; color: var(--muted); font-weight: 600; background: rgba(11,17,25,.7); }
+    .table tr:last-child td { border-bottom:none; }
+
+    .footer-note { color: var(--muted); font-size: 12px; margin-top: 10px; line-height: 1.45; }
+
+    .num-plus { position: relative; }
+    .num-plus input { padding-right: 28px; }
+    .num-plus::after{
+      content:"+";
+      position:absolute;
+      right: 12px;
+      top: 50%;
+      transform: translateY(-50%);
+      color: var(--muted);
+      font-weight: 700;
+      pointer-events: none;
+    }
+
+    .checkrow {
+      display:grid;
+      grid-template-columns: 1fr 180px;
+      gap: 10px;
+      align-items:center;
+      margin: 10px 0;
+    }
+    .checkwrap{
+      display:flex;
+      align-items:center;
+      gap: 10px;
+      justify-content:flex-start;
+      background:#0b1119;
+      border:1px solid #263548;
+      padding:10px 10px;
+      border-radius: 10px;
+    }
+    .checkwrap input[type="checkbox"]{
+      width: 18px;
+      height: 18px;
+      accent-color: #6aa7ff;
+    }
+
+    .subhead {
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      margin-top: 6px;
+      padding-top: 10px;
+      border-top: 1px solid var(--line);
+      color: var(--muted);
+      font-size: 12px;
+      letter-spacing: .4px;
+      text-transform: uppercase;
+    }
+  </style>
+</head>
+
+<body>
+<header>
+  <div class="wrap">
+    <h1>Encounter 28 Combat Calculator</h1>
+    <p>Glancing hits • Crit defense • MW per crit • Piercing • Rerolls (X / SR / Any) • Monte Carlo</p>
+  </div>
+</header>
+
+<main class="wrap">
+  <div class="grid">
+
+    <section class="card">
+      <div class="hd"><b>Inputs</b><span class="pill">D12 system</span></div>
+      <div class="bd" id="inputs">
+
+        <div class="subhead"><span>Attacker</span><span></span></div>
+
+        <div class="row">
+          <label>
+            Attack Dice
+            <span class="hint">Number of attack rolls</span>
+          </label>
+          <input type="number" id="attackDice" min="0" max="60" step="1" value="4">
+        </div>
+
+        <div class="row">
+          <label>
+            <span id="hitLabel">To Hit (7+)</span>
+            <span class="hint" id="hitHint">
+              1–2 always fail · 3..(Hit−1) = <b>Glancing</b> (1 dmg) · 11–12 = <b>Crit</b>
+            </span>
+          </label>
+          <div class="num-plus">
+            <input type="number" id="hitTarget" min="3" max="12" step="1" value="7">
+          </div>
+        </div>
+
+        <div class="checkrow">
+          <label>
+            Glancing Hits
+            <span class="hint">If disabled, rolls between 3 and (Hit−1) become normal failures instead of doing 1 damage.</span>
+          </label>
+          <div class="checkwrap">
+            <input type="checkbox" id="glancing" checked>
+            <span style="color:var(--muted); font-size:13px;">Enabled</span>
+          </div>
+        </div>
+
+        <div class="checkrow">
+          <label>
+            Crits on 9+
+            <span class="hint">Weapon crit threshold becomes 9–12 instead of 11–12.</span>
+          </label>
+          <div class="checkwrap">
+            <input type="checkbox" id="crit9">
+            <span style="color:var(--muted); font-size:13px;">Enabled</span>
+          </div>
+        </div>
+
+        <div class="split">
+          <div class="row" style="grid-template-columns: 1fr 1fr; margin: 0;">
+            <label>
+              Normal Dmg
+              <span class="hint">Per unsaved standard hit</span>
+            </label>
+            <input type="number" id="normalDmg" min="0" max="99" step="1" value="3">
+          </div>
+
+          <div class="row" style="grid-template-columns: 1fr 1fr; margin: 0;">
+            <label>
+              Crit Dmg
+              <span class="hint">Per unsaved crit hit</span>
+            </label>
+            <input type="number" id="critDmg" min="0" max="99" step="1" value="4">
+          </div>
+        </div>
+
+        <div class="row">
+          <label>
+            MW(x) per Crit
+            <span class="hint">For each crit rolled, deal x Mortal Wounds (unsavable) in addition to crit damage</span>
+          </label>
+          <input type="number" id="mwPerCrit" min="0" max="99" step="1" value="0">
+        </div>
+
+        <div class="split">
+          <div class="row" style="grid-template-columns: 1fr 1fr; margin: 0;">
+            <label>
+              Piercing (-x)
+              <span class="hint">Applies to all 3 defense dice</span>
+            </label>
+            <input type="number" id="piercing" min="0" max="12" step="1" value="0">
+          </div>
+
+          <div class="row" style="grid-template-columns: 1fr 1fr; margin: 0;">
+            <label>
+              Piercing Crits (-x)
+              <span class="hint">Applies if ≥1 crit was rolled</span>
+            </label>
+            <input type="number" id="piercingCrits" min="0" max="12" step="1" value="0">
+          </div>
+        </div>
+
+        <hr style="border:none;border-top:1px solid var(--line); margin:14px 0;">
+
+        <div class="row">
+          <label>
+            Rerolls
+            <span class="hint">Applied on the attack roll before defense is rolled</span>
+          </label>
+          <select id="rerollType">
+            <option value="none">None</option>
+            <option value="x">Reroll X (chosen dice)</option>
+            <option value="sr">Reroll SR (all dice with same result)</option>
+            <option value="any">Reroll Any (any dice you choose)</option>
+          </select>
+        </div>
+
+        <div class="row" id="rerollXRow" style="display:none;">
+          <label>
+            Reroll X
+            <span class="hint">How many dice you may reroll (only used for “Reroll X”)</span>
+          </label>
+          <input type="number" id="rerollX" min="0" max="60" step="1" value="1">
+        </div>
+
+        <div class="subhead"><span>Defender</span><span></span></div>
+
+        <div class="row">
+          <label>
+            <span id="defLabel">Defense (8+)</span>
+            <span class="hint">3 defense dice · Standard/Glancing save on this · Crits save only on 11–12</span>
+          </label>
+          <div class="num-plus">
+            <input type="number" id="saveTarget" min="2" max="12" step="1" value="7">
+          </div>
+        </div>
+
+        <div class="checkrow">
+          <label>
+            Extremely Resilient
+            <span class="hint">After saves, reduce total damage taken by 33% (incl. MW). Implemented as ceil(dmg × 2/3).</span>
+          </label>
+          <div class="checkwrap">
+            <input type="checkbox" id="resilient">
+            <span style="color:var(--muted); font-size:13px;">Enabled</span>
+          </div>
+        </div>
+
+        <div class="pillbar" id="pillbar">
+          <span class="pill" id="pillCrit"><b>Crit:</b> 11–12</span>
+          <span class="pill"><b>Fail:</b> 1–2</span>
+          <span class="pill" id="pillGlance"><b>Glance:</b> 3..(Hit−1) → 1 dmg</span>
+          <span class="pill"><b>Crit Save:</b> 11–12</span>
+        </div>
+      </div>
+    </section>
+
+    <section class="card">
+      <div class="hd"><b>Results</b><span class="pill" id="status">Ready</span></div>
+      <div class="bd">
+        <div class="kpi">
+          <div class="k">
+            <div class="t">Avg Total Damage</div>
+            <div class="v" id="kpiDmg">—</div>
+          </div>
+          <div class="k">
+            <div class="t">Avg Mortal Wounds</div>
+            <div class="v" id="kpiMW">—</div>
+          </div>
+        </div>
+
+        <table class="table">
+          <thead>
+            <tr><th>Breakdown (averages)</th><th>Value</th></tr>
+          </thead>
+          <tbody>
+            <tr><td>Crits rolled</td><td id="avgCrits">—</td></tr>
+            <tr><td>Standard hits rolled</td><td id="avgStd">—</td></tr>
+            <tr><td>Glancing hits rolled</td><td id="avgGlance">—</td></tr>
+            <tr><td>Unsaved crits</td><td id="avgUCrits">—</td></tr>
+            <tr><td>Unsaved standard hits</td><td id="avgUStd">—</td></tr>
+            <tr><td>Unsaved glancing hits</td><td id="avgUGlance">—</td></tr>
+            <tr><td>Avg defense dice used to save</td><td id="avgSaved">—</td></tr>
+          </tbody>
+        </table>
+
+        <div class="footer-note">
+          Defender allocates defense dice freely (modelled as optimal allocation: crit saves cancel crits first,
+          then normal saves cancel standard hits, then glancing hits). Piercing applies to all defense dice;
+          Piercing Crits applies only if ≥1 crit was rolled.
+        </div>
+      </div>
+    </section>
+
+  </div>
+</main>
+
+<script>
+  const RUNS = 50000;
+
+  function d12() { return (Math.random() * 12 | 0) + 1; }
+
+  function clampInt(n, lo, hi) {
+    n = Math.round(Number(n));
+    if (!Number.isFinite(n)) n = lo;
+    return Math.max(lo, Math.min(hi, n));
+  }
+
+  function toInt(n, d=0) {
+    n = Math.floor(Number(n));
+    return Number.isFinite(n) ? n : d;
+  }
+
+  function fmt(x, dp=1) {
+    return Number(x).toFixed(1);
+  }
+
+  function critThresholdFromParams(p) {
+    return p.crit9 ? 9 : 11;
+  }
+
+  function classifyRoll(r, hitTarget, critThreshold, glancingEnabled) {
+    if (r <= 2) return "fail";
+    if (r >= critThreshold) return "crit";
+    if (r >= hitTarget) return "std";
+    return glancingEnabled ? "glance" : "fail";
+  }
+
+  function applyRerolls(rolls, hitTarget, critThreshold, glancingEnabled, rerollType, rerollX) {
+    if (rerollType === "none") return rolls;
+
+    const tier = (r) => {
+      const c = classifyRoll(r, hitTarget, critThreshold, glancingEnabled);
+      if (c === "fail") return 0;
+      if (c === "glance") return 1;
+      if (c === "std") return 2;
+      return 3;
+    };
+
+    if (rerollType === "x") {
+      let x = Math.max(0, toInt(rerollX, 0));
+      if (x === 0) return rolls;
+
+      const idx = rolls.map((r,i)=>({i,r,t:tier(r)})).sort((a,b)=> a.t - b.t);
+
+      for (let k=0; k<idx.length && x>0; k++) {
+        const o = idx[k];
+        if (o.t >= 3) break;
+        rolls[o.i] = d12();
+        x--;
+      }
+      return rolls;
+    }
+
+    if (rerollType === "any") {
+      for (let i=0;i<rolls.length;i++) {
+        const c = classifyRoll(rolls[i], hitTarget, critThreshold, glancingEnabled);
+        if (c === "fail" || c === "glance") rolls[i] = d12();
+      }
+      return rolls;
+    }
+
+    if (rerollType === "sr") {
+      const counts = new Array(13).fill(0);
+      for (const r of rolls) {
+        const c = classifyRoll(r, hitTarget, critThreshold, glancingEnabled);
+        if (c === "fail" || c === "glance") counts[r]++;
+      }
+      let bestFace = 0, bestCount = 0;
+      for (let face=1; face<=12; face++) {
+        const c = counts[face];
+        if (c > bestCount) { bestCount = c; bestFace = face; }
+      }
+      if (bestCount <= 0) return rolls;
+
+      for (let i=0;i<rolls.length;i++) {
+        if (rolls[i] === bestFace) rolls[i] = d12();
+      }
+      return rolls;
+    }
+
+    return rolls;
+  }
+
+  function simulateOnce(p) {
+    const attackDice = Math.max(0, toInt(p.attackDice, 0));
+    const hitTarget  = clampInt(p.hitTarget, 3, 12);
+    const critThreshold = critThresholdFromParams(p);
+    const glancingEnabled = !!p.glancing;
+
+    const normalDmg  = Math.max(0, toInt(p.normalDmg, 0));
+    const critDmg    = Math.max(0, toInt(p.critDmg, 0));
+    const mwPerCrit  = Math.max(0, toInt(p.mwPerCrit, 0));
+
+    const saveTarget = clampInt(p.saveTarget, 2, 12);
+    const piercing   = Math.max(0, toInt(p.piercing, 0));
+    const piercingCrits = Math.max(0, toInt(p.piercingCrits, 0));
+
+    const resilient  = !!p.resilient;
+
+    let rolls = Array.from({length: attackDice}, d12);
+    rolls = applyRerolls(rolls, hitTarget, critThreshold, glancingEnabled, p.rerollType, p.rerollX);
+
+    let crits = 0, std = 0, glance = 0;
+    for (const r of rolls) {
+      const c = classifyRoll(r, hitTarget, critThreshold, glancingEnabled);
+      if (c === "crit") crits++;
+      else if (c === "std") std++;
+      else if (c === "glance") glance++;
+    }
+
+    let def = [d12(), d12(), d12()];
+    const mod = piercing + (crits > 0 ? piercingCrits : 0);
+    if (mod !== 0) def = def.map(x => x - mod);
+
+    let sorted = def.slice().sort((a,b)=>b-a);
+    let critLeft = crits, stdLeft = std, glanceLeft = glance;
+    let savedTotal = 0;
+
+    for (const die of sorted) {
+      if (critLeft > 0 && die >= 11) { critLeft--; savedTotal++; continue; }
+      if (die >= saveTarget) {
+        if (stdLeft > 0) { stdLeft--; savedTotal++; continue; }
+        if (glanceLeft > 0) { glanceLeft--; savedTotal++; continue; }
+      }
+    }
+
+    const unsavedCrit = critLeft;
+    const unsavedStd = stdLeft;
+    const unsavedGlance = glanceLeft;
+
+    const mw = crits * mwPerCrit;
+
+    let dmg =
+      (unsavedCrit * critDmg) +
+      (unsavedStd * normalDmg) +
+      (unsavedGlance * 1) +
+      mw;
+
+    if (resilient) {
+      dmg = Math.ceil(dmg * (2/3));
+    }
+
+    return {
+      dmg, mw, crits, std, glance,
+      uCrit: unsavedCrit, uStd: unsavedStd, uGlance: unsavedGlance,
+      savedTotal
+    };
+  }
+
+  function simulateMany(p, runs) {
+    let sumDmg=0, sumMW=0, sumCrit=0, sumStd=0, sumGl=0, sumUC=0, sumUS=0, sumUG=0, sumSaved=0;
+    for (let i=0;i<runs;i++) {
+      const r = simulateOnce(p);
+      sumDmg += r.dmg;
+      sumMW  += r.mw;
+      sumCrit += r.crits;
+      sumStd  += r.std;
+      sumGl   += r.glance;
+      sumUC   += r.uCrit;
+      sumUS   += r.uStd;
+      sumUG   += r.uGlance;
+      sumSaved += r.savedTotal;
+    }
+    const inv = 1 / runs;
+    return {
+      avgDmg: sumDmg * inv,
+      avgMW: sumMW * inv,
+      avgCrit: sumCrit * inv,
+      avgStd: sumStd * inv,
+      avgGl: sumGl * inv,
+      avgUC: sumUC * inv,
+      avgUS: sumUS * inv,
+      avgUG: sumUG * inv,
+      avgSaved: sumSaved * inv
+    };
+  }
+
+  const els = {
+    attackDice: document.getElementById("attackDice"),
+    hitTarget: document.getElementById("hitTarget"),
+    glancing: document.getElementById("glancing"),
+    crit9: document.getElementById("crit9"),
+    normalDmg: document.getElementById("normalDmg"),
+    critDmg: document.getElementById("critDmg"),
+    mwPerCrit: document.getElementById("mwPerCrit"),
+    piercing: document.getElementById("piercing"),
+    piercingCrits: document.getElementById("piercingCrits"),
+    rerollType: document.getElementById("rerollType"),
+    rerollX: document.getElementById("rerollX"),
+    rerollXRow: document.getElementById("rerollXRow"),
+
+    saveTarget: document.getElementById("saveTarget"),
+    resilient: document.getElementById("resilient"),
+
+    hitLabel: document.getElementById("hitLabel"),
+    defLabel: document.getElementById("defLabel"),
+    hitHint: document.getElementById("hitHint"),
+    pillCrit: document.getElementById("pillCrit"),
+    pillGlance: document.getElementById("pillGlance"),
+
+    status: document.getElementById("status"),
+    kpiDmg: document.getElementById("kpiDmg"),
+    kpiMW: document.getElementById("kpiMW"),
+
+    avgCrits: document.getElementById("avgCrits"),
+    avgStd: document.getElementById("avgStd"),
+    avgGlance: document.getElementById("avgGlance"),
+    avgUCrits: document.getElementById("avgUCrits"),
+    avgUStd: document.getElementById("avgUStd"),
+    avgUGlance: document.getElementById("avgUGlance"),
+    avgSaved: document.getElementById("avgSaved"),
+  };
+
+  function gatherParams() {
+    return {
+      attackDice: els.attackDice.value,
+      hitTarget: els.hitTarget.value,
+      glancing: els.glancing.checked,
+      crit9: els.crit9.checked,
+      normalDmg: els.normalDmg.value,
+      critDmg: els.critDmg.value,
+      mwPerCrit: els.mwPerCrit.value,
+      piercing: els.piercing.value,
+      piercingCrits: els.piercingCrits.value,
+      rerollType: els.rerollType.value,
+      rerollX: els.rerollX.value,
+      saveTarget: els.saveTarget.value,
+      resilient: els.resilient.checked
+    };
+  }
+
+  let pending = null;
+  function renderSoon() {
+    if (pending) cancelAnimationFrame(pending);
+    pending = requestAnimationFrame(render);
+  }
+
+  function render() {
+    const p = gatherParams();
+
+    els.rerollXRow.style.display = (p.rerollType === "x") ? "" : "none";
+
+    const hitT = clampInt(p.hitTarget, 3, 12);
+    const saveT = clampInt(p.saveTarget, 2, 12);
+    const pier = Math.max(0, toInt(p.piercing, 0));
+    const pierC = Math.max(0, toInt(p.piercingCrits, 0));
+    const rr = p.rerollType;
+    const res = p.resilient ? " | Resilient" : "";
+    const gl = p.glancing ? " | Glancing ON" : " | Glancing OFF";
+
+    const critT = critThresholdFromParams(p);
+    const critText = (critT === 9) ? "9–12" : "11–12";
+
+    els.hitLabel.textContent = `To Hit (${hitT}+)`;
+    els.defLabel.textContent = `Defense (${saveT}+)`;
+
+    if (p.glancing) {
+      els.hitHint.innerHTML = `1–2 always fail · 3..(Hit−1) = <b>Glancing</b> (1 dmg) · <b>Crit</b> = ${critText}`;
+      els.pillGlance.innerHTML = `<b>Glance:</b> 3..(Hit−1) → 1 dmg`;
+    } else {
+      els.hitHint.innerHTML = `1–2 always fail · 3..(Hit−1) = <b>Fail</b> · <b>Crit</b> = ${critText}`;
+      els.pillGlance.innerHTML = `<b>Glance:</b> Off`;
+    }
+
+    els.pillCrit.innerHTML = `<b>Crit:</b> ${critText}`;
+
+    els.status.textContent =
+      `Hit ${hitT}+ | Crit ${critText} | Save ${saveT}+ (Crit Save 11–12) | Pier -${pier} / CritPier -${pierC} | RR ${rr.toUpperCase()}${gl}${res}`;
+
+    const out = simulateMany(p, RUNS);
+
+    els.kpiDmg.textContent = fmt(out.avgDmg, 1);
+    els.kpiMW.textContent  = fmt(out.avgMW, 1);
+
+    els.avgCrits.textContent   = fmt(out.avgCrit, 1);
+    els.avgStd.textContent     = fmt(out.avgStd, 1);
+    els.avgGlance.textContent  = fmt(out.avgGl, 1);
+
+    els.avgUCrits.textContent  = fmt(out.avgUC, 1);
+    els.avgUStd.textContent    = fmt(out.avgUS, 1);
+    els.avgUGlance.textContent = fmt(out.avgUG, 1);
+
+    els.avgSaved.textContent   = fmt(out.avgSaved, 1);
+  }
+
+  document.querySelectorAll("#inputs input, #inputs select").forEach(el => {
+    el.addEventListener("input", renderSoon);
+    el.addEventListener("change", renderSoon);
+  });
+
+  render();
+</script>
+</body>
+</html>
