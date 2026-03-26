@@ -1,0 +1,4794 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+ <title>Mortalis Fighter Builder</title>
+
+  <style>
+    * {
+      box-sizing: border-box;
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI",
+        sans-serif;
+    }
+    body {
+      margin: 0;
+      background: #0f1113;
+      color: #e4e7eb;
+    }
+    .app {
+      max-width: 960px;
+      margin: 0 auto;
+      min-height: 100vh;
+      padding: 1.5rem 1rem 2rem;
+    }
+    .top-bar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 1rem;
+    }
+    
+
+    .top-actions{
+      display:flex;
+      gap:0.5rem;
+      align-items:center;
+      flex-wrap:wrap;
+      justify-content:flex-end;
+    }
+    .top-actions .tab-pill,
+    .top-actions .tab-pill-colour{
+      border-radius: 999px;
+      padding: 0.3rem 0.75rem;
+      font-size: 0.85rem;
+    }
+.top-title {
+      font-size: 1.4rem;
+      font-weight: 600;
+    }
+    .points-box-inline {
+      padding: 0.4rem 0.7rem;
+      border-radius: 0.5rem;
+      background: #2b1400;
+      border: 1px solid #ff8c00;
+      font-weight: 600;
+    }
+    .card {
+      background: #1E2024;  
+      border-radius: 0.75rem;
+      border: 1px solid #2a2d31;
+      padding: 0.75rem 1rem;
+      margin-bottom: 0.75rem;
+        position: relative;
+    }
+    .card h2 {
+      margin: 0 0 0.75rem;
+      font-size: 1.2rem;
+    }
+
+    /* Stats row + pills */
+    .stats-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.75rem;
+    }
+    .stat-pill {
+      background: linear-gradient(0deg, rgba(35,41,43,1), rgba(0,0,0,1));
+      border: 1px solid #ff9f1c;
+      border-radius: 12px;
+      padding: 0.45rem 0.7rem;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      min-width: 80px;
+    }
+    .stat-pill-label {
+      font-size: 0.75rem;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      color: #DFE4EB;
+      margin-bottom: 0.15rem;
+    }
+    .stat-pill-controls {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 0.2rem;
+    }
+    .stat-pill-value {
+      font-weight: 600;
+      font-size: 1.2rem;
+    }
+    .stat-btn-vert {
+      width: 26px;
+      height: 20px;
+      border-radius: 999px;
+      border: 1px solid #4b5563;
+      background: #1f2937;
+      color: #e5e7eb;
+      font-size: 0.8rem;
+      font-weight: 600;
+      cursor: pointer;
+      padding: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .stat-btn-vert:hover {
+      background: #374151;
+    }
+
+    /* Psyker block */
+    .warlock-box {
+      margin-top: 0.75rem;
+      padding-top: 0.5rem;
+      border-top: 1px solid #1f2937;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.75rem 1.5rem;
+      align-items: center;
+    }
+    .warlock-option {
+      font-size: 0.85rem;
+    }
+    .warlock-option input {
+      margin-right: 0.3rem;
+    }
+    .warlock-note {
+      font-size: 0.8rem;
+      color: #9ca3af;
+    }
+
+    .summary-highlight {
+      margin-top: 0.75rem;
+      font-weight: 600;
+      font-size: 0.9rem;
+    }
+
+    /* Tabs under stats */
+    .tabs-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+      margin: 0.5rem 0 0.75rem;
+    }
+    .tab-pill {
+      padding: 0.3rem 0.75rem;
+      border-radius: 999px;
+      border: 1px solid #374151;
+      background: linear-gradient(0deg, rgba(35,41,43,1), rgba(0,0,0,1));
+      color: #fff;
+      font-size: 0.85rem;
+      cursor: pointer;
+    }
+    .tab-pill-colour {
+      padding: 0.3rem 0.75rem;
+      border-radius: 999px;
+      border: 1px solid #374151;
+      background: linear-gradient(180deg, rgba(255,170,84,1), rgba(128,51,0,1));
+      color: #e5e7eb;
+      font-size: 0.85rem;
+      cursor: pointer;
+    }
+    .tab-pill:hover {
+      background: #FFC24D;
+    }
+    .tab-pill.active {
+      background: linear-gradient(180deg, rgba(255,170,84,1), rgba(128,51,0,1));
+      color: #fff;
+      border-color: #101213;
+    }
+
+    /* Sub-tabs (used inside Ranged Weapons) */
+    .subtabs-row{
+      display:flex;
+      flex-wrap:wrap;
+      gap:0.4rem;
+      margin:0.25rem 0 0.75rem;
+    }
+    .subtab-pill{
+      padding:0.2rem 0.6rem;
+      border-radius:999px;
+      border:1px solid #374151;
+      background:#101216;
+      color:#e5e7eb;
+      cursor:pointer;
+      font-size:0.85rem;
+      line-height:1.2;
+    }
+    .subtab-pill:hover{ border-color:#6b7280; }
+    .subtab-pill.active{
+      background:linear-gradient(180deg, rgba(255,170,84,1), rgba(128,51,0,1));
+      border-color:#9ca3af;
+    }
+
+    /* Generic lists (weapons, abilities, etc.) */
+    .flex-columns {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 1rem;
+    }
+    .column {
+      flex: 1 1 0;
+      min-width: 220px;
+    }
+    .item-list {
+      display: flex;
+      flex-direction: column;
+      gap: 0.4rem;
+      font-size: 0.9rem;
+    }
+    .item-row {
+      padding: 0.35rem 0.5rem;
+      border-radius: 0.5rem;
+      background: linear-gradient(0deg, rgba(35,41,43,1), rgba(0,0,0,1));
+      border: 1px solid #ff9f1c;
+      display: flex;
+      flex-direction: column;
+      gap: 0.3rem;
+    }
+    .item-row-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 0.5rem;
+    }
+    .item-main {
+      display: flex;
+      flex-direction: column;
+      gap: 0.15rem;
+    }
+    .item-name {
+      font-weight: 600;
+    }
+    .item-detail {
+      font-size: 0.8rem;
+      color: #9ca3af;
+    }
+    .item-footer {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 0.5rem;
+      margin-top: 0.15rem;
+    }
+    .item-points {
+      font-weight: 600;
+      font-size: 0.9rem;
+    }
+    .item-actions button {
+      border: none;
+      background: linear-gradient(180deg, rgba(255,170,84,1), rgba(128,51,0,1));
+      color: #fff;
+      padding: 0.25rem 0.55rem;
+      border-radius: 0.375rem;
+      font-size: 0.8rem;
+      cursor: pointer;
+    }
+    .item-actions button:hover {
+      background: #ffffff;
+    }
+    .item-actions .remove-btn {
+      background: linear-gradient(180deg, rgba(148,18,18,1), rgba(0,0,0,.12));
+      color: #fecaca;
+    }
+    .item-actions .remove-btn:hover {
+      background: #b91c1c;
+    }
+
+    /* Weapon upgrades in selected weapon rows */
+    .weapon-upgrades {
+      font-size: 0.75rem;
+      color: #9ca3af;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.35rem;
+      margin-top: 0.15rem;
+    }
+    .weapon-upgrades label {
+      display: flex;
+      align-items: center;
+      gap: 0.15rem;
+    }
+    .weapon-upgrades input {
+      width: 12px;
+      height: 12px;
+    }
+/* Summary category pill */
+.summary-pill {
+  background: linear-gradient(0deg, rgba(35,41,43,1), rgba(0,0,0,1));
+  border: 1px solid #636161;
+  border-radius: 12px;
+  padding: 0.7rem 1rem;
+  margin-bottom: 0.75rem;
+}
+
+/* Underlined category titles */
+.summary-category-title {
+  font-size: 1rem;
+  font-weight: 600;
+  margin: 0 0 0.35rem;
+  padding-bottom: 0rem;
+  border-bottom: 1px solid #ff8c00;
+  display: inline-block;
+}
+      /* Total Points inside Stats box */
+.stats-total-container {
+  width: 100%;
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;   /* ← centers vertically */
+  margin-top: 0.3rem;
+}
+/* Row for the Total Points pill inside the stats card */
+.stats-total-row {
+  width: 100%;
+  display: flex;
+  justify-content: flex-end;
+  margin-top: 0.5rem;
+}
+
+      /* Total Points pill inside stats card, floating top-right */
+.stats-total-floating {
+  position: absolute;
+  top: 1rem;
+  right: 1rem;
+  padding: 0.25rem 0.6rem;
+  border-radius: 10px;
+  background: #2b1400;
+  border: 1px solid #636161;
+  font-weight: 600;
+  font-size: 1rem;
+  white-space: nowrap;
+}
+
+
+    /* Options as exactly 2 columns */
+    .weapons-options-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 0.4rem;
+    }
+
+    /* 3-column layout: 2/3 options (2 cards), 1/3 selected */
+    .weapons-layout .options-column {
+      flex: 2 1 0;
+    }
+    .weapons-layout .selected-column {
+      flex: 1 1 0;
+    }
+  
+    /* Toolbar texture toggle */
+    .cc-tex-toggle{
+      display:inline-flex;
+      align-items:center;
+      gap:8px;
+      font-weight:800;
+      font-size:12px;
+      color:#111;
+      background: rgba(255,255,255,0.92);
+      border: 1px solid rgba(0,0,0,0.25);
+      border-radius: 12px;
+      padding: 6px 10px;
+    }
+    .cc-tex-toggle input{ accent-color: #111; }
+
+    /* Print only the generated card (no blank first page) */
+    @media print {
+      body.print-card-mode .app { display:none !important; }
+      body.print-card-mode #generated-card-overlay{
+        display:block !important;
+        position: static !important;
+        inset: auto !important;
+        overflow: visible !important;
+        padding: 0 !important;
+        background: transparent !important;
+      }
+      body.print-card-mode #generated-card-toolbar{ display:none !important; }
+    }
+
+
+
+    /* ===== Portrait Cropper Overlay ===== */
+    #portrait-cropper-overlay{
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,.78);
+      display: none;
+      z-index: 99999;
+      padding: 22px 14px;
+      overflow: auto;
+    }
+    #portrait-cropper-overlay.show{ display:block; }
+    #portrait-cropper-overlay .pc-modal{
+      max-width: 1100px;
+      margin: 0 auto;
+      background: #1E2024;
+      border: 1px solid #2a2d31;
+      border-radius: 14px;
+      padding: 14px;
+      display: grid;
+      grid-template-columns: 360px 1fr;
+      gap: 16px;
+      box-shadow: 0 20px 60px rgba(0,0,0,.55);
+    }
+    @media (max-width: 980px){
+      #portrait-cropper-overlay .pc-modal{ grid-template-columns: 1fr; }
+    }
+    .pc-panel .pc-title{ font-size: 1.05rem; font-weight: 700; margin-bottom: 8px; }
+    .pc-panel .pc-sub{ font-size: 0.85rem; color:#9aa1a8; line-height: 1.35; margin-bottom: 12px; }
+    .pc-panel input[type="file"]{
+      width: 100%;
+      padding: 10px;
+      border-radius: 12px;
+      border: 1px dashed #2a2d31;
+      background:#141619;
+      color:#e4e7eb;
+    }
+    .pc-actions{ display:flex; gap:0.5rem; flex-wrap:wrap; margin-top: 10px; }
+    .pc-stage{ position:relative; display:flex; justify-content:center; align-items:center; min-height: 520px; }
+    #pc-canvas{
+      width: 100%;
+      max-width: 760px;
+      height: auto;
+      background:#0b0d12;
+      border: 1px solid #2a2d31;
+      border-radius: 16px;
+      touch-action:none;
+      display:block;
+    }
+    .pc-badge{
+      position:absolute;
+      top: 12px;
+      left: 12px;
+      padding: 6px 10px;
+      border-radius: 999px;
+      background: rgba(20,22,25,.85);
+      border: 1px solid #2a2d31;
+      color:#9aa1a8;
+      font-size: 0.82rem;
+      backdrop-filter: blur(6px);
+    }
+    .pc-warn{
+      margin-top: 10px;
+      padding: 10px;
+      border-radius: 12px;
+      border: 1px solid rgba(255,180,74,.35);
+      background: rgba(255,180,74,.08);
+      color: #ffd7a3;
+      font-size: 0.85rem;
+      line-height: 1.35;
+    }
+
+    /* ===== Fighter Card Portrait Placement ===== */
+    .cc-portrait-wrap{
+      width: 240px;
+      height: 208px;
+      margin-top: 10px;
+      background: transparent;
+    }
+    .cc-portrait-img{
+      width: 100%;
+      height: 100%;
+      object-fit: contain; /* preserves full 682×592 frame */
+      display:block;
+    }
+
+</style>
+</head>
+<body>
+  <div class="app">
+    <header class="top-bar">
+
+     <div class="top-title">Mortalis Fighter Builder</div>
+     <div class="top-actions">
+       <button class="tab-pill-colour" id="btn-save-json" type="button">Save Profile</button>
+       <label class="tab-pill" style="cursor:pointer;">
+         Load Profile
+         <input id="file-load-json" type="file" accept="application/json" hidden>
+       </label>
+
+
+       <button class="tab-pill-colour" id="btn-save-warband" type="button" style="display:none;">Save to Warband</button>
+       <button class="tab-pill" id="btn-back-warband" type="button" style="display:none;">Back to Warband</button>
+       <button class="tab-pill-colour" id="btn-portrait" type="button" title="Crop / set portrait" style="display:none;">Portrait</button>
+ 
+     </div>
+</header>
+
+    <main>
+      <!-- Stats always visible -->
+      <section id="section-stats"></section>
+
+      <!-- Tabs for the rest -->
+      <div id="section-tabs" class="tabs-row">
+        <button class="tab-pill active" data-target="section-weapons-cc">Close Combat Weapons</button>
+        <button class="tab-pill" data-target="section-weapons-ranged">Ranged Weapons</button>
+        <button class="tab-pill" data-target="section-abilities">Fighter Abilities</button>
+        <button class="tab-pill" data-target="section-leader">Leader Abilities</button>
+        <button class="tab-pill" data-target="section-spells">Psychic Powers</button>
+        <button class="tab-pill" data-target="section-equipment">Equipment</button>
+        <button class="tab-pill" data-target="section-summary">Summary</button>
+      </div>
+
+      <!-- Tabbed sections -->
+      <section id="section-weapons-cc"></section>
+      <section id="section-weapons-ranged"></section>
+      <section id="section-abilities"></section>
+      <section id="section-leader"></section>
+      <section id="section-spells"></section>
+      <section id="section-equipment"></section>
+      <section id="section-summary"></section>
+    </main>
+  </div>
+
+  
+  <!-- Portrait Cropper Overlay -->
+  <div id="portrait-cropper-overlay" aria-hidden="true">
+    <div class="pc-modal">
+      <div class="pc-panel">
+        <div class="pc-title">Triangle Portrait Cropper</div>
+        <div class="pc-sub">Upload a photo, then <b>drag</b> to move and <b>scroll</b> (or pinch) to zoom. Output: <b>682×592</b>, triangle points <b>down</b>. Border: <b>8px</b> #D8E2D7.</div>
+
+        <input id="pc-file" type="file" accept="image/*" />
+
+        <div class="pc-actions">
+          <button class="tab-pill" id="pc-fit" type="button">Fit</button>
+          <button class="tab-pill" id="pc-reset" type="button">Reset</button>
+        </div>
+
+        <div class="pc-actions">
+          <button class="tab-pill-colour" id="pc-use" type="button">Use Portrait</button>
+          <button class="tab-pill" id="pc-close" type="button">Close</button>
+        </div>
+
+        <div id="pc-warn" class="pc-warn" style="display:none;"></div>
+      </div>
+
+      <div class="pc-stage">
+        <div class="pc-badge" id="pc-badge">No image loaded • 682×592</div>
+        <canvas id="pc-canvas" width="682" height="592"></canvas>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    (function () {
+      // STAT + COST CONFIG
+      var STAT_CONFIG = [
+        { key: "move",  label: "Move",  unit: '"', base: 6, min: 5, max: 8,  upCost: 4, downCost: 4, lowerIsBetter: false },
+        { key: "def",   label: "DEF",   unit: "+", base: 9, min: 5, max: 11, upCost: 1, downCost: 1, lowerIsBetter: true  },
+        { key: "ap",    label: "AP",    unit: "",  base: 2, min: 2, max: 4,  upCost: 4, downCost: 4, lowerIsBetter: false },
+        { key: "hp",    label: "HP",    unit: "",  base: 7, min: 3, max: 99, upCost: 1, downCost: 1, lowerIsBetter: false },
+        { key: "atk",   label: "ATK",   unit: "",  base: 3, min: 3, max: 5,  upCost: 2, downCost: 0, lowerIsBetter: false },
+        { key: "fight", label: "Fight", unit: "+", base: 7, min: 5, max: 11, upCost: 2, downCost: 1, lowerIsBetter: true  },
+        { key: "shoot", label: "Shoot", unit: "+", base: 7, min: 5, max: 11, upCost: 2, downCost: 1, lowerIsBetter: true  }
+      ];
+
+      // CLOSE COMBAT WEAPONS (example)
+     var CC_WEAPONS = [
+  { id: "fistsClaws", name: "Fists/Claws", profile: "ATK User, Hit User, DMG 2/3", points: 0 },
+  { id: "beastClawsBite", name: "Beast Claws/Bite", profile: "ATK User, Hit User, DMG 3/4", points: 2 },
+  { id: "bigBladeAxe", name: "Big Blade/Axe", profile: "ATK User, Hit User, DMG 3/5", points: 3 },
+  { id: "bigChainblade", name: "Big Chainblade", profile: "ATK User, Hit User, DMG 5/6", points: 5 },
+  { id: "bladeAxe", name: "Blade/Axe", profile: "ATK User, Hit User, DMG 3/4", points: 2 },
+  { id: "chainsword", name: "Chainsword", profile: "ATK User, Hit User, DMG 4/5", points: 4 },
+  { id: "flail", name: "Flail", profile: "ATK User, Hit User-1, DMG 4/5, Rng 2", points: 4 },
+  { id: "hugeHammerAxeBlade", name: "Huge Hammer/Axe/Blade", profile: "ATK User, Hit User, DMG 5/6, Reroll (1)", points: 6 },
+  { id: "monstrousClaws", name: "Monstrous Claws", profile: "ATK User, Hit User, DMG 5/6, MW (1)", points: 6 },
+  { id: "poisonedKnife", name: "Poisoned Knife", profile: "ATK User, Hit User, DMG 3/4, Poison", points: 3 },
+  { id: "poisonedWeapon", name: "Poisoned Weapon", profile: "ATK User, Hit User, DMG 4/5, Poison, Reroll (SR)", points: 6 },
+  { id: "powerFist", name: "Power Fist", profile: "ATK User, Hit User-2, DMG 5/7, Crits on 9+, MW (1)", points: 7 },
+  { id: "powerKnife", name: "Power Knife", profile: "ATK User, Hit User, DMG 3/5, Crits on 9+", points: 4 },
+  { id: "powerRapier", name: "Power Rapier", profile: "ATK User, Hit User, DMG 4/5, Crits on 9+", points: 6 },
+  { id: "powerSpear", name: "Power Spear", profile: "ATK User, Hit User, DMG 4/6, , Rng 2, Crits on 9+", points: 8 },
+  { id: "powerWeapon", name: "Power Weapon", profile: "ATK User, Hit User, DMG 4/6, Crits on 9+", points: 7 },
+  { id: "psychicStaff", name: "Psychic Staff", profile: "ATK User, Hit User, DMG 4/6, Crits on 9+, Fire", points: 8 },
+  { id: "thunderHammer", name: "Thunder Hammer", profile: "ATK User, Hit User-2, DMG 5/7, Crits on 9+, MW (2)", points: 8 },
+  { id: "whip", name: "Whip", profile: "ATK User, Hit User-1, DMG 3/4, Rng 2", points: 2 }
+];
+
+
+      // RANGED WEAPONS (example)
+      var RANGED_WEAPONS = [
+  // --- Pistols / Grenades ---
+  { id: "arcPistol", name: "Arc Pistol", profile: 'ATK 4, Hit User, DMG 4/5, Rng 8", Piercing (-3)', points: 4 },
+  { id: "autoLaspistol", name: "Auto/Laspistol", profile: 'ATK 4, Hit User, DMG 2/3, Rng 8"', points: 2 },
+  { id: "boltPistol", name: "Bolt Pistol", profile: 'ATK 4, Hit User, DMG 3/4, Rng 8", Piercing Crits (-2)', points: 3 },
+  { id: "handFlamer", name: "Hand Flamer", profile: 'ATK 4, Hit User+2, DMG 3/4, Rng 6", Ignores Cover, Torrent (1"), Fire', points: 5 },
+  { id: "meltaPistol", name: "Melta Pistol", profile: 'ATK 4, Hit User, DMG 6/3, Rng 3", Piercing (-5), MW (4)', points: 7 },
+  { id: "phosphorBlastPistol", name: "Phosphor Blast Pistol", profile: 'ATK 4, Hit User, DMG 3/4, Rng 8", Blast (1")', points: 4 },
+  { id: "plasmaPistol", name: "Plasma Pistol", profile: 'ATK 4, Hit User, DMG (Std) 5/6, Rng 8", Piercing (-3), Crits on 9+; (Supercharged): DMG 6/6, Rng 8", Piercing (-4), Crits on 9+, Risky', points: 7 },
+  { id: "rokkitPistol", name: "Rokkit Pistol", profile: 'ATK 6, Hit User, DMG 4/5, Rng 8", Blast (1")', points: 7 },
+  { id: "slugga", name: "Slugga", profile: 'ATK 6, Hit User, DMG 1/2, Rng 8"', points: 2 },
+  { id: "warpflamePistol", name: "Warpflame Pistol", profile: 'ATK 4, Hit User+2, DMG 3/4, Rng 6", Ignores Cover, Piercing (-2), Torrent (1"), Fire', points: 6 },
+  { id: "fragGrenade", name: "Frag Grenade", profile: 'ATK 4, Hit User-2, DMG 2/4, Rng 6", Blast (2"), Ignores Cover, One Use Only', points: 2 },
+  { id: "krakGrenade", name: "Krak Grenade", profile: 'ATK 4, Hit User-2, DMG 4/5, Rng 6", Piercing (-2), Ignores Cover, One Use Only', points: 2 },
+  { id: "meltaBomb", name: "Melta Bomb", profile: 'ATK 4, Hit User-2, DMG 5/6, Rng 6", Blast (2"), Piercing (-2), Ignores Cover, One Use Only, 2 AP action', points: 4 },
+
+  // --- Light / Medium Ranged ---
+  { id: "autoLasgun", name: "Auto/Lasgun", profile: "ATK 4, Hit User, DMG 2/3", points: 3 },
+  { id: "boltGun", name: "Bolt Gun", profile: "ATK 4, Hit User, DMG 3/4, Piercing Crits (-2)", points: 4 },
+  { id: "gaussBlaster", name: "Gauss Blaster", profile: "ATK 4, Hit User, DMG 4/5, Piercing (-2)", points: 5 },
+  { id: "hvyShotgun", name: "Hvy. Shotgun", profile: 'ATK 4, Hit User+2, DMG 4/4, Rng 6"', points: 4 },
+  { id: "infernoBoltGun", name: "Inferno Bolt Gun", profile: "ATK 4, Hit User, DMG 3/4, Piercing (-2)", points: 5 },
+  { id: "ionRifle", name: "Ion Rifle", profile: "ATK 4, Hit User, DMG 4/5, Piercing Crits (-2)", points: 5 },
+  { id: "neutronBlaster", name: "Neutron Blaster", profile: "ATK 4, Hit User, DMG 3/3, MW (2)", points: 6 },
+  { id: "pulseCarbine", name: "Pulse Carbine", profile: "ATK 4, Hit User, DMG 4/5, Reroll (1)", points: 5 },
+  { id: "shotgun", name: "Shotgun", profile: 'ATK 4, Hit User+2, DMG 3/3, Rng 6"', points: 3 },
+  { id: "shurikenRifle", name: "Shuriken Rifle", profile: "ATK 4, Hit User, DMG 3/4, Piercing (-2)", points: 5 },
+  { id: "teslaCarbine", name: "Tesla Carbine", profile: 'ATK 5, Hit User, DMG 3/3, Deals MW (2) to Fighters within 2" of target', points: 6 },
+
+  // --- Special ---
+  { id: "flamer", name: "Flamer", profile: 'ATK 4, Hit User+2, DMG 4/4, Rng 10", Ignores Cover, Torrent (2"), Fire', points: 10 },
+  { id: "grenadeLauncher", name: "Grenade Launcher", profile: 'ATK 4, Hit User, DMG (Frag) 2/4, Blast (2"); (Krak): DMG 4/5, Piercing (-2)', points: 10 },
+  { id: "meltaGun", name: "Melta Gun", profile: 'ATK 4, Hit User, DMG 6/3, Rng 6", Piercing (-5), MW (4)', points: 10 },
+  { id: "neutronRailRifle", name: "Neutron Rail Rifle", profile: "ATK 4, Hit User, DMG 4/4, MW (2)", points: 7 },
+  { id: "plasmaGun", name: "Plasma Gun", profile: 'ATK 4, Hit User, DMG (Std) 5/6, Piercing (-3), Crits on 9+; (Supercharged): DMG 6/6, Piercing (-4), Crits on 9+, Risky', points: 10 },
+  { id: "scopedBigShoota", name: "Scoped Big Shoota", profile: 'ATK 5, Hit User+1, DMG 3/3, MW (2), Heavy (Dash)', points: 10 },
+  { id: "shredder", name: "Shredder", profile: "ATK 4, Hit User, DMG 4/5, Piercing (-3)", points: 9 },
+  { id: "sniperRifle", name: "Sniper Rifle", profile: 'ATK 4, Hit User+1, DMG 3/3, Piercing (-2), Ignores Cover, MW (3)', points: 12 },
+  { id: "synapticDisintegrator", name: "Synaptic Disintegrator", profile: 'ATK 4, Hit User+1, DMG 4/3, Piercing (-2), Ignores Cover, MW (2)', points: 14 },
+  { id: "warpflamer", name: "Warpflamer", profile: 'ATK 4, Hit User+2, DMG 4/4, Rng 8", Ignores Cover, Torrent (2"), Piercing (-2), Fire', points: 7 },
+
+  // --- Heavy ---
+  { id: "eavyRokkitLauncha", name: "‘Eavy Rokkit Launcha", profile: 'ATK 6, Hit User+2, DMG 4/5, Blast (1"), Heavy (Dash)', points: 13 },
+  { id: "bigShoota", name: "Big Shoota", profile: "ATK 6, Hit User, DMG 3/4", points: 7 },
+  { id: "chaincannon", name: "Chaincannon", profile: 'ATK 6, Hit User, DMG 4/4, Reroll (1), Heavy (Dash)', points: 10 },
+  { id: "fragCannon", name: "Frag Cannon", profile: 'ATK 4, Hit User, DMG (Shell) 5/7, Piercing (-3); (Shrapnel): DMG 4/5, Blast (2")', points: 10 },
+  { id: "heavyBolter", name: "Heavy Bolter", profile: 'ATK 5, Hit User, DMG 5/6, Reroll (1), Heavy (Dash)', points: 10 },
+  { id: "heavyStubber", name: "Heavy Stubber", profile: 'ATK 5, Hit User, DMG 4/5, Heavy (Dash)', points: 6 },
+  { id: "lascannon", name: "Lascannon", profile: 'ATK 4, Hit User, DMG 6/7, Piercing (-2), MW (2), Heavy (Dash)', points: 10 },
+  { id: "missileLauncher", name: "Missile Launcher", profile: 'Mode (Krak): ATK 4, Hit User, DMG 6/7, Piercing (-4), Heavy (Dash); (Frag): DMG 3/5, Blast (2"), Piercing Crits (-2), Heavy (Dash)', points: 10 },
+  { id: "multiMelta", name: "Multi Melta", profile: 'ATK 4, Hit User, DMG 6/3, MW (4), Heavy (Dash), Piercing (-5)', points: 13 },
+  { id: "plasmaCannon", name: "Plasma Cannon", profile: 'Mode (Std): ATK 4, Hit User, DMG 5/6, Blast (2"), Piercing (-3), Heavy (Dash); (Supercharged): DMG 6/6, Blast (2"), Piercing (-3), Heavy (Dash), Risky', points: 12 },
+  { id: "rokkitLauncha", name: "Rokkit Launcha", profile: 'ATK 6, Hit User, DMG 4/5, Blast (1")', points: 9 },
+  { id: "shurikenCannon", name: "Shuriken Cannon", profile: "ATK 5, Hit User, DMG 4/5", points: 7 },
+  { id: "soulreaperCannon", name: "Soulreaper Cannon", profile: "ATK 6, Hit User, DMG 4/5, Piercing Crits (-2)", points: 12 },
+  { id: "wraithCannon", name: "Wraith Cannon", profile: 'ATK 4, Hit User, DMG 6/3, MW (3), Heavy (Dash), Piercing (-4), Crits on 9+', points: 13 }
+];
+
+      // --- Ranged weapon sub-categories ---
+      // Used to filter the RANGED_WEAPONS list into sub-tabs (selection/points logic is unchanged).
+      var RANGED_CATEGORIES = [
+        { key: "pistols", label: "Pistols/Grenades", ids: [
+          "arcPistol",
+          "autoLaspistol",
+          "boltPistol",
+          "handFlamer",
+          "meltaPistol",
+          "phosphorBlastPistol",
+          "plasmaPistol",
+          "rokkitPistol",
+          "slugga",
+          "warpflamePistol",
+          "fragGrenade",
+          "krakGrenade",
+          "meltaBomb"
+        ]},
+        { key: "light", label: "Light/Medium Ranged", ids: [
+          "autoLasgun",
+          "boltGun",
+          "gaussBlaster",
+          "hvyShotgun",
+          "infernoBoltGun",
+          "ionRifle",
+          "neutronBlaster",
+          "pulseCarbine",
+          "shotgun",
+          "shurikenRifle",
+          "teslaCarbine"
+        ]},
+        { key: "special", label: "Special", ids: [
+          "flamer",
+          "grenadeLauncher",
+          "meltaGun",
+          "neutronRailRifle",
+          "plasmaGun",
+          "scopedBigShoota",
+          "shredder",
+          "sniperRifle",
+          "synapticDisintegrator",
+          "warpflamer"
+        ]},
+        { key: "heavy", label: "Heavy", ids: [
+          "eavyRokkitLauncha",
+          "bigShoota",
+          "chaincannon",
+          "fragCannon",
+          "heavyBolter",
+          "heavyStubber",
+          "lascannon",
+          "missileLauncher",
+          "multiMelta",
+          "plasmaCannon",
+          "rokkitLauncha",
+          "shurikenCannon",
+          "soulreaperCannon",
+          "wraithCannon"
+        ]}
+      ];
+
+      // Remember the last open ranged sub-tab during this session
+      var currentRangedCategory = "pistols";
+
+      function getRangedWeaponsForCategory (catKey) {
+        var key = catKey || "pistols";
+        var i, j;
+
+        // Find the category definition
+        var def = null;
+        for (i = 0; i < RANGED_CATEGORIES.length; i++) {
+          if (RANGED_CATEGORIES[i].key === key) { def = RANGED_CATEGORIES[i]; break; }
+        }
+        if (!def) def = RANGED_CATEGORIES[0];
+
+        // Build set of allowed ids
+        var allow = {};
+        for (j = 0; j < def.ids.length; j++) allow[def.ids[j]] = true;
+
+        // Filter
+        var out = [];
+        for (i = 0; i < RANGED_WEAPONS.length; i++) {
+          if (allow[RANGED_WEAPONS[i].id]) out.push(RANGED_WEAPONS[i]);
+        }
+        return out;
+      }
+
+
+
+
+      // FIGHTER ABILITIES (example placeholder)
+      var FIGHTER_ABILITIES = [
+  {
+    id: "counterstrike",
+    name: "Counterstrike",
+    points: 4,
+    effect:
+      "Each time an enemy Fighter deals this Fighter damage from an attack dice in Close Combat, this Fighter deals that Fighter 1 MW."
+  },
+  {
+    id: "terrifying",
+    name: "Terrifying",
+    points: 3,
+    effect:
+      'Enemy Fighters within 1" of this Fighter have -2 to hit in Close Combat.'
+  },
+  {
+    id: "expertGunfighter",
+    name: "Expert Gunfighter",
+    points: 4,
+    effect:
+      "This Fighter can make Shooting attacks with Pistols even while within 1\" of enemy Fighters."
+  },
+  {
+    id: "expertDueller",
+    name: "Expert Dueller",
+    points: 4,
+    effect:
+      "This Fighter’s Close Combat weapons gain Reroll (SR)."
+  },
+  {
+    id: "horrifyingDismemberment",
+    name: "Horrifying Dismemberment",
+    points: 2,
+    effect:
+      "When this Fighter slays an enemy in Close Combat, enemy Fighters within 6\" of the slain Fighter get -1 AP for the rest of the turn."
+  },
+  {
+    id: "experiencedBrawler",
+    name: "Experienced Brawler",
+    points: 2,
+    effect:
+      "This Fighter does not suffer -2 to hit from being outnumbered in CC, and enemies do not gain +2 to hit from outnumbering this Fighter."
+  },
+  {
+    id: "nullPariah",
+    name: "Null / Pariah",
+    points: 5,
+    effect:
+      "This Fighter cannot be targeted by Psychic Powers and cannot be a Psyker. Psykers (friend or foe) within 6\" cannot use Psychic Powers."
+  },
+  {
+    id: "zealot",
+    name: "Zealot",
+    points: 3,
+    effect:
+      "When this Fighter fights in Close Combat after Charging this activation, it gains +1 to hit."
+  },
+  {
+    id: "fast",
+    name: "Fast",
+    points: 2,
+    effect:
+      "This Fighter may perform a free Dash action during its activation (no AP cost)."
+  },
+  {
+    id: "hyperAggressive",
+    name: "Hyper Aggressive",
+    points: 4,
+    effect:
+      "This Fighter may perform either 2 Shooting actions (Pistols/Light/Medium only) or 2 Close Combat actions during its activation."
+  },
+  {
+    id: "gestaltMind",
+    name: "Gestalt Mind",
+    points: 2,
+    effect:
+      "This Fighter may share its AP with other Fighters in the Team that also have Gestalt Mind. When activating a Fighter, you may give 1 AP to another unactivated Gestalt Mind Fighter (max 4 AP on a Fighter)."
+  },
+  {
+    id: "reanimation",
+    name: "Reanimation",
+    points: 4,
+    effect:
+      "When a Fighter with Reanimation is slain, place a token within 1\". At the start of each turn, on 5+ it is reanimated within 1\" with D3+2 HP and may act as normal. A Fighter can only be reanimated once; fail = leave the token and try next turn."
+  },
+  {
+    id: "vengeance",
+    name: "Vengeance",
+    points: 2,
+    effect:
+      "When an enemy slays one of your Fighters, that enemy gains a Vengeance token. Fighters with Vengeance may turn one normal hit into a Crit when attacking an enemy with a Vengeance token. Remove the token when the enemy is slain; Vengeance tokens stack."
+  },
+  {
+    id: "powerFromPain",
+    name: "Power from Pain",
+    points: 4,
+    effect:
+      "This Fighter gains a PfP token each time it injures or slays an enemy. During its activation it may spend PfP to: gain 1 AP (this turn), regain D3+1 HP, or gain Reroll (SR) on all weapons (this turn)."
+  },
+  {
+    id: "ruthless",
+    name: "Ruthless",
+    points: 2,
+    effect:
+      "This Fighter may shoot at enemies locked in Combat. Any failed To Hit rolls of 1–2 hit the friendly model as normal damage."
+  },
+  {
+    id: "regenerate",
+    name: "Regenerate",
+    points: 4,
+    effect:
+      "At the beginning of this Fighter’s activation, it regains D3+1 lost HP."
+  },
+  {
+    id: "extremelyResilient",
+    name: "Extremely Resilient",
+    points: "+33% of HP Stat",
+    dynamicType: "percentHp",
+    dynamicFactor: 1/3,
+    effect:
+      "Whenever this Fighter takes damage from an attack, remove 1 point of damage from the Normal/Crit Damage characteristic of the weapon, to a minimum of 1. (Eg. Damage 3/4 becomes Damage 2/3, etc.)"
+  },
+  {
+    id: "unfetteredRage",
+    name: "Unfettered Rage",
+    points: 4,
+    effect:
+      "If this Fighter does not score any Critical Hits in Close Combat, you may change one normal hit to a Critical Hit."
+  },
+  {
+    id: "noxiousPresence",
+    name: "Noxious Presence",
+    points: 4,
+    effect:
+      'Enemy Fighters within 3" reduce their DEF by 1. This stacks with other Noxious Presence auras.'
+  },
+  {
+    id: "scarred",
+    name: "Scarred",
+    points: 3,
+    effect:
+      "Once per turn in Close Combat, this Fighter may lose 1 HP to reroll one attack die. If the reroll hits, add +1 Damage; if it misses, the Fighter loses 1 additional HP."
+  },
+  {
+    id: "bornInDarkness",
+    name: "Born in Darkness",
+    points: 5,
+    effect:
+      'This Fighter cannot be targeted by Shooting attacks from 12" or more away, and cannot make Shooting attacks at targets 12" or more away.'
+  },
+  {
+    id: "alchemist",
+    name: "Alchemist",
+    points: 3,
+    effect:
+      "Damage from Poison/Fire tokens applied by this Fighter’s weapons instead deals D3+1 damage."
+  },
+  {
+    id: "trenchWarrior",
+    name: "Trench Warrior",
+    points: 4,
+    effect:
+      "This Fighter can use the Shoot action even while Hidden."
+  },
+  {
+    id: "safeguard",
+    name: "Safeguard",
+    points: 3,
+    effect:
+      "Whenever this Fighter is within proximity of an Objective, its weapons gain Reroll (SR)."
+  },
+  {
+    id: "gunslinger",
+    name: "Gunslinger",
+    points: 4,
+    effect:
+      "1 AP: If this Fighter has not yet used a Shoot action this activation, it may make two free Shooting actions with Pistol weapons."
+  },
+  {
+    id: "headTaker",
+    name: "Head-taker",
+    points: 3,
+    effect:
+      "Whenever this Fighter kills an enemy in Melee, increase Crit Damage for all its Melee weapons by +2 for the rest of the battle."
+  },
+  {
+    id: "overwatch",
+    name: "Overwatch",
+    points: 4,
+    effect:
+      'When an enemy ends a Move within 6" and visible (but not within 1"), this Fighter may immediately Shoot with -2 to hit. Counts as its Counteract action for the turn.'
+  },
+  {
+    id: "endlessHorde",
+    name: "Endless Horde",
+    points: "= HP Stat",
+    dynamicType: "hpStat",
+    dynamicFactor: 1,
+    effect:
+      "Cost equals this Fighter’s current HP stat. When this Fighter dies, at the start of the next turn it returns at your Rearguard Deployment Zone edge. Only for Fighters with 2 AP or less and 10 HP or less."
+  },
+  {
+    id: "volatileExpiration",
+    name: "Volatile Expiration",
+    points: 3,
+    effect:
+      "When this Fighter is slain, you may roll a D12 (subtract 2 if within 1\" of another enemy). On 6+, each Fighter within 2\" suffers D3 MW."
+  },
+  {
+    id: "expendable",
+    name: "Expendable",
+    points: 3,
+    effect:
+      "When this Fighter dies, roll a D12; on 6+ you gain 1 FP."
+  },
+  {
+    id: "agent",
+    name: "Agent",
+    points: 2,
+    effect:
+      "The AP cost of all Interact actions for this Fighter is reduced by 1 (to a minimum of 0)."
+  },  
+  {
+    id: "sacrificialFollower",
+    name: "Sacrificial Follower",
+    points: 4,
+    effect:
+      'When within 6" of a Friendly Psyker, add 1 Warp Token to your Pool each turn. When within 6", may also suffer any MW suffered by use of Warp Tokens, instead of Psyker.'
+  },
+  {
+    id: "patientandReactive",
+    name: "Patient and Reactive",
+    points: 10,
+    effect:
+      'This Fighter may make two activations per turn, and split his AP between 2 those activations. For all intents and purposes, this counts as two separate activations. '
+  },
+  {
+    id: "finalDefiance",
+    name: "Final Defiance",
+    points: 4,
+    effect:
+      'When this Fighter is slain, it may immediately perform one last action before removing it from play. '
+  },
+  {
+    id: "superhumanWarrior",
+    name: "Superhuman Warrior",
+    points: 10,
+    effect:
+      "This Fighter may perform 2 Shooting actions or 2 Close Combat actions in its activation. If using a Special/Heavy weapon, the second Shoot costs 2 AP. When Counteracting, it may perform 2 different actions."
+  }
+];
+
+
+      // LEADER ABILITIES – 0 pts, max 2 selected
+      var LEADER_ABILITIES = [
+        {
+          id: "inspiringPresence",
+          name: "Inspiring Presence",
+          points: 0,
+          effect: '1 AP: Friendly Fighters within 3" of your Leader gain 1 AP until end of turn.'
+        },
+        {
+          id: "masterTactician",
+          name: "Master Tactician",
+          points: 0,
+          effect: "1 AP: You immediately gain 1 FP."
+        },
+        {
+          id: "guidance",
+          name: "Guidance",
+          points: 0,
+          effect: '1 AP: Choose a friendly Fighter within Line of Sight. That Fighter gains 1 AP until end of turn.'
+        },
+        {
+          id: "grizzledVeteran",
+          name: "Grizzled Veteran",
+          points: 0,
+          effect: "As long as this Fighter is on the battlefield, you can use the Tactical Reroll once per turn for 0 FP."
+        },
+        {
+          id: "heroicLeader",
+          name: "Heroic Leader",
+          points: 0,
+          effect: "May use a Feat for free once per turn, but only during this Fighter’s activation."
+        },
+        {
+          id: "giveOrders",
+          name: "Give Orders",
+          points: 0,
+          effect:
+            '1 AP: All friendly Fighters within 6" gain ONE of the following (chosen once for all) until end of turn: +1 to Hit, +1" Charge range, or Hide action for 0 AP.'
+        },
+        {
+          id: "noEscape",
+          name: "No Escape",
+          points: 0,
+          effect:
+            'Enemy Fighters within this Fighter’s melee range reduce their Move by 2" when performing a Fall Back action.'
+        },
+        {
+          id: "getHimMark",
+          name: "Get Him!",
+          points: 0,
+          effect:
+            '1 AP: Select an enemy Fighter within Line of Sight. All shooting attacks against that Fighter gain Reroll (SR) until end of turn.'
+        },
+        {
+          id: "perfectDuellist",
+          name: "Perfect Duellist",
+          points: 0,
+          effect: "This Fighter can defend against Critical Hits in Close Combat using normal Defence rolls."
+        },
+        {
+          id: "implacable",
+          name: "Implacable",
+          points: 0,
+          effect: "This Fighter is immune to Glancing Hits."
+        },
+        {
+          id: "impermeable",
+          name: "Impermeable",
+          points: 0,
+          effect: "This Fighter is immune to effects from the Poison/Fire keyword."
+        },
+        {
+          id: "infernal",
+          name: "Infernal",
+          points: 0,
+          effect:
+            "This Fighter’s weapons gain Poison/Fire. When attacking enemy Fighters that have a Poison/Fire token, the weapon’s Damage values are improved by +1/+1."
+        },
+        {
+          id: "uncontrolledEruption",
+          name: "Uncontrolled Eruption",
+          points: 0,
+          effect:
+            '2 AP: Inflict D3+2 Mortal Wounds to each other Fighter that is within 2" and visible to this Fighter.'
+        },
+        {
+          id: "whispersWarp",
+          name: "Whispers of the Warp",
+          points: 0,
+          effect:
+            'Whenever an opponent activates a Fighter within 6", roll a D6. If the result is higher than that Fighter’s AP, it loses 1 AP for this activation.'
+        },
+        {
+          id: "spiritualPariah",
+          name: "Spiritual Pariah",
+          points: 0,
+          effect:
+            'Enemy Fighters within 6" and visible to this Fighter cannot reroll attack or defence rolls.'
+        },
+        {
+          id: "mercilessOnslaught",
+          name: "Merciless Onslaught",
+          points: 0,
+          effect:
+            "1 AP: Activate before rolling to Hit with a Close Combat attack. For that attack, Glancing Hits deal 2 Damage."
+        },
+        {
+          id: "mindOnMission",
+          name: "Mind on the Mission",
+          points: 0,
+          effect:
+            'All friendly Fighters within 6" may use the Interact action for 0 AP.'
+        },
+        {
+          id: "feedOnPain",
+          name: "Feed on Pain",
+          points: 0,
+          effect:
+            "If this Fighter slays an enemy Fighter with an attack, it regains 3 lost HP."
+        }
+      ];
+
+      // SPELLS – no points, MV + layout with breaks
+      var SPELLS = [
+        {
+          id: "tempest",
+          name: "TEMPEST",
+          cv: 7,
+          points: 0,
+          effect:
+            'Range: 16"<br><br>' +
+            'Target suffers D3 MW; roll a D12: on 11–12, push target D6" directly away and Knock Prone (loses 1 AP next activation).<br><br>' +
+            "Power Surge (MV 9): Deals +2 MW before the push."
+        },
+        {
+          id: "graviticMaelstrom",
+          name: "GRAVITIC MAELSTROM",
+          cv: 9,
+          points: 0,
+          effect:
+            'Range: 12", 3" AoE<br><br>' +
+            'All models inside must roll 7+ or be dragged D3" toward the center and suffer D3 MW.<br><br>' +
+            "Power Surge (MV 11): Fighters dragged suffer D3+2 MW."
+        },
+               {
+          id: "spectralChains",
+          name: "SPECTRAL CHAINS",
+          cv: 9,
+          points: 0,
+          effect:
+            'Range: 10"<br><br>' +
+            "Target Fighter may immediately be moved up to 6” by the Conjuring Warlock’s Player.<br><br>" +
+            "Power Surge (CV 11): Target also suffers D3 MW if it repositions in it's own activation this turn."
+        },
+        {
+          id: "stolenSight",
+          name: "STOLEN SIGHT",
+          cv: 7,
+          points: 0,
+          effect:
+            'Range: 12"<br><br>' +
+            "In its next activation, Target suffers –3 to Shoot; if Engaged, suffers –2 to Fight instead.<br><br>" +
+            "Power Surge (MV 9): –4 to Shoot, –3 to Fight."
+        },
+        {
+          id: "twistOfWill",
+          name: "TWIST OF WILL",
+          cv: 7,
+          points: 0,
+          effect:
+            'Range: 12"<br><br>' +
+            "Target must reroll all successful attack rolls on its next activation.<br><br>" +
+            "Power Surge (MV 9): Target also cannot Charge until next turn."
+        },
+        {
+          id: "voidfireBlast",
+          name: "VOIDFIRE BLAST",
+          cv: 9,
+          points: 0,
+          effect:
+            'Range: 12"<br><br>' +
+            "Pick any point. All models within 2\" suffer 2D3 MW. Psyker suffers 1 MW.<br><br>" +
+            "Power Surge (MV 11): Radius becomes 4\"."
+        },
+        {
+          id: "blazingWind",
+          name: "BLAZING WIND",
+          cv: 7,
+          points: 0,
+          effect:
+            'Range: 12"<br><br>' +
+            'Target suffers D3 Damage and is moved 2" directly away.<br><br>' +
+            "Power Surge (MV 9): D3+1 Damage and 4\" push."
+        },
+        {
+          id: "fireblast",
+          name: "FIREBLAST",
+          cv: 7,
+          points: 0,
+          effect:
+            'Range: 12"<br><br>' +
+            "Target suffers D3+1 Damage.<br><br>" +
+            "Power Surge (MV 9): Target also gains a Fire token."
+        },
+        {
+          id: "lightningBolt",
+          name: "LIGHTNING BOLT",
+          cv: 8,
+          points: 0,
+          effect:
+            "Range: —<br><br>" +
+            "Target suffers D3+2 MW.<br><br>" +
+            "Power Surge (MV 10): D3+3 MW."
+        },
+        {
+          id: "mendFlesh",
+          name: "MEND FLESH",
+          cv: 6,
+          points: 0,
+          effect:
+            'Range: 12"<br><br>' +
+            "Restore D3+1 HP to a friendly Fighter.<br><br>" +
+            "Power Surge (MV 10): Restore D3+2 HP and remove 1 Poison/Burning token."
+        },
+        {
+          id: "circleOfWarding",
+          name: "WARP FIELD",
+          cv: 6,
+          points: 0,
+          effect:
+            'Range: 3" aura<br><br>' +
+            "Friendly Fighters inside gain +2 DEF (max 5+) and cannot be Charged this turn.<br><br>" +
+            "Power Surge (MV 8): Circle lasts until next activation."
+        },
+        {
+          id: "arcaneAegis",
+          name: "IMMATERIAL SHIELD",
+          cv: 7,
+          points: 0,
+          effect:
+            'Range: 6"<br><br>' +
+            "Target gains +2 DEF (max 5+) until next turn.<br><br>" +
+            "Power Surge (MV 9): Target ignores first 2 Damage from next attack."
+        },
+        {
+          id: "spectralDecoy",
+          name: "SPECTRAL DECOY",
+          cv: 6,
+          points: 0,
+          effect:
+            "Range: Self<br><br>" +
+            "First attack against the Psyker before next activation automatically misses.<br><br>" +
+            "Power Surge (MV 8): On 5+, reflect that missed ranged attack for D3 Damage."
+        },
+        {
+          id: "soulflameSurge",
+          name: "SOULFLAME SURGE",
+          cv: 8,
+          points: 0,
+          effect:
+            'Range: 12"<br><br>' +
+            'A friendly Fighter gains +1 ATK and “Crits on 9+” on CC weapons until end of Turn.<br><br>' +
+            "Power Surge (MV 10): Affect two Fighters instead of one."
+        },
+        {
+          id: "veilOfShadows",
+          name: "VEIL OF SHADOWS",
+          cv: 7,
+          points: 0,
+          effect:
+            'Range: 6"<br><br>' +
+            "Target becomes Hidden, removed from engagement, placed up to 3\" away from enemies.<br><br>" +
+            "Power Surge (MV 9): Target may act normally; remove Hidden immediately."
+        },
+   
+        {
+          id: "phantasmalHorror",
+          name: "PHANTASMAL HORROR",
+          cv: 8,
+          points: 0,
+          effect:
+            'Range: 12"<br><br>' +
+            "Target must roll ≤ AP×2 on D12 or cannot Charge/move closer this turn.<br><br>" +
+            "Power Surge (MV 10): Must roll ≤ AP instead."
+        },
+        {
+          id: "siphonLife",
+          name: "SIPHON LIFE",
+          cv: 7,
+          points: 0,
+          effect:
+            'Range: 8"<br><br>' +
+            "Target suffers D3 MW; Psyker heals the same amount.<br><br>" +
+            "Power Surge (MV 9): D3+2 MW/heal."
+        },
+        {
+          id: "veilOfSouls",
+          name: "VEIL OF SOULS",
+          cv: 8,
+          points: 0,
+          effect:
+            "Range: Self<br><br>" +
+            "Until next activation, Psyker gains +1 DEF; enemies within 3\" suffer –1 to Hit.<br><br>" +
+            "Power Surge (MV 10): Psyker instead gains +2 DEF."
+        },
+        {
+          id: "etherealBody",
+          name: "ETHEREAL BODY",
+          cv: 7,
+          points: 0,
+          effect:
+            "Range: Self<br><br>" +
+            "Move through models and terrain (cannot end inside them or within 1\" of enemies unless Charging).<br><br>" +
+            "Power Surge (MV 9): Also gain +2 DEF until next turn."
+        }
+      ];
+
+      
+      // ===== Psychic Power MV helpers (display only) =====
+      function normName (s){
+        return String(s||"").trim().toLowerCase();
+      }
+      function getSpellMV (spellObj){
+        if (!spellObj) return null;
+        // Prefer explicit mv/cv on the selected object
+        if (spellObj.mv != null && spellObj.mv !== "") return spellObj.mv;
+        if (spellObj.cv != null && spellObj.cv !== "") return spellObj.cv;
+        // Try lookup by id
+        var sid = spellObj.id || "";
+        for (var i = 0; i < SPELLS.length; i++){
+          if (SPELLS[i].id === sid) return SPELLS[i].cv;
+        }
+        // Try lookup by name (case-insensitive)
+        var sn = normName(spellObj.name);
+        if (sn){
+          for (var j = 0; j < SPELLS.length; j++){
+            if (normName(SPELLS[j].name) === sn) return SPELLS[j].cv;
+          }
+        }
+        return null;
+      }
+      function spellMetaLabel (spellObj){
+        var mv = getSpellMV(spellObj);
+        if (mv == null || mv === "") return "MV —";
+        return "MV " + mv;
+      }
+
+// EQUIPMENT (unchanged from previous working version)
+      var EQUIPMENT = [
+        {
+          id: "medipackKIT",
+          name: "Medipack Kit (+)",
+          points: 4,
+          effect: '1 AP: Friendly Fighter within 1" regains 2D3 lost HP.'
+        },
+        {
+          id: "scannerAuspex",
+          name: "Scanner/Auspex",
+          points: 4,
+          effect: "1 AP: Mark an enemy in LoS. Shooting vs that Fighter gains Reroll (SR) until next turn."
+        },
+        {
+          id: "blinkPack",
+          name: "Blink Pack/Personal Teleporter (+)",
+          points: "+50% Stat cost",
+          dynamicType: "percentStats",
+          dynamicFactor: 0.5,
+          effect:
+            '1 AP: Reposition up to 12", ignoring terrain/height. Then roll D12; on 1–2 suffer D3 MW and may take no further actions this activation.'
+        },
+        {
+          id: "flightDevice",
+          name: "Jump Pack/Rokkit Pack/Wings",
+          points: "+33% Stat cost",
+          dynamicType: "percentStats",
+          dynamicFactor: 1/3,
+          effect:
+            'Gains Jump Move: +3" Move and may ignore terrain and vertical height when repositioning.'
+        },
+        {
+          id: "banner",
+          name: "Banner (+)",
+          points: 2,
+          effect: 'Friendly Fighters within 3" gain +1 to Hit with CC and Shooting attacks.'
+        },
+        {
+          id: "demolitions",
+          name: "Demolitions (+)",
+          points: 6,
+          effect:
+            "Once per game plant an Explosive Device while moving. 1 AP to detonate: ATK 4, Hit 2+, DMG 5/6, Piercing (-2), Blast (2\")."
+        },
+        {
+          id: "climbingEquipment",
+          name: "Climbing Equipment",
+          points: 2,
+          effect: 'Ignore the first 2" of vertical repositioning.'
+        },
+        {
+          id: "holyRelic",
+          name: "Holy Relic (+)",
+          points: 3,
+          effect: "User may ignore 1 normal damage attack per game."
+        },
+        {
+          id: "camoCloak",
+          name: "Camo Cloak",
+          points: 4,
+          effect:
+            "User gains -1 to be hit when in Cover or Hidden (stacks with Cover/Hidden)."
+        },
+        {
+          id: "forceField",
+          name: "Force Field (+)",
+          points: 5,
+          effect: "User gains a 9+ Aegis save."
+        },
+        {
+          id: "combatDrugs",
+          name: "Combat Drugs",
+          points: 4,
+          effect:
+            "At start of activation choose: (1) Heal 2D3 HP, (2) Reroll (SR) on CC attacks this turn, or (3) +2\" Move this turn."
+        },
+        {
+          id: "mastercraftedForcefield",
+          name: "Mastercrafted Force Field (+)",
+          points: 10,
+          effect: "User gains a 7+ Aegis save."
+        },
+        {
+          id: "suspensorSystem",
+          name: "Suspensor System",
+          points: 3,
+          effect: "User’s Heavy Weapons gain the “Heavy (Move)” Special Rule."
+        },
+        {
+          id: "reconDrone",
+          name: "Recon Drone/Servo Skull",
+          points: 4,
+          effect:
+            "1 AP: Mark an enemy in LoS. Shooting vs that Fighter ignores negative To Hit modifiers from Light Cover and Hidden until end of turn."
+        },
+        {
+          id: "commsEquipment",
+          name: "Comms Equipment (+)",
+          points: 4,
+          effect: '1 AP: Grant a friendly Fighter within 9" +1 AP this round.'
+        },
+        {
+          id: "shimmerShield",
+          name: "Shimmershield (+)",
+          points: 4,
+          effect:
+            "User and friendly Fighters within 2\" reduce Piercing of enemy Shooting attacks by 2."
+        },
+        {
+          id: "breachingRam",
+          name: "Breaching Ram (+)",
+          points: 5,
+          effect:
+            'Treat any wall <1" thick as Accessible Terrain (may move through at cost of 1" Move).'
+        },
+        {
+          id: "digitalWeapons",
+          name: "Digital Weapons (+)",
+          points: 2,
+          effect:
+            "At the start of this Fighter’s CC activation, deal 2 MW to the engaged enemy Fighter."
+        },
+        {
+          id: "stormShield",
+          name: "Storm Shield (+)",
+          points: 5,
+          effect:
+            "User gains a 7+ Aegis save and 4 Defense dice in CC when using this shield. May only have Pistol and/or CC weapons as ranged options."
+        },
+        {
+          id: "commsJammer",
+          name: "Comms Jammer (+)",
+          points: 5,
+          effect:
+            "1 AP: Select a visible enemy Fighter; that Fighter must be activated last by your opponent this turn."
+        },
+        {
+          id: "grapplingHookGun",
+          name: "Grappling Hook Gun (+)",
+          points: 5,
+          effect:
+            '1 AP Move action: Place this Fighter within 1" of a chosen visible point on terrain, not within 1" of enemies. This Fighter may not have any Ranged Weapons.'
+        },
+        {
+          id: "macabreMemento",
+          name: "Macabre Memento (+)",
+          points: 6,
+          effect:
+            'While visible and within 3" of enemy Fighters, those Fighters reduce the Attack characteristic of their Melee and Ranged weapons by 1.'
+        },
+        {
+          id: "commandUplink",
+          name: "Command Uplink (+)",
+          points: 5,
+          effect: "Gain 1 extra FP at the start of the battle."
+        },
+        {
+          id: "blessedAmmunition",
+          name: "Blessed / Tainted Ammunition (+)",
+          points: 5,
+          effect:
+            "Add +1 to both Damage values of this Fighter’s Ranged weapons. Cannot be used on Heavy Weapons."
+        },
+        {
+          id: "targetingDesignator",
+          name: "Targeting Designator (+)",
+          points: 14,
+          effect:
+            'Gain an additional Ranged weapon: Cannon Strike – ATK 4, Hit 6+, DMG 3/5, Blast (2"), Heavy (Dash), may be used while Hidden.'
+        },
+        {
+          id: "laserSight",
+          name: "Laser Sight",
+          points: 3,
+          effect:
+            'This Fighter’s Ranged weapons with “Rng X” gain +1" range (except Flamers and Grenades).'
+        },
+        {
+          id: "gravShute",
+          name: "Grav Shute/Sliders",
+          points: 3,
+          effect: "This Fighter ignores vertical height when dropping down."
+        },
+        {
+          id: "gorgetProtection",
+          name: "Gorget Protection",
+          points: 4,
+          effect:
+            "Enemy Fighters can only score Critical Hits on 11+ in CC against this Fighter."
+        },
+        {
+          id: "operationalIntelligence",
+          name: "Operational Intelligence",
+          points: 4,
+          effect:
+            "Once per battle you may reroll the initiative roll. With Random Activation, return the drawn token and pull another."
+        },
+          {
+          id: "markerLights",
+          name: "Markerlights",
+          points: 5,
+          effect:
+            "1 AP action: Place a Markerlight token on an enemy Fighter in this Fighters line of sight. When a Fighter with the Markerlights ability is shooting at a Fighter with Markerlights tokens, its weapons gain No Cover (if 1 token) and No Cover + Reroll(1) (if 2 tokens)"
+        },
+          {
+          id: "hyperstaticField",
+          name: "Hyperstatic Field",
+          points: 5,
+          effect:
+            'Whenever an enemy Fighter moves within 1", roll 3D12; for each 9+ that enemy suffers 1 MW.'
+        },  
+        {
+          id: "grenaDier",
+          name: "Grenadier (+)",
+          points: 6,
+          effect:
+            'This Fighter is equipped with unlimited Frag and Krak grenades and has +2 to hit when using them..'
+        },
+        {
+          id: "psychicFamiliar",
+          name: "Psychic Familiar",
+          points: 4,
+          effect:
+            'Add one Warp Token to your Pool each turn.'
+        }
+          
+      ];
+
+      // FIGHTER STATE
+      var fighter = {
+        name: "",
+        portraitDataUrl: "",
+        portraitKey: "",
+        stats: {},
+        ccWeapons: [],
+        rangedWeapons: [],
+        abilities: [],
+        leaderAbilities: [],
+        spells: [],
+        equipment: [],
+        isWarlock: false,
+        isMasterWarlock: false,
+        points: {
+          base: 16,
+          stats: 0,
+          warlock: 0,
+          ccWeapons: 0,
+          rangedWeapons: 0,
+          abilities: 0,
+          leaderAbilities: 0,
+          spells: 0,
+          equipment: 0
+        }
+      };
+
+// === Cosmetic display-name overrides (builder + card) ===
+function getDisplayName(item){
+  if(!item) return "";
+  var n = (item.displayNameOverride != null ? String(item.displayNameOverride) : "").trim();
+  if(n) return n;
+  return (item.name != null ? String(item.name) : "");
+}
+
+window.getDisplayName = getDisplayName;
+function setDisplayNameOverride(item, newName){
+  if(!item) return;
+  var n = (newName != null ? String(newName) : "").trim();
+  if(n){
+    item.displayNameOverride = n;
+  } else {
+    delete item.displayNameOverride;
+  }
+}
+function promptRename(item, fallbackLabel){
+  var current = (item && item.displayNameOverride) ? String(item.displayNameOverride) : "";
+  var base = (item && item.name) ? String(item.name) : (fallbackLabel||"");
+  var val = window.prompt("Rename for card (cosmetic only). Leave blank to reset.", current || base);
+  if(val === null) return false; // cancelled
+  setDisplayNameOverride(item, val);
+  return true;
+}
+
+      // Expose state for external card renderer
+      window.fighter = fighter;
+      window.computeTotal = computeTotal;
+
+
+      // TOTALS
+      function computeTotal () {
+        return fighter.points.base +
+               fighter.points.stats +
+               fighter.points.warlock +
+               fighter.points.ccWeapons +
+               fighter.points.rangedWeapons +
+               fighter.points.abilities +
+               fighter.points.leaderAbilities +
+               fighter.points.spells +
+               fighter.points.equipment;
+      }
+
+      function refreshTotal () {
+        var el = document.getElementById("totalPoints");
+        if (el) el.textContent = computeTotal();
+      }
+
+      // SUMMARY
+      function updateSummary () {
+        var container = document.getElementById("section-summary");
+        if (!container) return;
+
+        var html = '<div class="card"><h2>Summary</h2>';
+
+        html += "<p>";
+        html += "Base: " + fighter.points.base + " pts";
+        html += " · Stats: " + fighter.points.stats + " pts";
+        html += " · Psyker: " + fighter.points.warlock + " pts";
+        html += " · CC Weapons: " + fighter.points.ccWeapons + " pts";
+        html += " · Ranged Weapons: " + fighter.points.rangedWeapons + " pts";
+        html += "<br>";
+        html += "Abilities: " + fighter.points.abilities + " pts";
+        html += " · Leader Abilities: " + fighter.points.leaderAbilities + " pts";
+        html += " · Psychic Powers: " + fighter.points.spells + " pts";
+        html += " · Equipment: " + fighter.points.equipment + " pts";
+        html += "<br><span style='color:#f97316;'>Total: " + computeTotal() + " pts</span>";
+        html += "</p>";
+
+
+        html += "<div class='summary-pill' style='margin-top:0.25rem;'>";
+        html += "<div class='summary-category-title'>Stats</div>";
+        html += "<div style='display:flex; flex-wrap:wrap; gap:0.5rem; margin-top:0.35rem;'>";
+        for (var si = 0; si < STAT_CONFIG.length; si++) {
+          var scfg = STAT_CONFIG[si];
+          var v = fighter.stats[scfg.key];
+          html += "<div style='background:#141619;border:1px solid #2a2d31;border-radius:12px;padding:0.35rem 0.55rem;min-width:78px;text-align:center;'>";
+          html += "<div style='font-size:0.72rem; letter-spacing:0.04em; text-transform:uppercase; color:#9aa1a8;'>" + scfg.label + "</div>";
+          html += "<div style='font-weight:700; font-size:1.05rem; margin-top:0.05rem;'>" + v + (scfg.unit || "") + "</div>";
+          html += "</div>";
+        }
+        html += "</div>";
+
+        // Psyker status
+        var psyLabel = fighter.isMasterWarlock ? "Master Psyker" : (fighter.isWarlock ? "Psyker" : "None");
+        html += "<div style='margin-top:0.6rem; display:flex; gap:0.5rem; flex-wrap:wrap; align-items:center;'>";
+        html += "<div style='background:#141619;border:1px solid #2a2d31;border-radius:12px;padding:0.35rem 0.55rem;min-width:140px;'>";
+        html += "<div style='font-size:0.72rem; letter-spacing:0.04em; text-transform:uppercase; color:#9aa1a8;'>Psyker</div>";
+        html += "<div style='font-weight:700; font-size:1.02rem; margin-top:0.05rem;'>" + psyLabel + "</div>";
+        html += "</div>";
+        html += "</div>";
+
+        html += "<div style='display:flex; flex-wrap:wrap; gap:0.5rem; margin-top:0.6rem;'>";        html += "<button class='tab-pill-colour' onclick='copyFighterText()'>Copy Text</button>";        html += "<button class='tab-pill' onclick='openPortraitFromSummary()'>Portrait</button>";
+        
+        html += "<button class=\'tab-pill-colour\' onclick=\'printFighterCard\(\)\'>Generate Card</button>";
+html += "</div>";
+        html += "<p style='margin:0.45rem 0 0; font-size:0.82rem; color:#9ca3af;'>Tip: Use <b>Copy Text</b> to paste into a document or <b>Generate Card</b> to generate a simple Fighter Card. Use Portrait to upload, crop and insert an image of your Fighter into the card. </p>";
+        html += "</div>";
+
+        function renderList(title, arr) {
+  html += '<div class="summary-pill">';
+  html += '<div class="summary-category-title">' + title + '</div>';
+
+  if (!arr || !arr.length) {
+    html += "<p style='font-size:0.9rem; color:#9ca3af; margin:0;'>None</p>";
+  } else {
+    html += "<ul style='padding-left:1.1rem; margin:0; font-size:0.9rem;'>";
+    for (var i = 0; i < arr.length; i++) {
+      var x = arr[i];
+      var main = x.profile || x.effect || "";
+      var meta = (title === "Psychic Powers") ? spellMetaLabel(x) : ((x.points || 0) + " pts");
+      html += "<li style='margin-bottom:0.15rem;'>" +
+              x.name + " (" + meta + ")" +
+              (main ? " — " + main : "") +
+              "</li>";
+    }
+    html += "</ul>";
+  }
+
+  html += "</div>";
+}
+
+
+        renderList("Close Combat Weapons", fighter.ccWeapons);
+        renderList("Ranged Weapons",        fighter.rangedWeapons);
+        renderList("Fighter Abilities",     fighter.abilities);
+        renderList("Leader Abilities",      fighter.leaderAbilities);
+        renderList("Psychic Powers",                fighter.spells);
+        renderList("Equipment",             fighter.equipment);
+
+        html += "</div>";
+        container.innerHTML = html;
+
+        // --- Fighter name input ---
+        var nameInput = container.querySelector("#fighter-name-input");
+        if (nameInput){
+          nameInput.value = fighter.name || "";
+          nameInput.addEventListener("input", function(){
+            fighter.name = nameInput.value || "";
+            refreshTotal();
+            updateSummary();
+          });
+        }
+
+
+        // Name input handler
+        var nameInput = document.getElementById("fighter-name-input");
+        if (nameInput) {
+          nameInput.value = fighter.name || "";
+          var __nameDebounce = null;
+          nameInput.addEventListener("input", function () {
+            fighter.name = this.value || "";
+            if (__nameDebounce) clearTimeout(__nameDebounce);
+            __nameDebounce = setTimeout(function () {
+              // Name does not affect points/stats; avoid full rerender while typing.
+              // (Keeps typing snappy even with long lists.)
+            }, 150);
+            });
+          // Also update on blur (useful if paste happens)
+          nameInput.addEventListener("blur", function () {
+            fighter.name = this.value || "";
+          });
+          }
+}
+
+            // ===== Copy Build Text =====
+      function buildExportText () {
+        var lines = [];
+        var nm = (fighter.name && fighter.name.trim()) ? fighter.name.trim() : "Fighter";
+        lines.push(nm + " — " + computeTotal() + " pts");
+        lines.push("");
+
+        // Stats line
+        var statBits = [];
+        for (var i = 0; i < STAT_CONFIG.length; i++) {
+          var sc = STAT_CONFIG[i];
+          statBits.push(sc.label + " " + fighter.stats[sc.key] + (sc.unit || ""));
+        }
+        lines.push(statBits.join(" · "));
+
+        // Psyker state
+        var psyLabel = fighter.isMasterWarlock ? "Master Psyker" : (fighter.isWarlock ? "Psyker" : "None");
+        lines.push("Psyker: " + psyLabel);
+        lines.push("");
+
+        function listBlock (title, arr) {
+          lines.push(title + ":");
+          if (!arr || !arr.length) {
+            lines.push("  - None");
+            lines.push("");
+            return;
+          }
+          for (var j = 0; j < arr.length; j++) {
+            var x = arr[j];
+            var main = x.profile || x.effect || "";
+            var pts = x.points || 0;
+            lines.push("  - " + x.name + " (" + pts + " pts)" + (main ? " — " + main : ""));
+          }
+          lines.push("");
+        }
+
+        listBlock("Close Combat Weapons", fighter.ccWeapons);
+        listBlock("Ranged Weapons", fighter.rangedWeapons);
+        listBlock("Fighter Abilities", fighter.abilities);
+        listBlock("Leader Abilities", fighter.leaderAbilities);
+        listBlock("Psychic Powers", fighter.spells);
+        listBlock("Equipment", fighter.equipment);
+
+        lines.push("Breakdown: Base " + fighter.points.base + " · Stats " + fighter.points.stats + " · Psyker " + fighter.points.warlock +
+                   " · CC " + fighter.points.ccWeapons + " · Ranged " + fighter.points.rangedWeapons +
+                   " · Abilities " + fighter.points.abilities + " · Leader " + fighter.points.leaderAbilities +
+                   " · Psychic " + fighter.points.spells + " · Equipment " + fighter.points.equipment);
+
+        return lines.join("\n");
+      }
+
+      // Exposed to onclick handlers
+
+      // Open the existing Portrait cropper (button is in header but hidden)
+      window.openPortraitFromSummary = function () {
+        var b = document.getElementById("btn-portrait");
+        if (b) b.click();
+      };
+
+      // ===== Print-friendly Card =====
+      
+      // ===== Generate Card (in-page) =====
+      window.generateFighterCard = function () {
+        try {
+          var nm = (fighter.name && fighter.name.trim()) ? fighter.name.trim() : "Fighter";
+          var total = computeTotal();
+          var psyLabel = fighter.isMasterWarlock ? "Master Psyker" : (fighter.isWarlock ? "Psyker" : "None");
+
+          // Resolve asset URLs (works locally + GitHub Pages)
+          var baseHref = (window.location && window.location.href) ? window.location.href : "";
+          baseHref = baseHref.replace(/[#?].*$/, "");
+          baseHref = baseHref.replace(/[^\/]*$/, "");
+var texUrl  = (new URL("./img/mortalistexture.jpg", baseHref)).href;
+
+          // HP pips (rows of 15)
+          var hpVal = Number(fighter.stats && fighter.stats.hp ? fighter.stats.hp : 0) || 0;
+          var maxPips = 30;
+          var pipCount = Math.max(0, Math.min(hpVal, maxPips));
+          var pipsPerRow = 15;
+          var rows = [];
+          for (var pi = 0; pi < pipCount; pi += pipsPerRow) {
+            rows.push("●".repeat(Math.min(pipsPerRow, pipCount - pi)));
+          }
+          var hpPips = rows.join("<br>");
+          if (hpVal > maxPips) hpPips += "<br>+" + (hpVal - maxPips);
+
+          function esc(s){ return String(s||"").replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;"); }
+
+          function renderRulesHtml (s) {
+            var t = String(s || "")
+              .replace(/<br\b[^>]*>/gi, "\n")
+              .replace(/<br</gi, "\n")
+              .replace(/\r\n/g, "\n");
+            var parts = t.split(/\n+/);
+            var out = "";
+            for (var i = 0; i < parts.length; i++) {
+              var line = parts[i].trim();
+              if (!line) continue;
+              out += (out ? "<br>" : "") + esc(line);
+            }
+            return out;
+          }
+          // Only include blocks that have content, so the grid compacts nicely
+          var blocks = [];
+          var b;
+          b = listHtml("Close Combat Weapons", fighter.ccWeapons); if (b) blocks.push(b);
+          b = listHtml("Ranged Weapons", fighter.rangedWeapons); if (b) blocks.push(b);
+          b = listHtml("Abilities", fighter.abilities); if (b) blocks.push(b);
+          b = listHtml("Leader Abilities", fighter.leaderAbilities); if (b) blocks.push(b);
+          b = listHtml("Psychic Powers", fighter.spells); if (b) blocks.push(b);
+          b = listHtml("Equipment", fighter.equipment); if (b) blocks.push(b);
+          var gridHtml = "<div class='grid'>" + blocks.join("") + "</div>";
+
+
+
+          function listHtml(title, arr) {
+            if (!arr || !arr.length) return "";
+            var out = "<div class='block'><div class='block-title'>" + esc(title) + "</div>";
+            out += "<ul>";
+            for (var i = 0; i < arr.length; i++) {
+              var x = arr[i];
+              var meta = (title === "Psychic Powers") ? spellMetaLabel(x) : ((x.points || 0) + " pts");
+              var main = (x.profile || x.effect || "");
+              var rulesHtml = renderRulesHtml(main);
+              out += "<li><b>" + esc(getDisplayName(x)) + "</b> <span class='muted'>(" + esc(meta) + ")</span>";
+              if (rulesHtml) out += "<br><span class='muted'>" + rulesHtml + "</span>";
+              out += "</li>";
+            }
+            out += "</ul></div>";
+            return out;
+          }
+
+          var stats = [];
+          for (var i = 0; i < STAT_CONFIG.length; i++) {
+            var sc = STAT_CONFIG[i];
+            stats.push("<span class='stat'><span class='k'>" + esc(sc.label) + "</span> <span class='v'>" + esc(fighter.stats[sc.key] + (sc.unit||"")) + "</span></span>");
+          }
+
+          // Create / reuse overlay
+          var existing = document.getElementById("generated-card-overlay");
+          if (!existing) {
+            existing = document.createElement("div");
+            existing.id = "generated-card-overlay";
+            existing.style.position = "fixed";
+            existing.style.inset = "0";
+            existing.style.zIndex = "99999";
+            existing.style.overflow = "auto";
+            existing.style.background = "#ffffff";
+            existing.style.padding = "24px";
+            document.body.appendChild(existing);
+          }
+
+          // Hide app UI while in card view (but keep it in DOM)
+          document.body.classList.add("card-view");
+
+          existing.innerHTML =
+            "<div style='max-width:900px;margin:0 auto;'>" +
+              "<div style='display:flex;gap:10px;justify-content:flex-end;margin-bottom:10px;'>" +
+                "<button onclick='window.exitCardView()' style='padding:8px 10px;border-radius:10px;border:1px solid #222;background:#fff;font-weight:800;cursor:pointer;'>Back</button>" +
+                "<button onclick='window.print()' style='padding:8px 10px;border-radius:10px;border:1px solid #222;background:#fff;font-weight:800;cursor:pointer;'>Print</button>" +
+              "</div>" +
+              "<div class='print-card card'>" +
+                "<div style='width:100%;display:block;text-align:center;margin:0 0 12px 0;'>" +"</div>" +
+                "<div class='top'>" +
+                  "<div class='left-pill'><div class='name'>" + esc(nm) + "</div><div class='meta'>Psyker: <b>" + esc(psyLabel) + "</b></div></div>" +
+                  "<div class='right'>" +
+                    "<div class='pts'>" + total + " pts</div>" +
+                    "<div class='hp-row'><span class='hp-label'>HP:</span> <span class='hp-pips'>" + hpPips + "</span></div>" +
+                  "</div>" +
+                "</div>" +
+                "<div class='stats'>" + stats.join('') + "</div>" +
+                gridHtml +
+              "</div>" +
+            "</div>";
+
+          // Hide empty sections on the generated card (removes blocks that would show 'None')
+          try {
+            var overlay = document.getElementById("generated-card-overlay");
+            if (overlay) {
+              var blocks = overlay.querySelectorAll(".print-card .block");
+              blocks.forEach(function (blk) {
+                var ul = blk.querySelector("ul");
+                var muted = blk.querySelector(".muted");
+                if (!ul || (muted && /none/i.test((muted.textContent || "").trim()))) {
+                  blk.remove();
+                }
+              });
+            }
+          } catch (e) {}
+
+          // Fixed 8:7 card ratio with auto-scale-to-fit (no scrolling)
+          try {
+            var overlay = document.getElementById("generated-card-overlay");
+            if (overlay) {
+              var card = overlay.querySelector(".print-card.card");
+              if (card) {
+                // Wrap all card content in a scalable inner container (once)
+                var inner = card.querySelector(".card-inner");
+                if (!inner) {
+                  inner = document.createElement("div");
+                  inner.className = "card-inner";
+                  while (card.firstChild) inner.appendChild(card.firstChild);
+                  card.appendChild(inner);
+                }
+
+                // Measure with no scaling first
+                inner.style.transform = "scale(1)";
+                inner.style.transformOrigin = "top left";
+                inner.style.width = "100%";
+
+                var availH = card.clientHeight;
+                var naturalH = inner.scrollHeight || 0;
+                if (naturalH > 0 && availH > 0) {
+                  var scale = Math.min(1, availH / naturalH);
+                  inner.style.transform = "scale(" + scale.toFixed(4) + ")";
+                  inner.style.width = (100 / scale).toFixed(2) + "%";
+                }
+              }
+            }
+          } catch (e) {}
+
+          // Inject/refresh print-card styles (scoped)
+          var styleId = "generated-card-style";
+          var st = document.getElementById(styleId);
+          if (!st) {
+            st = document.createElement("style");
+            st.id = styleId;
+            document.head.appendChild(st);
+          }
+          st.textContent = `
+            /* Hide the app behind the overlay while generating the card */
+            body.card-view > :not(#generated-card-overlay):not(style):not(script) { display: none !important; }
+
+            /* Print: show only the card */
+            @media print {
+              body.card-view > :not(#generated-card-overlay):not(style):not(script) { display: none !important; }
+              #generated-card-overlay { position: static !important; inset: auto !important; background: transparent !important; padding: 0 !important; }
+              #generated-card-overlay button { display: none !important; }
+            }
+
+            .print-card.card{
+              width:820px;
+              margin:0 auto;
+              background:url('${texUrl}') repeat;
+              background-size:600px auto;
+              border:2px solid #111;
+              border-radius:0;
+              padding:16px 18px 18px;
+              box-shadow:0 10px 30px rgba(0,0,0,.18);
+            }
+            .top{display:flex;justify-content:space-between;align-items:flex-start;gap:12px;}
+            .name{font-size:20px;font-weight:900;letter-spacing:1px;}
+            .meta{margin-top:6px;font-size:13px;color:#333;}
+            .pts{font-size:18px;font-weight:800;padding:6px 10px;border:2px solid #111;border-radius:12px;white-space:nowrap;display:inline-block;background:rgba(255,255,255,0.88);box-shadow:0 2px 6px rgba(0,0,0,0.25);}
+            .right{display:flex;flex-direction:column;align-items:flex-end;gap:6px;}
+            .hp-row{font-size:12px;color:#333;display:flex;gap:6px;align-items:flex-start;max-width:380px;}
+            .hp-label{font-weight:900;}
+            .hp-pips{display:grid; grid-template-columns: repeat(15, 16px); grid-auto-rows: 16px; gap: 4px 6px; margin-left:6px; align-content:start;}
+            .left-pill{background:rgba(255,255,255,0.88);border:1px solid rgba(0,0,0,0.25);border-radius:14px;padding:10px 12px;box-shadow:0 2px 6px rgba(0,0,0,0.25);width:33%;box-sizing:border-box;flex:0 0 33%;}
+            .stats{display:flex;flex-wrap:wrap;gap:8px;margin-top:12px;}
+            .stat{background:rgba(255,255,255,0.88);border:1px solid rgba(0,0,0,0.25);border-radius:14px;padding:6px 8px;min-width:84px;text-align:center;box-shadow:0 2px 6px rgba(0,0,0,0.25);}
+            .stat .k{display:block;font-size:11px;letter-spacing:.05em;text-transform:uppercase;color:#444;}
+            .stat .v{display:block;font-size:16px;font-weight:800;margin-top:2px;}
+            .grid{display:grid;grid-template-columns:repeat(auto-fit, minmax(320px, 1fr));gap:12px;margin-top:14px;align-items:start;}
+            .block{background:rgba(255,255,255,0.88);border-radius:14px;border:1px solid rgba(0,0,0,0.25);box-shadow:0 2px 6px rgba(0,0,0,0.25);padding:10px;}
+            .block-title{font-weight:900;margin-bottom:6px;color:#111;}
+            ul{margin:0;padding-left:18px;}
+            li{margin-bottom:6px;}
+            .muted{color:#555;font-size:12px;}
+          
+            /* card text color fix */
+            .print-card.card, .print-card.card * { color:#111 !important; }
+            .print-card.card .muted { color:#555 !important; }
+            .print-card.card .hp-pips { color:#fff !important; }
+
+            .card-inner{width:100%;transform-origin:top left;}
+
+            @media print { body{-webkit-print-color-adjust:exact;print-color-adjust:exact;} }
+`;
+        
+          // ===== Fixed 8:7 ratio + autoscale-to-fit (no scrolling) =====
+          try {
+            // Enforce fixed frame (8:7) on the generated card
+            var overlay = document.getElementById("generated-card-overlay");
+            if (overlay) {
+              var card = overlay.querySelector(".print-card.card");
+              if (card) {
+                card.style.height = "718px";   // 820 * 7 / 8
+                card.style.overflow = "hidden";
+                card.style.boxSizing = "border-box";
+
+                // Wrap content in a scalable inner container
+                var inner = card.querySelector(".card-inner");
+                if (!inner) {
+                  inner = document.createElement("div");
+                  inner.className = "card-inner";
+                  while (card.firstChild) inner.appendChild(card.firstChild);
+                  card.appendChild(inner);
+                }
+                inner.style.transformOrigin = "top left";
+
+                function fit() {
+                  // reset scale to measure natural size
+                  inner.style.transform = "scale(1)";
+                  inner.style.width = "100%";
+
+                  var availH = card.clientHeight;
+                  var naturalH = inner.scrollHeight || 0;
+                  if (naturalH > 0 && availH > 0) {
+                    var scale = Math.min(1, availH / naturalH);
+                    inner.style.transform = "scale(" + scale.toFixed(4) + ")";
+                    inner.style.width = (100 / scale).toFixed(2) + "%";
+                  }
+                }
+
+                // run after layout settles
+                requestAnimationFrame(function(){ requestAnimationFrame(fit); });
+
+                // Also enable background/color printing where supported
+                st.textContent += "\n@media print{body{-webkit-print-color-adjust:exact;print-color-adjust:exact;}}\n";
+              }
+            }
+          } catch (e) {}
+} catch (e) {
+          alert("Generate Card failed: " + e);
+        }
+      };
+
+      window.exitCardView = function () {
+        var el = document.getElementById("generated-card-overlay");
+        if (el) el.remove();
+        document.body.classList.remove("card-view");
+      };
+
+
+      // Backward compatibility
+      window.printFighterCard = function () { window.generateFighterCard(); };
+
+
+
+window.copyFighterText = function () {
+  try {
+    var txt = buildExportText();
+
+    // Convert any HTML line breaks to real ones (safety pass)
+    txt = txt.replace(/<br\s*\/?>/gi, "\n");
+
+    if (navigator.clipboard && navigator.clipboard.writeText) {
+      navigator.clipboard.writeText(txt).then(function(){
+        alert("Copied!");
+      }).catch(function(){
+        window.prompt("Copy this text:", txt);
+      });
+    } else {
+      window.prompt("Copy this text:", txt);
+    }
+  } catch (e) {
+    alert("Copy failed: " + e);
+  }
+};
+
+
+      // STAT COST
+      function recalcStatCost () {
+        var total = 0;
+        for (var i = 0; i < STAT_CONFIG.length; i++) {
+          var cfg = STAT_CONFIG[i];
+          var base = cfg.base;
+          var cur = fighter.stats[cfg.key];
+          if (cur === base) continue;
+          var step = (cur > base) ? 1 : -1;
+          var lowerIsBetter = !!cfg.lowerIsBetter;
+
+          for (var v = base; v !== cur; v += step) {
+            var next = v + step;
+            var improving = lowerIsBetter ? (next < v) : (next > v);
+            if (improving) {
+              total += cfg.upCost || 0;
+            } else {
+              total -= cfg.downCost || 0;
+            }
+          }
+        }
+        fighter.points.stats = total;
+      }
+
+      // WARLOCK COST – 50% / 66% of (base + stat adjustments)
+      function recalcWarlockCost () {
+        var baseline = (fighter.points.base || 0) + (fighter.points.stats || 0);
+        if (baseline < 0) {
+          baseline = 0;
+        }
+
+        if (fighter.isMasterWarlock) {
+          fighter.points.warlock = Math.ceil(baseline * 0.66);
+        } else if (fighter.isWarlock) {
+          fighter.points.warlock = Math.ceil(baseline * 0.5);
+        } else {
+          fighter.points.warlock = 0;
+        }
+      }
+
+      // Build profile string with upgrades included
+      function buildWeaponProfile (weapon) {
+        var baseText = weapon.baseProfile || weapon.profile || "";
+        var text = baseText;
+        var extras = [];
+        var up = weapon.upgrades || {};
+        if (up.poison)        extras.push("Poison/Fire");
+        if (up.enchanted)     extras.push("Crits on 9+");
+        if (up.cursed)        extras.push("MW (2)");
+        if (up.truestrike)        extras.push("Reroll (SR)");
+        if (up.masterCrafted) extras.push("Piercing (-2)");
+
+        if (extras.length) {
+          if (text) {
+            text += ", " + extras.join(", ");
+          } else {
+            text = extras.join(", ");
+          }
+        }
+        weapon.profile = text; // keep summary in sync
+        return text;
+      }
+
+                 // INIT STATS SECTION (with Psyker toggles + floating Total Points)
+      function initStats () {
+        var container = document.getElementById("section-stats");
+        if (!container) return;
+
+        var i, cfg;
+        // Initialize missing stats to base values (do not overwrite loaded/imported values)
+        if (!fighter.stats) fighter.stats = {};
+        for (i = 0; i < STAT_CONFIG.length; i++) {
+          cfg = STAT_CONFIG[i];
+          if (fighter.stats[cfg.key] == null) fighter.stats[cfg.key] = cfg.base;
+        }
+
+        var html = '<div class="card"><h2>Core Stats</h2>';
+
+        
+
+        // Fighter name
+        html += '<div style="margin-bottom:0.65rem; margin-top:0.15rem;">';
+        html += '  <div style="font-size:0.75rem; text-transform:uppercase; color:#9aa1a8; margin-bottom:0.15rem;">Fighter Name</div>';
+        html += '  <input id="fighter-name-input" type="text" placeholder="Enter name..." style="width:100%; padding:0.4rem 0.6rem; border-radius:8px; border:1px solid #2a2d31; background:#141619; color:#e5e7eb;">';
+        html += '</div>';
+
+// 🔹 Floating Total Points pill in the top-right of this card
+        html += ''
+          + '<div class="points-box-inline stats-total-floating">'
+          + '  Total Points: <span id="totalPoints">0</span>'
+          + '</div>';
+
+        // Stat pills
+        html += '<div class="stats-row">';
+        for (i = 0; i < STAT_CONFIG.length; i++) {
+          cfg = STAT_CONFIG[i];
+          html += ''
+            + '<div class="stat-pill" data-key="' + cfg.key + '">'
+            + '  <div class="stat-pill-label">' + cfg.label + '</div>'
+            + '  <div class="stat-pill-controls">'
+            + '    <button class="stat-btn-vert stat-up">▲</button>'
+            + '    <div class="stat-pill-value"><span class="value-text">' + fighter.stats[cfg.key] + '</span>' + cfg.unit + '</div>'
+            + '    <button class="stat-btn-vert stat-down">▼</button>'
+            + '  </div>'
+            + '</div>';
+        }
+        html += '</div>'; // end .stats-row
+
+        // Psyker section
+        html += ''
+          + '<div class="warlock-box">'
+          + '  <label class="warlock-option">'
+          + '    <input type="checkbox" class="warlock-toggle" data-type="warlock"> Psyker (+50% of Stat cost)'
+          + '  </label>'
+          + '  <label class="warlock-option">'
+          + '    <input type="checkbox" class="warlock-toggle" data-type="master"> Master Psyker (+66% of Stat cost)'
+          + '  </label>'
+          + '  <div class="warlock-note">'
+          + '    Psykers gain access to Psychic Powers. Only one of these options may be active.'
+          + '  </div>'
+          + '</div>';
+
+        html += '</div>'; // end .card
+        container.innerHTML = html;
+
+        // --- Stat pill handlers ---
+        var pills = container.getElementsByClassName("stat-pill");
+
+        function attachHandlers (pill) {
+          var key = pill.getAttribute("data-key");
+          var cfgLocal = null;
+          for (var j = 0; j < STAT_CONFIG.length; j++) {
+            if (STAT_CONFIG[j].key === key) {
+              cfgLocal = STAT_CONFIG[j];
+              break;
+            }
+          }
+          if (!cfgLocal) return;
+
+          var valueEl = pill.querySelector(".value-text");
+          
+          valueEl.textContent = fighter.stats[key];
+var upBtn = pill.querySelector(".stat-up");
+          var downBtn = pill.querySelector(".stat-down");
+
+          upBtn.addEventListener("click", function () {
+            var val = fighter.stats[key];
+            if (val < cfgLocal.max) {
+              fighter.stats[key] = val + 1;
+              valueEl.textContent = fighter.stats[key];
+              recalcStatCost();
+              recalcWarlockCost();
+              recalcAbilityPoints(); // updates dynamic equipment
+              refreshTotal();
+              updateSummary();
+            }
+          });
+
+          downBtn.addEventListener("click", function () {
+            var val = fighter.stats[key];
+            if (val > cfgLocal.min) {
+              fighter.stats[key] = val - 1;
+              valueEl.textContent = fighter.stats[key];
+              recalcStatCost();
+              recalcWarlockCost();
+              recalcAbilityPoints(); // updates dynamic equipment
+              refreshTotal();
+              updateSummary();
+            }
+          });
+        }
+
+        for (var p = 0; p < pills.length; p++) {
+          attachHandlers(pills[p]);
+        }
+
+        // --- Psyker toggles ---
+        var warlockToggles = container.getElementsByClassName("warlock-toggle");
+
+        function syncWarlock () {
+          for (var w = 0; w < warlockToggles.length; w++) {
+            var input = warlockToggles[w];
+            var type = input.getAttribute("data-type");
+            if (type === "warlock") {
+              input.checked = !!fighter.isWarlock && !fighter.isMasterWarlock;
+            } else {
+              input.checked = !!fighter.isMasterWarlock;
+            }
+          }
+        }
+
+        for (var w2 = 0; w2 < warlockToggles.length; w2++) {
+          (function (input) {
+            input.addEventListener("change", function () {
+              var type = input.getAttribute("data-type");
+              if (type === "warlock") {
+                fighter.isWarlock = input.checked;
+                if (input.checked) fighter.isMasterWarlock = false;
+              } else {
+                fighter.isMasterWarlock = input.checked;
+                if (input.checked) fighter.isWarlock = false;
+              }
+              recalcWarlockCost();
+              recalcAbilityPoints(); // dynamic eq baseline
+              syncWarlock();
+              refreshTotal();
+              updateSummary();
+            });
+          })(warlockToggles[w2]);
+        }
+
+        // Initial calculations
+        recalcStatCost();
+        recalcWarlockCost();
+        recalcAbilityPoints();
+        syncWarlock();
+        refreshTotal();
+        updateSummary();
+      }
+
+
+
+      // Compute upgrade cost for a single weapon
+      function computeWeaponUpgradeCost (weapon) {
+        if (!weapon.upgrades) return 0;
+        var count = 0;
+        if (weapon.upgrades.poison)        count++;
+        if (weapon.upgrades.enchanted)     count++;
+        if (weapon.upgrades.cursed)        count++;
+        if (weapon.upgrades.truestrike)    count++;
+        if (weapon.upgrades.masterCrafted) count++;
+        if (count === 0) return 0;
+        return 2 + (count - 1) * 4; // first = 2, others = 4
+      }
+
+      // WEAPON COST (base + upgrades)
+      function recalcWeaponPoints () {
+        var sumCC = 0;
+        var sumR = 0;
+        var i;
+
+        for (i = 0; i < fighter.ccWeapons.length; i++) {
+          var wc = fighter.ccWeapons[i];
+          var base = (wc.basePoints != null) ? wc.basePoints : wc.points;
+          var upgCost = computeWeaponUpgradeCost(wc);
+          wc.points = base + upgCost;
+          sumCC += wc.points;
+        }
+
+        for (i = 0; i < fighter.rangedWeapons.length; i++) {
+          var rw = fighter.rangedWeapons[i];
+          var baseR = (rw.basePoints != null) ? rw.basePoints : rw.points;
+          var upgCostR = computeWeaponUpgradeCost(rw);
+          rw.points = baseR + upgCostR;
+          sumR += rw.points;
+        }
+
+        fighter.points.ccWeapons = sumCC;
+        fighter.points.rangedWeapons = sumR;
+      }
+
+      // ABILITY / SPELL / EQUIPMENT COST
+      // ABILITY / SPELL / EQUIPMENT COST
+      function recalcAbilityPoints () {
+        var i, sumA = 0, sumL = 0, sumS = 0, sumE = 0;
+
+        // Fighter Abilities (some with dynamic HP-based cost)
+        for (i = 0; i < fighter.abilities.length; i++) {
+          var ab = fighter.abilities[i];
+          var p = 0;
+
+          if (ab.dynamicType === "percentHp") {
+            var hp = fighter.stats.hp || 0;
+            var factor = ab.dynamicFactor || 0;
+            p = Math.ceil(hp * factor);
+            ab.points = p; // keep stored value updated
+          } else if (ab.dynamicType === "hpStat") {
+            var hp2 = fighter.stats.hp || 0;
+            var factor2 = (ab.dynamicFactor != null) ? ab.dynamicFactor : 1;
+            p = Math.round(hp2 * factor2);
+            ab.points = p;
+          } else {
+            p = ab.points || 0;
+          }
+
+          sumA += p;
+        }
+
+        // Leader Abilities (all 0)
+        for (i = 0; i < fighter.leaderAbilities.length; i++) {
+          sumL += fighter.leaderAbilities[i].points || 0;
+        }
+
+        // Psychic Powers (all 0)
+        for (i = 0; i < fighter.spells.length; i++) {
+          sumS += fighter.spells[i].points || 0;
+        }
+
+        // Equipment (with dynamic items)
+        var baseline = (fighter.points.base || 0) + (fighter.points.stats || 0);
+        if (baseline < 0) baseline = 0;
+
+        for (i = 0; i < fighter.equipment.length; i++) {
+          var eq = fighter.equipment[i];
+          var ep = 0;
+          if (eq.dynamicType === "percentStats") {
+            var factorEq = eq.dynamicFactor || 0;
+            ep = Math.ceil(baseline * factorEq);
+            eq.points = ep;
+          } else {
+            ep = eq.points || 0;
+          }
+          sumE += ep;
+        }
+
+        fighter.points.abilities       = sumA;
+        fighter.points.leaderAbilities = sumL;
+        fighter.points.spells          = sumS;
+        fighter.points.equipment       = sumE;
+
+        // 🔑 Make sure the Selected lists show the updated point values
+        refreshAbilityEquipmentDisplays();
+      }
+
+      // Update the displayed "X pts" labels in the Selected columns
+      function refreshAbilityEquipmentDisplays () {
+        // Fighter Abilities
+        var abilList = document.getElementById("section-abilities-selected");
+        if (abilList) {
+          var rows = abilList.getElementsByClassName("item-row");
+          for (var i = 0; i < rows.length; i++) {
+            var row = rows[i];
+            var idxAttr = row.getAttribute("data-idx");
+            var idx = idxAttr ? parseInt(idxAttr, 10) : i;
+            var ab = fighter.abilities[idx];
+            if (!ab) continue;
+            var ptsEl = row.querySelector(".item-points");
+            if (ptsEl) {
+              ptsEl.textContent = (ab.points || 0) + " pts";
+            }
+          }
+        }
+
+        // Equipment
+        var eqList = document.getElementById("section-equipment-selected");
+        if (eqList) {
+          var eqRows = eqList.getElementsByClassName("item-row");
+          for (var j = 0; j < eqRows.length; j++) {
+            var row2 = eqRows[j];
+            var idxAttr2 = row2.getAttribute("data-idx");
+            var idx2 = idxAttr2 ? parseInt(idxAttr2, 10) : j;
+            var eq = fighter.equipment[idx2];
+            if (!eq) continue;
+            var ptsEl2 = row2.querySelector(".item-points");
+            if (ptsEl2) {
+              ptsEl2.textContent = (eq.points || 0) + " pts";
+            }
+          }
+        }
+      }
+
+
+
+      // GENERIC PANEL FOR ABILITIES, LEADER, SPELLS, EQUIPMENT
+      function initSimplePanel (sectionId, title, srcArray, targetArrayName, isSpell, maxSelect) {
+        var container = document.getElementById(sectionId);
+        if (!container) return;
+
+        if (!fighter[targetArrayName]) {
+          fighter[targetArrayName] = [];
+        }
+
+        var html = '<div class="card"><h2>' + title + '</h2>';
+        if (isSpell) {
+          html += "<p style='font-size:0.8rem; color:#9ca3af; margin-top:0; margin-bottom:0.5rem;'>Warlocks may choose 2 spells and use 1 per activation, Master Warlocks may choose 3 spells and use 2 per activation.</p>";
+        }
+        if (maxSelect && targetArrayName === "leaderAbilities") {
+          html += "<p style='font-size:0.8rem; color:#9ca3af; margin-top:0; margin-bottom:0.5rem;'>You may select up to " + maxSelect + " Leader Abilities.</p>";
+        }
+
+        html += '<div class="flex-columns weapons-layout"><div class="column options-column">';
+        html += '<h3>Options</h3><div class="item-list weapons-options-grid">';
+
+        var i, it;
+        for (i = 0; i < srcArray.length; i++) {
+          it = srcArray[i];
+          var rightLabel;
+          if (isSpell) {
+            rightLabel = "MV " + it.cv;
+          } else {
+            rightLabel = (it.points || 0) + " pts";
+          }
+
+          html += ''
+            + '<div class="item-row" data-id="' + it.id + '">'
+            + '  <div class="item-row-header">'
+            + '    <div class="item-main">'
+            + '      <div class="item-name">' + it.name + '</div>'
+            + '      <div class="item-detail">' + (it.profile || it.effect || "") + '</div>'
+            + '    </div>'
+            + '    <div class="item-points">' + rightLabel + '</div>'
+            + '  </div>'
+            + '  <div class="item-footer">'
+            + '    <div></div>'
+            + '    <div class="item-actions"><button class="add-btn">Add</button></div>'
+            + '  </div>'
+            + '</div>';
+        }
+
+        html += '</div></div>';
+        html += '<div class="column selected-column">';
+        html += '<h3>Selected</h3><div class="item-list" id="' + sectionId + '-selected"></div>';
+        html += '</div></div>';
+        html += '</div>';
+        container.innerHTML = html;
+
+        function renderSelected () {
+          var listEl = document.getElementById(sectionId + "-selected");
+          var arr = fighter[targetArrayName];
+          var i;
+          if (!arr || !arr.length) {
+            listEl.innerHTML = "<p style='font-size:0.9rem; color:#9ca3af;'>None</p>";
+            return;
+          }
+          var sHtml = "";
+          for (i = 0; i < arr.length; i++) {
+            var a = arr[i];
+            var rightLabel;
+            if (isSpell) {
+              rightLabel = "MV " + (a.cv != null ? a.cv : "?");
+            } else {
+              rightLabel = (a.points || 0) + " pts";
+            }
+
+            sHtml += ''
+              + '<div class="item-row" data-idx="' + i + '">'
+              + '  <div class="item-row-header">'
+              + '    <div class="item-main">'
+              + '      <div class="item-name">' + a.name + '</div>'
+              + '      <div class="item-detail">' + (a.profile || a.effect || "") + '</div>'
+              + '    </div>'
+              + '    <div class="item-points">' + rightLabel + '</div>'
+              + '  </div>'
+              + '  <div class="item-footer">'
+              + '    <div></div>'
+              + '    <div class="item-actions"><button class="rename-btn">Rename</button><button class="remove-btn">Remove</button></div>'
+              + '  </div>'
+              + '</div>';
+          }
+          listEl.innerHTML = sHtml;
+
+          var removes = listEl.getElementsByClassName("remove-btn");
+          for (i = 0; i < removes.length; i++) {
+            (function (btn) {
+              btn.addEventListener("click", function () {
+                var row = btn.closest(".item-row");
+                var idx = parseInt(row.getAttribute("data-idx"), 10);
+                fighter[targetArrayName].splice(idx, 1);
+                recalcAbilityPoints();
+                refreshTotal();
+                updateSummary();
+                renderSelected();
+              });
+            })(removes[i]);
+          }
+
+
+var renames = listEl.getElementsByClassName("rename-btn");
+for (i = 0; i < renames.length; i++) {
+  (function (btn) {
+    btn.addEventListener("click", function () {
+      var row = btn.closest(".item-row");
+      var idx = parseInt(row.getAttribute("data-idx"), 10);
+      var it = fighter[targetArrayName][idx];
+      if (promptRename(it)) {
+        refreshTotal();
+        updateSummary();
+        renderSelected();
+      }
+    });
+  })(renames[i]);
+}
+        }
+
+        var adds = container.getElementsByClassName("add-btn");
+        for (var j = 0; j < adds.length; j++) {
+          (function (btn) {
+            btn.addEventListener("click", function () {
+              var row = btn.closest(".item-row");
+              var id = row.getAttribute("data-id");
+              var src = srcArray;
+              var found = null;
+              var k;
+              for (k = 0; k < src.length; k++) {
+                if (src[k].id === id) {
+                  found = src[k];
+                  break;
+                }
+              }
+              if (!found) return;
+
+              if (isSpell && !fighter.isWarlock && !fighter.isMasterWarlock) {
+                alert("You must be a Psyker or Master Psyker to add spells.");
+                return;
+              }
+
+              if (maxSelect && fighter[targetArrayName].length >= maxSelect) {
+                alert("You may only select up to " + maxSelect + " " + title + ".");
+                return;
+              }
+
+              fighter[targetArrayName].push({
+                name: found.name,
+                points: (isSpell ? 0 : (found.points || 0)),
+                profile: found.profile,
+                effect: found.effect,
+                dynamicType: found.dynamicType,
+                dynamicFactor: found.dynamicFactor,
+                cv: found.cv
+              });
+              recalcAbilityPoints();
+              refreshTotal();
+              updateSummary();
+              renderSelected();
+            });
+          })(adds[j]);
+        }
+
+        recalcAbilityPoints();
+        renderSelected();
+        refreshTotal();
+        updateSummary();
+      }
+
+      // CC WEAPONS PANEL
+      function initWeaponsCC () {
+        var container = document.getElementById("section-weapons-cc");
+        if (!container) return;
+
+        var html = '<div class="card"><h2>Close Combat Weapons</h2>';
+        html += '<div class="flex-columns weapons-layout">';
+
+        html += '<div class="column options-column"><h3>Options</h3><div class="item-list weapons-options-grid">';
+        var i, w;
+        for (i = 0; i < CC_WEAPONS.length; i++) {
+          w = CC_WEAPONS[i];
+          html += ''
+            + '<div class="item-row" data-group="cc" data-id="' + w.id + '">'
+            + '  <div class="item-row-header">'
+            + '    <div class="item-main">'
+            + '      <div class="item-name">' + w.name + '</div>'
+            + '      <div class="item-detail">' + w.profile + '</div>'
+            + '    </div>'
+            + '    <div class="item-points">' + w.points + ' pts</div>'
+            + '  </div>'
+            + '  <div class="item-footer">'
+            + '    <div></div>'
+            + '    <div class="item-actions"><button class="add-weapon">Add</button></div>'
+            + '  </div>'
+            + '</div>';
+        }
+        html += '</div></div>';
+
+        html += '<div class="column selected-column"><h3>Selected CC Weapons</h3><div id="ccSelected" class="item-list"></div></div>';
+
+        html += '</div></div>';
+        container.innerHTML = html;
+
+        function renderSelected () {
+          var ccEl = document.getElementById("ccSelected");
+          var i;
+
+          if (!fighter.ccWeapons.length) {
+            ccEl.innerHTML = '<p style="font-size:0.9rem; color:#9ca3af;">None</p>';
+          } else {
+            var ccHtml = "";
+            for (i = 0; i < fighter.ccWeapons.length; i++) {
+              var wc = fighter.ccWeapons[i];
+              var prof = buildWeaponProfile(wc);
+              ccHtml += ''
+                + '<div class="item-row" data-idx="' + i + '" data-group="cc">'
+                + '  <div class="item-row-header">'
+                + '    <div class="item-main">'
+                + '      <div class="item-name">' + wc.name + '</div>'
+                + '      <div class="item-detail">' + prof + '</div>'
+                + '    </div>'
+                + '    <div class="item-points">' + wc.points + ' pts</div>'
+                + '  </div>'
+                + '  <div class="weapon-upgrades">'
+                + '    <label><input type="checkbox" class="upgrade-toggle" data-upg="poison"' + (wc.upgrades && wc.upgrades.poison ? ' checked' : '') + '>Poisoned/Fiery</label>'
+                + '    <label><input type="checkbox" class="upgrade-toggle" data-upg="enchanted"' + (wc.upgrades && wc.upgrades.enchanted ? ' checked' : '') + '>Enchanted</label>'
+                + '    <label><input type="checkbox" class="upgrade-toggle" data-upg="cursed"' + (wc.upgrades && wc.upgrades.cursed ? ' checked' : '') + '>Cursed</label>'
+                  + '    <label><input type="checkbox" class="upgrade-toggle" data-upg="truestrike"' + (wc.upgrades && wc.upgrades.truestrike ? ' checked' : '') + '>Truestrike</label>'
+                + '    <label><input type="checkbox" class="upgrade-toggle" data-upg="masterCrafted"' + (wc.upgrades && wc.upgrades.masterCrafted ? ' checked' : '') + '>Master Crafted</label>'
+                + '  </div>'
+                + '  <div class="item-footer">'
+                + '    <div></div>'
+                + '    <div class="item-actions"><button class="rename-btn" data-type="cc">Rename</button><button class="remove-btn" data-type="cc">Remove</button></div>'
+                + '  </div>'
+                + '</div>';
+            }
+            ccEl.innerHTML = ccHtml;
+          }
+
+          var removes = container.getElementsByClassName("remove-btn");
+          for (i = 0; i < removes.length; i++) {
+            (function (btn) {
+              btn.addEventListener("click", function () {
+                var row = btn.closest(".item-row");
+                var idx = parseInt(row.getAttribute("data-idx"), 10);
+                fighter.ccWeapons.splice(idx, 1);
+                recalcWeaponPoints();
+                refreshTotal();
+                updateSummary();
+                renderSelected();
+              });
+            })(removes[i]);
+          }
+
+
+var renames = container.getElementsByClassName("rename-btn");
+for (i = 0; i < renames.length; i++) {
+  (function (btn) {
+    btn.addEventListener("click", function () {
+      var row = btn.closest(".item-row");
+      var idx = parseInt(row.getAttribute("data-idx"), 10);
+      var grp = row.getAttribute("data-group") || btn.getAttribute("data-type");
+      var arr = (grp === "ranged" ? fighter.rangedWeapons : fighter.ccWeapons);
+      var it = arr[idx];
+      if (promptRename(it)) {
+        refreshTotal();
+        updateSummary();
+        renderSelected();
+      }
+    });
+  })(renames[i]);
+}
+
+          var upgToggles = container.getElementsByClassName("upgrade-toggle");
+          for (i = 0; i < upgToggles.length; i++) {
+            (function (input) {
+              input.addEventListener("change", function () {
+                var row = input.closest(".item-row");
+                var idx = parseInt(row.getAttribute("data-idx"), 10);
+                var upgKey = input.getAttribute("data-upg");
+
+                var arr = fighter.ccWeapons;
+                var wObj = arr[idx];
+                if (!wObj.upgrades) {
+                  wObj.upgrades = { poison: false, enchanted: false, cursed: false, truestrike: false, masterCrafted: false };
+                }
+                wObj.upgrades[upgKey] = input.checked;
+
+                recalcWeaponPoints();
+                renderSelected();
+                refreshTotal();
+                updateSummary();
+              });
+            })(upgToggles[i]);
+          }
+        }
+
+        var adds = container.getElementsByClassName("add-weapon");
+        for (var k = 0; k < adds.length; k++) {
+          (function (btn) {
+            btn.addEventListener("click", function () {
+              var row = btn.closest(".item-row");
+              var id = row.getAttribute("data-id");
+              var srcArray = CC_WEAPONS;
+              var i, found = null;
+              for (i = 0; i < srcArray.length; i++) {
+                if (srcArray[i].id === id) {
+                  found = srcArray[i];
+                  break;
+                }
+              }
+              if (!found) return;
+
+              fighter.ccWeapons.push({
+                name: found.name,
+                baseProfile: found.profile,
+                profile: found.profile,
+                basePoints: found.points,
+                points: found.points,
+                upgrades: {
+                  poison: false,
+                  enchanted: false,
+                  cursed: false,
+                  truestrike: false,  
+                  masterCrafted: false
+                }
+              });
+              recalcWeaponPoints();
+              refreshTotal();
+              updateSummary();
+              renderSelected();
+            });
+          })(adds[k]);
+        }
+
+        recalcWeaponPoints();
+        renderSelected();
+        refreshTotal();
+        updateSummary();
+      }
+
+      // RANGED WEAPONS PANEL
+      function initWeaponsRanged () {
+        var container = document.getElementById("section-weapons-ranged");
+        if (!container) return;
+
+        var html = '<div class="card"><h2>Ranged Weapons</h2>';
+        html += '<div class="flex-columns weapons-layout">';
+
+        html += '<div class="column options-column"><h3>Options</h3>';
+        html += '<div class="subtabs-row ranged-subtabs">';
+        html += '  <button class="subtab-pill ranged-cat-pill" data-cat="pistols">Pistols/Grenades</button>';
+        html += '  <button class="subtab-pill ranged-cat-pill" data-cat="light">Light/Medium Ranged</button>';
+        html += '  <button class="subtab-pill ranged-cat-pill" data-cat="special">Special</button>';
+        html += '  <button class="subtab-pill ranged-cat-pill" data-cat="heavy">Heavy</button>';
+        html += '</div>';
+        html += '<div id="rangedOptions" class="item-list weapons-options-grid"></div></div>';
+
+        html += '<div class="column selected-column"><h3>Selected Ranged Weapons</h3><div id="rangedSelected" class="item-list"></div></div>';
+
+        html += '</div></div>';
+        container.innerHTML = html;
+        // --- Ranged sub-category rendering ---
+        function setActiveRangedCategoryPills () {
+          var btns = container.getElementsByClassName("ranged-cat-pill");
+          for (var b = 0; b < btns.length; b++) {
+            var btn = btns[b];
+            var isActive = (btn.getAttribute("data-cat") === currentRangedCategory);
+            if (isActive) btn.classList.add("active");
+            else btn.classList.remove("active");
+          }
+        }
+
+        function renderRangedOptions () {
+          var listEl = document.getElementById("rangedOptions");
+          if (!listEl) return;
+
+          var src = getRangedWeaponsForCategory(currentRangedCategory);
+          var oHtml = "";
+          for (var i = 0; i < src.length; i++) {
+            var r = src[i];
+            oHtml += ''
+              + '<div class="item-row" data-group="ranged" data-id="' + r.id + '">'
+              + '  <div class="item-row-header">'
+              + '    <div class="item-main">'
+              + '      <div class="item-name">' + r.name + '</div>'
+              + '      <div class="item-detail">' + r.profile + '</div>'
+              + '    </div>'
+              + '    <div class="item-points">' + r.points + ' pts</div>'
+              + '  </div>'
+              + '  <div class="item-footer">'
+              + '    <div></div>'
+              + '    <div class="item-actions"><button class="add-weapon">Add</button></div>'
+              + '  </div>'
+              + '</div>';
+          }
+          listEl.innerHTML = oHtml || '<p style="font-size:0.9rem; color:#9ca3af;">None</p>';
+        }
+
+        // Initial state
+        if (!currentRangedCategory) currentRangedCategory = "pistols";
+        setActiveRangedCategoryPills();
+        renderRangedOptions();
+
+
+
+        function renderSelected () {
+          var rEl = document.getElementById("rangedSelected");
+          var i;
+
+          if (!fighter.rangedWeapons.length) {
+            rEl.innerHTML = '<p style="font-size:0.9rem; color:#9ca3af;">None</p>';
+          } else {
+            var rHtml = "";
+            for (i = 0; i < fighter.rangedWeapons.length; i++) {
+              var rw = fighter.rangedWeapons[i];
+              var profR = buildWeaponProfile(rw);
+              rHtml += ''
+                + '<div class="item-row" data-idx="' + i + '" data-group="ranged">'
+                + '  <div class="item-row-header">'
+                + '    <div class="item-main">'
+                + '      <div class="item-name">' + rw.name + '</div>'
+                + '      <div class="item-detail">' + profR + '</div>'
+                + '    </div>'
+                + '    <div class="item-points">' + rw.points + ' pts</div>'
+                + '  </div>'
+                + '  <div class="weapon-upgrades">'
+                + '    <label><input type="checkbox" class="upgrade-toggle" data-upg="poison"' + (rw.upgrades && rw.upgrades.poison ? ' checked' : '') + '>Poisoned/Fiery</label>'
+                + '    <label><input type="checkbox" class="upgrade-toggle" data-upg="enchanted"' + (rw.upgrades && rw.upgrades.enchanted ? ' checked' : '') + '>Enchanted</label>'
+                + '    <label><input type="checkbox" class="upgrade-toggle" data-upg="cursed"' + (rw.upgrades && rw.upgrades.cursed ? ' checked' : '') + '>Cursed</label>'
+                   + '    <label><input type="checkbox" class="upgrade-toggle" data-upg="truestrike"' + (rw.upgrades && rw.upgrades.truestrike ? ' checked' : '') + '>Truestrike</label>'
+                + '    <label><input type="checkbox" class="upgrade-toggle" data-upg="masterCrafted"' + (rw.upgrades && rw.upgrades.masterCrafted ? ' checked' : '') + '>Master Crafted</label>'
+                + '  </div>'
+                + '  <div class="item-footer">'
+                + '    <div></div>'
+                + '    <div class="item-actions"><button class="rename-btn" data-type="ranged">Rename</button><button class="remove-btn" data-type="ranged">Remove</button></div>'
+                + '  </div>'
+                + '</div>';
+            }
+            rEl.innerHTML = rHtml;
+          }
+
+          var removes = container.getElementsByClassName("remove-btn");
+          for (i = 0; i < removes.length; i++) {
+            (function (btn) {
+              btn.addEventListener("click", function () {
+                var row = btn.closest(".item-row");
+                var idx = parseInt(row.getAttribute("data-idx"), 10);
+                fighter.rangedWeapons.splice(idx, 1);
+                recalcWeaponPoints();
+                refreshTotal();
+                updateSummary();
+                renderSelected();
+              });
+            })(removes[i]);
+          }
+
+          
+
+          var renames = container.getElementsByClassName("rename-btn");
+          for (i = 0; i < renames.length; i++) {
+            (function (btn) {
+              btn.addEventListener("click", function () {
+                var row = btn.closest(".item-row");
+                var idx = parseInt(row.getAttribute("data-idx"), 10);
+                var arr = fighter.rangedWeapons;
+                var it = arr[idx];
+                if (promptRename(it)) {
+                  refreshTotal();
+                  updateSummary();
+                  renderSelected();
+                }
+              });
+            })(renames[i]);
+          }
+
+var upgToggles = container.getElementsByClassName("upgrade-toggle");
+          for (i = 0; i < upgToggles.length; i++) {
+            (function (input) {
+              input.addEventListener("change", function () {
+                var row = input.closest(".item-row");
+                var idx = parseInt(row.getAttribute("data-idx"), 10);
+                var upgKey = input.getAttribute("data-upg");
+
+                var arr = fighter.rangedWeapons;
+                var wObj = arr[idx];
+                if (!wObj.upgrades) {
+                  wObj.upgrades = { poison: false, enchanted: false, cursed: false, truestrike: false, masterCrafted: false };
+                }
+                wObj.upgrades[upgKey] = input.checked;
+
+                recalcWeaponPoints();
+                renderSelected();
+                refreshTotal();
+                updateSummary();
+              });
+            })(upgToggles[i]);
+          }
+        }
+
+        // Handle ranged sub-category tabs + adding weapons via event delegation
+        container.addEventListener("click", function (e) {
+          var t = e.target;
+
+          // Switch sub-category
+          if (t && t.classList && t.classList.contains("ranged-cat-pill")) {
+            var cat = t.getAttribute("data-cat") || "pistols";
+            currentRangedCategory = cat;
+            renderRangedOptions();
+            setActiveRangedCategoryPills();
+            return;
+          }
+
+          // Add weapon
+          if (t && t.classList && t.classList.contains("add-weapon")) {
+            var row = t.closest(".item-row");
+            if (!row) return;
+            var id = row.getAttribute("data-id");
+
+            var i, found = null;
+            for (i = 0; i < RANGED_WEAPONS.length; i++) {
+              if (RANGED_WEAPONS[i].id === id) { found = RANGED_WEAPONS[i]; break; }
+            }
+            if (!found) return;
+
+            fighter.rangedWeapons.push({
+              name: found.name,
+              baseProfile: found.profile,
+              profile: found.profile,
+              basePoints: found.points,
+              points: found.points,
+              upgrades: {
+                poison: false,
+                enchanted: false,
+                cursed: false,
+                truestrike: false,
+                masterCrafted: false
+              }
+            });
+
+            recalcWeaponPoints();
+            refreshTotal();
+            updateSummary();
+            renderSelected();
+          }
+        });
+
+        recalcWeaponPoints();
+        renderSelected();
+        refreshTotal();
+        updateSummary();
+      }
+
+      // TABS
+      function initTabs () {
+        var tabsContainer = document.getElementById("section-tabs");
+        if (!tabsContainer) return;
+
+        var tabs = tabsContainer.getElementsByClassName("tab-pill");
+        var sectionIds = [
+          "section-weapons-cc",
+          "section-weapons-ranged",
+          "section-abilities",
+          "section-leader",
+          "section-spells",
+          "section-equipment",
+          "section-summary"
+        ];
+
+        function setActiveTab (targetId) {
+          var i;
+          for (i = 0; i < tabs.length; i++) {
+            var tab = tabs[i];
+            var tTarget = tab.getAttribute("data-target");
+            if (tTarget === targetId) {
+              tab.classList.add("active");
+            } else {
+              tab.classList.remove("active");
+            }
+          }
+          for (i = 0; i < sectionIds.length; i++) {
+            var secId = sectionIds[i];
+            var el = document.getElementById(secId);
+            if (!el) continue;
+            el.style.display = (secId === targetId) ? "block" : "none";
+          }
+        }
+
+        for (var j = 0; j < tabs.length; j++) {
+          (function (tab) {
+            tab.addEventListener("click", function () {
+              var target = tab.getAttribute("data-target");
+              setActiveTab(target);
+            });
+          })(tabs[j]);
+        }
+
+        setActiveTab("section-weapons-cc");
+      }
+
+      // INIT
+
+      // ================= JSON Save/Load + Autosave =================
+      var MRFB_STORAGE_KEY = "mortalis_fighter_autosave_v1";
+
+      function deepClone(obj){
+        try { return JSON.parse(JSON.stringify(obj)); }
+        catch(e){ return null; }
+      }
+
+      function buildExportPayload(){
+        // Ensure all derived values are up to date before exporting
+        try{
+          recalcStatCost();
+          recalcWarlockCost();
+          recalcWeaponPoints();
+          recalcAbilityPoints();
+        }catch(e){}
+        return {
+          app: "Mortalis Fighter Builder",
+          version: 1,
+          savedAt: new Date().toISOString(),
+          fighter: deepClone(fighter)
+        };
+      }
+
+      function downloadJson(filename, dataObj){
+        var jsonStr = JSON.stringify(dataObj, null, 2);
+        var blob = new Blob([jsonStr], { type: "application/json" });
+        var url = URL.createObjectURL(blob);
+        var a = document.createElement("a");
+        a.href = url;
+        a.download = filename;
+        document.body.appendChild(a);
+        a.click();
+        setTimeout(function(){
+          try{ URL.revokeObjectURL(url); }catch(e){}
+          try{ document.body.removeChild(a); }catch(e){}
+        }, 0);
+      }
+
+      function safeAssign(target, src){
+        if (!src || typeof src !== "object") return;
+        Object.keys(src).forEach(function(k){ target[k] = src[k]; });
+      }
+
+      function applyImportedFighterState(imported){
+        if (!imported || typeof imported !== "object") throw new Error("Invalid JSON (no fighter object).");
+
+        // Replace top-level scalar/flags
+        fighter.name = imported.name || "";
+        fighter.isWarlock = !!imported.isWarlock;
+        fighter.isMasterWarlock = !!imported.isMasterWarlock;
+
+        // Portrait (optional)
+        fighter.portraitDataUrl = (typeof imported.portraitDataUrl === "string") ? imported.portraitDataUrl : (fighter.portraitDataUrl || "");
+
+        // Stats
+        if (!fighter.stats) fighter.stats = {};
+        safeAssign(fighter.stats, imported.stats || {});
+
+        // Lists (replace arrays)
+        fighter.ccWeapons = Array.isArray(imported.ccWeapons) ? imported.ccWeapons : [];
+        fighter.rangedWeapons = Array.isArray(imported.rangedWeapons) ? imported.rangedWeapons : [];
+        fighter.abilities = Array.isArray(imported.abilities) ? imported.abilities : [];
+        fighter.leaderAbilities = Array.isArray(imported.leaderAbilities) ? imported.leaderAbilities : [];
+        fighter.spells = Array.isArray(imported.spells) ? imported.spells : [];
+        fighter.equipment = Array.isArray(imported.equipment) ? imported.equipment : [];
+
+        // Points block: keep base if present, otherwise default
+        if (!fighter.points) fighter.points = {};
+        var baseDefault = 16;
+        fighter.points.base = (imported.points && typeof imported.points.base === "number") ? imported.points.base : (fighter.points.base || baseDefault);
+
+        // Recompute all derived points and refresh UI
+        recalcStatCost();
+        recalcWarlockCost();
+        recalcWeaponPoints();
+        recalcAbilityPoints();
+
+        // Re-render all panels to ensure checkboxes + selected lists match
+        initStats();
+        initWeaponsCC();
+        initWeaponsRanged();
+        initSimplePanel("section-abilities", "Fighter Abilities", FIGHTER_ABILITIES, "abilities", false, null);
+        initSimplePanel("section-leader",   "Leader Abilities",  LEADER_ABILITIES,  "leaderAbilities", false, 2);
+        initSimplePanel("section-spells",   "Spells",            SPELLS,            "spells", true, null);
+        initSimplePanel("section-equipment","Equipment",         EQUIPMENT,         "equipment", false, null);
+
+        refreshTotal();
+        updateSummary();
+        try{ initTabs(); }catch(e){}
+      }
+
+      function importFromJsonText(jsonText){
+        var parsed;
+        try { parsed = JSON.parse(jsonText); } catch(e){ throw new Error("Invalid JSON."); }
+
+        // Accept either {fighter:{...}} payloads or plain fighter objects
+        var f = parsed && parsed.fighter ? parsed.fighter : parsed;
+        applyImportedFighterState(f);
+      }
+
+      async function autosaveNow(){
+        try{
+          var payload = buildExportPayload();
+        try{
+          if (payload && payload.fighter){
+            var pKey = (payload.fighter.portraitKey && String(payload.fighter.portraitKey).trim()) ? String(payload.fighter.portraitKey).trim() : "";
+            var pData = (payload.fighter.portraitDataUrl && String(payload.fighter.portraitDataUrl).trim()) ? String(payload.fighter.portraitDataUrl).trim() : "";
+            if (!pKey && ctx.entryId) pKey = String(ctx.entryId);
+            if (pData){
+              if (!pKey) pKey = "p_" + Math.random().toString(16).slice(2) + "_" + Date.now().toString(16);
+              payload.fighter.portraitKey = pKey;
+              try{ await mrPortraitSet(pKey, pData); }catch(_e){}
+            }
+            payload.fighter.portraitDataUrl = "";
+          }
+        }catch(_e){}
+          if (!payload || !payload.fighter) return;
+          localStorage.setItem(MRFB_STORAGE_KEY, JSON.stringify(payload));
+        }catch(e){}
+      }
+
+      var __autosaveTimer = null;
+      function autosaveSoon(){
+        if (__autosaveTimer) clearTimeout(__autosaveTimer);
+        __autosaveTimer = setTimeout(function(){
+          __autosaveTimer = null;
+          autosaveNow();
+        }, 650);
+      }
+
+      function tryLoadAutosave(){
+        try{
+          var raw = localStorage.getItem(MRFB_STORAGE_KEY);
+          if (!raw) return;
+          var parsed = JSON.parse(raw);
+          if (!parsed) return;
+          if (!parsed.fighter) return;
+          applyImportedFighterState(parsed.fighter);
+        }catch(e){
+          // ignore
+        }
+      }
+
+      function clearAutosave(){
+        try{
+          if (__autosaveTimer) { clearTimeout(__autosaveTimer); __autosaveTimer = null; }
+          localStorage.removeItem(MRFB_STORAGE_KEY);
+        }catch(e){}
+      }
+
+      function setupJsonUi(){
+        var btnSave = document.getElementById("btn-save-json");
+        var inputLoad = document.getElementById("file-load-json");
+        var btnClear = document.getElementById("btn-clear-autosave");
+
+        if (btnSave){
+          btnSave.addEventListener("click", function(){
+            var payload = buildExportPayload();
+            var nm = (fighter.name && fighter.name.trim()) ? fighter.name.trim() : "fighter";
+            var safe = nm.replace(/[^\w\-]+/g, "_").slice(0, 50) || "fighter";
+            downloadJson("mortalis_" + safe + ".json", payload);
+          });
+        }
+
+        if (inputLoad){
+          inputLoad.addEventListener("change", function(){
+            var file = this.files && this.files[0];
+            if (!file) return;
+            var reader = new FileReader();
+            reader.onload = function(){
+              try{
+                importFromJsonText(String(reader.result || ""));
+                autosaveNow(); // immediately update local autosave with loaded state
+                alert("Loaded!");
+              }catch(e){
+                alert("Load failed: " + e.message);
+              }
+              inputLoad.value = ""; // reset so re-loading same file triggers change
+            };
+            reader.onerror = function(){ alert("Load failed: could not read file."); inputLoad.value = ""; };
+            reader.readAsText(file);
+          });
+        }
+
+        if (btnClear){
+          btnClear.addEventListener("click", function(){
+            clearAutosave();
+            alert("Autosave cleared.");
+          });
+        }
+
+        // Generic autosave: catch most interactions without editing every handler
+        document.addEventListener("input", autosaveSoon, true);
+        document.addEventListener("change", autosaveSoon, true);
+        document.addEventListener("click", function(e){
+          // Ignore clicks on JSON/autosave controls so we don't immediately re-autosave after clearing
+          if (e.target && e.target.closest && e.target.closest("#btn-save-json, #btn-clear-autosave, #file-load-json")) return;
+          autosaveSoon();
+        }, true);
+      }
+
+
+// INIT
+
+      // ================= Portrait Cropper (Integrated) =================
+      (function(){
+        var btnPortrait = null;
+        var ov = null;
+        var fileEl = null, badgeEl = null, warnEl = null;
+        var cvs = null, ctx = null;
+
+        // Locked output size (must match your standalone cropper)
+        var OUT_W = 682, OUT_H = 592;
+        var TRI_BORDER_COLOR = "#D8E2D7";
+        var TRI_BORDER_WIDTH = 8;
+
+        // state
+        var img = null;
+        var imgReady = false;
+        var offsetX = 0, offsetY = 0, scale = 1;
+        var dragging = false, lastX = 0, lastY = 0;
+
+        var pointers = new Map();
+        var pinchStartDist = 0, pinchStartScale = 1;
+        var pinchMid = {x:0,y:0};
+        var pinchStartOffset = {x:0,y:0};
+
+        function setWarn(msg){
+          if (!warnEl) return;
+          if (!msg){
+            warnEl.style.display = "none";
+            warnEl.textContent = "";
+            return;
+          }
+          warnEl.textContent = msg;
+          warnEl.style.display = "block";
+        }
+
+        function clamp(n,a,b){ return Math.max(a, Math.min(b,n)); }
+
+        function trianglePath(w,h){
+          // Locked: pointing down
+          return [[0,0],[w,0],[w/2,h]];
+        }
+
+        function setCanvasSizeLocked(){
+          if (!cvs) return;
+          cvs.width = OUT_W;
+          cvs.height = OUT_H;
+        }
+
+        function canvasPointFromEvent(e){
+          var r = cvs.getBoundingClientRect();
+          var x = (e.clientX - r.left) * (cvs.width / r.width);
+          var y = (e.clientY - r.top)  * (cvs.height / r.height);
+          return {x:x,y:y};
+        }
+
+        function zoomAtCanvasPoint(factor, p){
+          var oldScale = scale;
+          var newScale = clamp(scale * factor, 0.05, 20);
+          if (newScale === oldScale) return;
+
+          var W = cvs.width, H = cvs.height;
+          var cx = W/2 + offsetX;
+          var cy = H/2 + offsetY;
+
+          var dx = p.x - cx;
+          var dy = p.y - cy;
+
+          var ratio = newScale / oldScale;
+          offsetX -= dx * (ratio - 1);
+          offsetY -= dy * (ratio - 1);
+
+          scale = newScale;
+          draw();
+        }
+
+        function resetView(){
+          offsetX = 0; offsetY = 0; scale = 1;
+          draw();
+        }
+
+        function fitToTriangle(){
+          if (!imgReady) return;
+          var W = cvs.width, H = cvs.height;
+          var iw = img.naturalWidth || img.width;
+          var ih = img.naturalHeight || img.height;
+
+          // cover the whole output frame
+          scale = Math.max(W/iw, H/ih);
+          offsetX = 0; offsetY = 0;
+          draw();
+        }
+
+        function draw(){
+          if (!ctx) return;
+          var W = cvs.width, H = cvs.height;
+          ctx.clearRect(0,0,W,H);
+
+          // Triangle clip
+          var pts = trianglePath(W,H);
+          ctx.save();
+          ctx.beginPath();
+          ctx.moveTo(pts[0][0], pts[0][1]);
+          ctx.lineTo(pts[1][0], pts[1][1]);
+          ctx.lineTo(pts[2][0], pts[2][1]);
+          ctx.closePath();
+          ctx.clip();
+
+          if (imgReady){
+            var iw = img.naturalWidth || img.width;
+            var ih = img.naturalHeight || img.height;
+            var dw = iw * scale;
+            var dh = ih * scale;
+            var x = (W/2 - dw/2) + offsetX;
+            var y = (H/2 - dh/2) + offsetY;
+            ctx.drawImage(img, x, y, dw, dh);
+
+            // border (inside clip so it never bleeds outside)
+            ctx.lineWidth = TRI_BORDER_WIDTH;
+            ctx.strokeStyle = TRI_BORDER_COLOR;
+            ctx.beginPath();
+            ctx.moveTo(pts[0][0], pts[0][1]);
+            ctx.lineTo(pts[1][0], pts[1][1]);
+            ctx.lineTo(pts[2][0], pts[2][1]);
+            ctx.closePath();
+            ctx.stroke();
+          } else {
+            ctx.save();
+            ctx.fillStyle = "rgba(255,255,255,.08)";
+            ctx.fillRect(0,0,W,H);
+            ctx.restore();
+          }
+
+          ctx.restore();
+
+          // Preview-only: darken outside triangle for clarity
+          ctx.save();
+          ctx.fillStyle = "rgba(0,0,0,.35)";
+          ctx.beginPath();
+          ctx.rect(0,0,W,H);
+          ctx.moveTo(pts[0][0], pts[0][1]);
+          ctx.lineTo(pts[1][0], pts[1][1]);
+          ctx.lineTo(pts[2][0], pts[2][1]);
+          ctx.closePath();
+          ctx.fill("evenodd");
+          ctx.restore();
+        }
+
+        function exportTrianglePNG(){
+          var W = OUT_W, H = OUT_H;
+          var off = document.createElement("canvas");
+          off.width = W; off.height = H;
+          var octx = off.getContext("2d", {alpha:true});
+
+          var pts = trianglePath(W,H);
+          octx.save();
+          octx.beginPath();
+          octx.moveTo(pts[0][0], pts[0][1]);
+          octx.lineTo(pts[1][0], pts[1][1]);
+          octx.lineTo(pts[2][0], pts[2][1]);
+          octx.closePath();
+          octx.clip();
+
+          var iw = img.naturalWidth || img.width;
+          var ih = img.naturalHeight || img.height;
+          var dw = iw * scale;
+          var dh = ih * scale;
+          var x = (W/2 - dw/2) + offsetX;
+          var y = (H/2 - dh/2) + offsetY;
+
+          octx.drawImage(img, x, y, dw, dh);
+
+          // baked border
+          octx.lineWidth = TRI_BORDER_WIDTH;
+          octx.strokeStyle = TRI_BORDER_COLOR;
+          octx.beginPath();
+          octx.moveTo(pts[0][0], pts[0][1]);
+          octx.lineTo(pts[1][0], pts[1][1]);
+          octx.lineTo(pts[2][0], pts[2][1]);
+          octx.closePath();
+          octx.stroke();
+
+          octx.restore();
+          return off.toDataURL("image/png");
+        }
+
+        function updatePortraitButton(){
+          if (!btnPortrait) return;
+          var has = (fighter && fighter.portraitDataUrl && String(fighter.portraitDataUrl).trim());
+          btnPortrait.textContent = has ? "Portrait ✓" : "Portrait";
+        }
+
+        function openPortrait(){
+          if (!ov) return;
+          setWarn(null);
+          ov.classList.add("show");
+          ov.setAttribute("aria-hidden","false");
+          document.body.style.overflow = "hidden";
+
+          // init canvas
+          setCanvasSizeLocked();
+          ctx = cvs.getContext("2d", { alpha:true });
+
+          // show badge
+          if (badgeEl) badgeEl.textContent = (imgReady ? "Loaded" : "No image loaded") + " • " + OUT_W + "×" + OUT_H;
+
+          // If we already have a portrait, keep it; otherwise just draw placeholder.
+          draw();
+        }
+
+        function closePortrait(){
+          if (!ov) return;
+          ov.classList.remove("show");
+          ov.setAttribute("aria-hidden","true");
+          document.body.style.overflow = "";
+          updatePortraitButton();
+        }
+
+        function wire(){
+          btnPortrait = document.getElementById("btn-portrait");
+          ov = document.getElementById("portrait-cropper-overlay");
+          fileEl = document.getElementById("pc-file");
+          badgeEl = document.getElementById("pc-badge");
+          warnEl = document.getElementById("pc-warn");
+          cvs = document.getElementById("pc-canvas");
+          if (!btnPortrait || !ov || !fileEl || !cvs) return;
+
+          // open/close
+          btnPortrait.addEventListener("click", function(){ openPortrait(); });
+          document.getElementById("pc-close").addEventListener("click", function(){ closePortrait(); });
+          ov.addEventListener("click", function(e){
+            if (e.target === ov) closePortrait();
+          });
+
+          // buttons
+          document.getElementById("pc-fit").addEventListener("click", function(){ setWarn(null); fitToTriangle(); });
+          document.getElementById("pc-reset").addEventListener("click", function(){ setWarn(null); resetView(); });
+
+          document.getElementById("pc-use").addEventListener("click", function(){
+            setWarn(null);
+            if (!imgReady){
+              setWarn("Load an image first.");
+              return;
+            }
+            try{
+              fighter.portraitDataUrl = exportTrianglePNG();
+              try{
+                var key = (fighter.portraitKey && String(fighter.portraitKey).trim()) ? String(fighter.portraitKey).trim() : "";
+                if (!key){
+                  if (window.__mr_current_roster_entry_id) key = String(window.__mr_current_roster_entry_id);
+                }
+                if (!key) key = "p_" + Math.random().toString(16).slice(2) + "_" + Date.now().toString(16);
+                fighter.portraitKey = key;
+                mrPortraitSet(key, fighter.portraitDataUrl).catch(function(){});
+              }catch(_e){}
+              autosaveSoon();
+              updateSummary();
+              refreshTotal();
+              closePortrait();
+            }catch(err){
+              setWarn("Could not export the portrait. Try a different image file.");
+            }
+          });
+
+          // image load
+          fileEl.addEventListener("change", function(e){
+            var f = e.target.files && e.target.files[0];
+            if (!f) return;
+            setWarn(null);
+            if (badgeEl) badgeEl.textContent = "Loading…";
+
+            var url = URL.createObjectURL(f);
+            var im = new Image();
+            im.onload = function(){
+              img = im;
+              imgReady = true;
+              if (badgeEl) badgeEl.textContent = "Loaded • " + OUT_W + "×" + OUT_H;
+              fitToTriangle();
+              try{ URL.revokeObjectURL(url); }catch(_){}
+            };
+            im.onerror = function(){
+              imgReady = false;
+              if (badgeEl) badgeEl.textContent = "Failed to load image • " + OUT_W + "×" + OUT_H;
+              setWarn("Could not load that image. Try a JPG or PNG.");
+              try{ URL.revokeObjectURL(url); }catch(_){}
+              draw();
+            };
+            im.src = url;
+          });
+
+          // pointer / wheel controls
+          cvs.addEventListener("pointerdown", function(e){
+            cvs.setPointerCapture(e.pointerId);
+            pointers.set(e.pointerId, {x:e.clientX, y:e.clientY});
+
+            if (pointers.size === 1){
+              dragging = true;
+              lastX = e.clientX;
+              lastY = e.clientY;
+            } else if (pointers.size === 2){
+              var pts = Array.from(pointers.values());
+              pinchStartDist = Math.hypot(pts[0].x - pts[1].x, pts[0].y - pts[1].y);
+              pinchStartScale = scale;
+              pinchStartOffset = {x: offsetX, y: offsetY};
+
+              var midClient = {x:(pts[0].x+pts[1].x)/2, y:(pts[0].y+pts[1].y)/2};
+              var r = cvs.getBoundingClientRect();
+              pinchMid = {
+                x: (midClient.x - r.left) * (cvs.width / r.width),
+                y: (midClient.y - r.top)  * (cvs.height / r.height)
+              };
+            }
+          });
+
+          cvs.addEventListener("pointermove", function(e){
+            if (!pointers.has(e.pointerId)) return;
+            pointers.set(e.pointerId, {x:e.clientX, y:e.clientY});
+
+            if (pointers.size === 1 && dragging){
+              var dx = e.clientX - lastX;
+              var dy = e.clientY - lastY;
+              lastX = e.clientX;
+              lastY = e.clientY;
+
+              var r = cvs.getBoundingClientRect();
+              offsetX += dx * (cvs.width / r.width);
+              offsetY += dy * (cvs.height / r.height);
+              draw();
+            } else if (pointers.size === 2){
+              var pts = Array.from(pointers.values());
+              var dist = Math.hypot(pts[0].x - pts[1].x, pts[0].y - pts[1].y);
+              if (pinchStartDist > 0){
+                var factor = dist / pinchStartDist;
+                scale = clamp(pinchStartScale * factor, 0.05, 20);
+
+                var ratio = scale / pinchStartScale;
+                var W = cvs.width, H = cvs.height;
+                var cx0 = W/2 + pinchStartOffset.x;
+                var cy0 = H/2 + pinchStartOffset.y;
+                var dx = pinchMid.x - cx0;
+                var dy = pinchMid.y - cy0;
+
+                offsetX = pinchStartOffset.x - dx * (ratio - 1);
+                offsetY = pinchStartOffset.y - dy * (ratio - 1);
+                draw();
+              }
+            }
+          });
+
+          cvs.addEventListener("pointerup", function(e){
+            pointers.delete(e.pointerId);
+            dragging = false;
+            if (pointers.size === 1){
+              var remaining = Array.from(pointers.values())[0];
+              lastX = remaining.x; lastY = remaining.y;
+              dragging = true;
+            }
+          });
+
+          cvs.addEventListener("pointercancel", function(e){
+            pointers.delete(e.pointerId);
+            dragging = false;
+          });
+
+          cvs.addEventListener("wheel", function(e){
+            e.preventDefault();
+            if (!imgReady) return;
+            var p = canvasPointFromEvent(e);
+            var direction = Math.sign(e.deltaY);
+            var factor = direction > 0 ? 0.92 : 1.08;
+            zoomAtCanvasPoint(factor, p);
+          }, { passive:false });
+
+          // initial state
+          setCanvasSizeLocked();
+          ctx = cvs.getContext("2d", { alpha:true });
+          draw();
+          updatePortraitButton();
+        }
+
+        // expose a tiny helper if needed later
+        window.__drfb_openPortraitCropper = openPortrait;
+
+        // wire at DOMContentLoaded (builder uses DOMContentLoaded already, but this is safe)
+        document.addEventListener("DOMContentLoaded", function(){
+          try { wire(); } catch(e) { console.error(e); }
+          try { setupJsonUi(); } catch(e) { console.error(e); }
+   
+        });
+      })();
+
+
+      
+
+      // ---- IndexedDB Portrait Store (shared with Team Builder) ----
+      var PORTRAIT_DB_NAME = "warband_portraits_v1";
+      var PORTRAIT_STORE   = "portraits";
+      function mrOpenPortraitDB(){
+        return new Promise(function(resolve, reject){
+          try{
+            var req = indexedDB.open(PORTRAIT_DB_NAME, 1);
+            req.onupgradeneeded = function(){
+              var db = req.result;
+              if (!db.objectStoreNames.contains(PORTRAIT_STORE)) db.createObjectStore(PORTRAIT_STORE);
+            };
+            req.onsuccess = function(){ resolve(req.result); };
+            req.onerror = function(){ reject(req.error); };
+          }catch(err){ reject(err); }
+        });
+      }
+      function mrPortraitSet(key, dataUrl){
+        if (!key) return Promise.resolve(false);
+        return mrOpenPortraitDB().then(function(db){
+          return new Promise(function(resolve, reject){
+            var tx = db.transaction(PORTRAIT_STORE, "readwrite");
+            tx.objectStore(PORTRAIT_STORE).put(String(dataUrl||""), String(key));
+            tx.oncomplete = function(){ resolve(true); };
+            tx.onerror = function(){ reject(tx.error); };
+          });
+        });
+      }
+      function mrPortraitGet(key){
+        if (!key) return Promise.resolve("");
+        return mrOpenPortraitDB().then(function(db){
+          return new Promise(function(resolve, reject){
+            var tx = db.transaction(PORTRAIT_STORE, "readonly");
+            var req = tx.objectStore(PORTRAIT_STORE).get(String(key));
+            req.onsuccess = function(){ resolve(String(req.result||"")); };
+            req.onerror = function(){ reject(req.error); };
+          });
+        });
+      }
+
+
+      // ===== Roster <-> Fighter Builder bridge (localStorage) =====
+// Mirrors the Dark Realms bridge logic, but uses Mortalis-specific storage keys.
+// TEAM_KEY payload: { version, savedAt, warbandName, limit, team:[{id, sourceFileName, data}] }
+// EDIT_KEY payload: { version, mode:"edit"|"new", entryId, returnUrl, startedAt }
+var M_TEAM_KEY = "mortalis_roster_team_state_v1";
+var M_EDIT_KEY = "mortalis_roster_edit_ctx_v1";
+
+function mSafeJsonParse(raw){
+  try { return JSON.parse(raw); } catch(e){ return null; }
+}
+function mGetTeamState(){
+  var obj = mSafeJsonParse(localStorage.getItem(M_TEAM_KEY) || "");
+  if (!obj || typeof obj !== "object") return null;
+  if (!Array.isArray(obj.team)) obj.team = [];
+  return obj;
+}
+function mSetTeamState(obj){
+  try{
+    obj.savedAt = new Date().toISOString();
+    localStorage.setItem(M_TEAM_KEY, JSON.stringify(obj));
+  }catch(e){}
+}
+function mUid(){
+  return "f_" + Math.random().toString(16).slice(2) + "_" + Date.now().toString(16);
+}
+function mNavigateBack(returnUrl){
+  window.location.href = returnUrl || "index.html";
+}
+
+function mRerenderAllPanels(){
+  // Rebuild UI from current fighter state (best-effort; avoid crashing if something changes)
+  try { initStats(); } catch(e){}
+  try { initWeaponsCC(); } catch(e){}
+  try { initWeaponsRanged(); } catch(e){}
+  try { initSimplePanel("section-abilities", "Fighter Abilities", FIGHTER_ABILITIES, "abilities", false, null); } catch(e){}
+  try { initSimplePanel("section-leader",   "Leader Abilities",  LEADER_ABILITIES,  "leaderAbilities", false, 2); } catch(e){}
+  try { initSimplePanel("section-spells",   "Psychic Powers",    SPELLS,            "spells", true, null); } catch(e){}
+  try { initSimplePanel("section-equipment","Equipment",         EQUIPMENT,         "equipment", false, null); } catch(e){}
+  try { refreshTotal(); } catch(e){}
+  try { updateSummary(); } catch(e){}
+  try { initTabs(); } catch(e){}
+}
+
+function mLoadFromRosterIfNeeded(){
+  var ctx = mSafeJsonParse(localStorage.getItem(M_EDIT_KEY) || "");
+  if (!ctx || typeof ctx !== "object") return null;
+        window.__mr_current_roster_entry_id = ctx.entryId || null;
+
+  // Show roster buttons (Mortalis uses different ids)
+  var btnSaveRoster = document.getElementById("btn-save-warband");
+  var btnBackRoster = document.getElementById("btn-back-warband");
+  if (btnSaveRoster) btnSaveRoster.style.display = "";
+  if (btnBackRoster) btnBackRoster.style.display = "";
+
+  if (btnBackRoster){
+    btnBackRoster.onclick = function(){
+      mNavigateBack(ctx.returnUrl);
+    };
+  }
+
+  // If opened in EDIT mode, load the fighter from the roster immediately
+  try{
+    if (ctx.mode === "edit" && ctx.entryId){
+      (async function(){
+        try{
+          var ts = mGetTeamState();
+          if (ts && Array.isArray(ts.team)){
+            for (var i=0; i<ts.team.length; i++){
+              var ent = ts.team[i];
+              if (ent && ent.id === ctx.entryId && ent.data){
+                var fObj = (ent.data.fighter ? ent.data.fighter : ent.data);
+                try{
+                  var pKey = (fObj && fObj.portraitKey) ? String(fObj.portraitKey) : String(ctx.entryId);
+                  if (pKey){
+                    var pData = await mrPortraitGet(pKey);
+                    if (pData && fObj) fObj.portraitDataUrl = pData;
+                  }
+                }catch(_e){}
+                try{ applyImportedFighterState(fObj); }catch(e){}
+                try{
+                  // Re-render main UI sections (function names differ; safest is trigger existing init if present)
+                  if (typeof initStats === "function") initStats();
+                  if (typeof initWeaponsCC === "function") initWeaponsCC();
+                  if (typeof initWeaponsRanged === "function") initWeaponsRanged();
+                  if (typeof updateSummary === "function") updateSummary();
+                  if (typeof initTabs === "function") initTabs();
+                }catch(e){}
+                break;
+              }
+            }
+          }
+        }catch(e){}
+      })();
+    }
+  }catch(_e){}
+
+  if (btnSaveRoster){
+    btnSaveRoster.onclick = async function(){
+      try{
+        var teamState = mGetTeamState() || { version: 1, warbandName: "", limit: 0, presets: [], team: [] };
+        if (!Array.isArray(teamState.team)) teamState.team = [];
+
+        // Always save builder payload into the roster entry (includes portraitDataUrl, etc.)
+        var payload = buildExportPayload();
+
+        if (ctx.mode === "edit" && ctx.entryId){
+          var updated = false;
+          for (var i=0; i<teamState.team.length; i++){
+            if (teamState.team[i] && teamState.team[i].id === ctx.entryId){
+              teamState.team[i].data = payload;
+
+              // Keep existing filename if any; otherwise set a helpful one.
+              if (!teamState.team[i].sourceFileName){
+                var nm = (payload && payload.fighter && payload.fighter.name && String(payload.fighter.name).trim())
+                  ? String(payload.fighter.name).trim()
+                  : ((fighter && fighter.name && String(fighter.name).trim()) ? String(fighter.name).trim() : "fighter");
+                teamState.team[i].sourceFileName = ("mortalis_" + nm.replace(/[^\w\-]+/g,"_").slice(0,50) + ".json");
+              }
+              updated = true;
+              break;
+            }
+          }
+
+          if (!updated){
+            // EntryId not found in roster (shouldn't happen, but don't wipe anything)
+            var newId = ctx.entryId;
+            teamState.team.push({ id: newId, sourceFileName: "mortalis_fighter.json", data: payload });
+            ctx.entryId = newId;
+            ctx.mode = "edit";
+            try{ localStorage.setItem(M_EDIT_KEY, JSON.stringify(ctx)); }catch(e){}
+          }
+        } else {
+          // New fighter
+          var nid = mUid();
+          var nm2 = (payload && payload.fighter && payload.fighter.name && String(payload.fighter.name).trim())
+            ? String(payload.fighter.name).trim()
+            : ((fighter && fighter.name && String(fighter.name).trim()) ? String(fighter.name).trim() : "fighter");
+          var fname = ("mortalis_" + nm2.replace(/[^\w\-]+/g,"_").slice(0,50) + ".json");
+          teamState.team.push({ id: nid, sourceFileName: fname, data: payload });
+
+          // Update ctx so a second save will update the same entry if they come back
+          ctx.entryId = nid;
+          ctx.mode = "edit";
+          try{ localStorage.setItem(M_EDIT_KEY, JSON.stringify(ctx)); }catch(e){}
+        }
+
+        mSetTeamState(teamState);
+      }catch(e){
+        alert("Save to warband failed: " + e);
+        return;
+      }
+
+      mNavigateBack(ctx.returnUrl);
+    };
+  }
+
+  // If editing, load the fighter from roster
+  if (ctx.mode === "edit" && ctx.entryId){
+    var teamState2 = mGetTeamState();
+    if (teamState2 && Array.isArray(teamState2.team)){
+      var entry = null;
+      for (var j=0; j<teamState2.team.length; j++){
+        if (teamState2.team[j] && teamState2.team[j].id === ctx.entryId){
+          entry = teamState2.team[j];
+          break;
+        }
+      }
+      if (entry && entry.data){
+        try{
+          importFromJsonText(JSON.stringify(entry.data));
+          try{
+            if (fighter && (!fighter.portraitDataUrl || !String(fighter.portraitDataUrl).trim()) && fighter.portraitKey){
+              mrPortraitGet(String(fighter.portraitKey)).then(function(d){
+                if (d){ fighter.portraitDataUrl = d; try{ updateSummary(); }catch(e){} try{ refreshTotal(); }catch(e){} }
+                mRerenderAllPanels();
+              }).catch(function(){ mRerenderAllPanels(); });
+              return;
+            }
+          }catch(_e){}
+          mRerenderAllPanels();
+        }catch(e){
+          console.warn("Roster import failed:", e);
+        }
+      }
+    }
+  }
+
+  return ctx;
+}
+
+document.addEventListener("DOMContentLoaded", function () {
+        initStats();
+        initWeaponsCC();
+        initWeaponsRanged();
+        initSimplePanel("section-abilities", "Fighter Abilities", FIGHTER_ABILITIES, "abilities", false, null);
+        initSimplePanel("section-leader",   "Leader Abilities",  LEADER_ABILITIES,  "leaderAbilities", false, 2);
+        initSimplePanel("section-spells",   "Psychic Powers",            SPELLS,            "spells", true, null);
+        initSimplePanel("section-equipment","Equipment",         EQUIPMENT,         "equipment", false, null);
+        refreshTotal();
+        updateSummary();
+        initTabs();
+        try{ mLoadFromRosterIfNeeded(); }catch(e){}
+      });
+    })();
+  </script>
+
+<!-- Clean card renderer override (DOM-based; avoids template-literal string editing pitfalls) -->
+<style id="mortalis-clean-card-css">
+  /* Overlay */
+  #generated-card-overlay{
+    position:fixed; inset:0; z-index:9999;
+    display:none;
+    background:#fff;
+    overflow:auto;
+    padding:24px;
+    box-sizing:border-box;
+    font-family: Arial, Helvetica, sans-serif;
+    color:#111;
+  }
+  #generated-card-toolbar{
+    max-width: 980px;
+    margin: 0 auto 12px auto;
+    display:flex;
+    gap:10px;
+    justify-content:flex-end;
+    align-items:center;
+  }
+  #generated-card-toolbar button{
+    padding: 8px 10px;
+    border-radius: 10px;
+    border: 1px solid #222;
+    background: #fff;
+    font-weight: 800;
+    cursor: pointer;
+  }
+
+  /* Card frame */
+  .print-card.clean-card{
+    width: 820px;
+    height: 660px; /* 8:7 of 820 */
+    margin: 0 auto;
+    border: 2px solid #111;
+    border-radius: 0;
+    box-sizing: border-box;
+    padding: 16px 18px 18px;
+    overflow: hidden; /* fixed frame */
+    display:flex;
+    flex-direction:column;
+    box-shadow: 0 10px 30px rgba(0,0,0,.18);
+    background-repeat: no-repeat;
+    background-size: cover;
+  }
+
+  /* --- Big portrait behind header + stat pills (stops before options pill) --- */
+  .cc-topwrap{position:relative;}
+  .cc-bg-portrait{
+    position:absolute;
+    top:0;
+    left:50%;
+    transform:translateX(-50%);
+    height:100%;
+    width:auto;
+    max-width:none;
+    z-index:1;
+    pointer-events:none;
+    filter: drop-shadow(0 2px 6px rgba(0,0,0,.75));
+  }
+  /* Ensure header + stats + HP pips render above portrait */
+  .cc-header, .cc-stats{position:relative; z-index:5;}
+  .cc-hp, .hp-pips{position:relative; z-index:6;}
+.cc-header{
+  display:grid;
+  grid-template-columns: 260px 260px 260px; /* left | logo | right */
+  align-items:start;
+  gap:12px;
+}
+  .cc-header-left{justify-self:start;}
+  .cc-header-center{justify-self:center; text-align:center;}
+  .cc-header-right{width:260px;}
+
+  
+  .cc-leftpill{
+    background: rgba(255,255,255,0.92);
+    border: 1px solid black;
+    border-radius: 14px;
+    padding: 10px 8px;
+    flex: 1 1 auto;
+    box-sizing:border-box;
+    width: 260px;
+    max-width: 260px;
+    margin-top: 20px;
+    margin-left: 30px;
+}
+  .cc-name{font-weight: 900; font-size: 16px; margin-bottom: 4px; color:#111;}
+  .cc-meta{font-size: 12px; color:#111;}
+  .cc-right{
+    display:flex;
+    flex-direction:column;
+    gap:8px;
+    align-items:flex-end;
+    flex: 0 0 auto;
+  }
+  .cc-pts{
+    background: rgba(255,255,255,0.92);
+    border: 1px solid black;
+    border-radius: 14px;
+    padding: 8px 10px;
+    font-weight: 900;
+    color:#111;
+    min-width: 50px;
+    text-align:center;
+    margin-top: 20px;
+    margin-right: 30px;
+    margin-bottom: 10px;
+  }
+  .cc-hp{
+    background: transparent;
+    border: 0;
+    border-radius: 0;
+    padding: 0;
+    align-items: center; 
+    min-width: 110px;
+    margin-right: 20px;
+  }
+  .hp-pips{
+  display:grid;
+  grid-template-columns: repeat(12, 20px);
+  grid-auto-rows: 20px;
+  gap: 4px 6px;
+  min-width: 260px;
+  display: flex;
+  margin-left: auto;
+  margin-right: 15px;
+  align-content: start;
+  justify-content: end;
+  justify-items: end; /* prevents squish */
+}
+  .hp-pip{width:20px;height:20px;border-radius:50%;border:2px solid #111;background:#fff;box-sizing:border-box;}
+
+  .cc-stats{
+    margin-top: 12px;
+    display:grid;
+    grid-template-columns: repeat(auto-fit, minmax(48px, 1fr));
+    gap:22px;
+    padding: 0 120px;
+  }
+  .cc-stat{
+    background: rgba(236,241,231,0.95);
+    border: 1px solid black;
+    border-radius: 14px;
+    padding: 8px 6px;
+    text-align:center;
+  
+    color:#111;
+  }
+
+  
+  .cc-stat-label{font-size:12px; font-weight:800; opacity:0.85; margin-bottom:2px; text-transform: uppercase; color:#111;}
+  .cc-stat-val{font-size:19px; font-weight:900; line-height:1.05; color:#111; display:block;}
+
+  /* --- Weapons profile table (auto from selected weapons) --- */
+  .cc-weapons{
+    margin:none;
+    background: transparent;
+    border-bottom: 1px solid black;
+    padding: 8px 10px;
+
+  
+    column-span: all;
+    -webkit-column-span: all;
+    break-inside: avoid;
+    margin-bottom: 10px;
+  }
+
+    /* Weapon icon alignment */
+.weapon-icon{
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  width:16px;
+  height:16px;
+  margin-right:6px;
+  vertical-align:middle;
+}
+
+.weapon-icon img{
+  width:100%;
+  height:100%;
+  display:block;
+}
+  .cc-weapons table{ width:100%; border-collapse:collapse; font-size:13px; }
+  .cc-weapons th{
+    text-transform: uppercase;
+    font-size: 13px;
+    letter-spacing: 0.04em;
+    text-align:left;
+    border-bottom: 1px solid rgba(0,0,0,0.35);
+    padding: 4px 6px;
+  }
+.cc-weapons table thead th:nth-child(5),
+.cc-weapons table tbody td:nth-child(5) {
+  padding-left: 20px;
+}
+.cc-weapons table thead th:nth-child(4),
+.cc-weapons table tbody td:nth-child(4) {
+  padding-left: 10px;
+}
+
+  .cc-weapons td{
+    padding: 4px 6px;
+    vertical-align: top;
+    border-bottom: 1px solid rgba(0,0,0,0.15);
+  }
+  .cc-weapons tr:last-child td{ border-bottom:none; } 
+  .cc-weapons .wname{ font-weight: 900; width: 24%; } /* Weapon Title */
+  .cc-weapons .wname .wicon{
+    display:inline-block;
+    width:14px; height:14px;
+    margin-right:6px;
+    vertical-align:-2px;
+  }
+  .cc-weapons .wname img.wicon{
+    object-fit:contain;
+  }
+  .cc-weapons .wname .wicon-cc{ color:#c2410c; }      /* fallback emoji tint */
+  .cc-weapons .wname .wicon-ranged{ color:#374151; }  /* fallback emoji tint */
+  .cc-weapons .wnum{ font-weight: 900; text-align:center; white-space:nowrap; }
+  .cc-weapons .wrules{ font-weight: 600;}
+    
+/* Single options pill */
+  .cc-options-pill{
+    margin-top: 14px;
+    flex: 1 1 auto;
+    min-height: 0;
+    display:flex;
+    background: rgba(255,255,255,0.88);
+    border: 1px solid black;
+    border-radius: 14px;
+    padding: 10px;
+    padding-bottom: 20px;
+    overflow: hidden;
+    position: relative; position: relative;
+    box-sizing: border-box;
+  }
+  .cc-options-inner{
+    flex:1;
+    display:block;
+    /* Two-column flow */
+    column-count: 2;
+    column-gap: 16px;
+    column-fill: auto;
+    /* Scalable typography */
+    --opt-scale: 1;
+    font-size: calc(13px * var(--opt-scale));
+    line-height: calc(1.25 * var(--opt-scale));
+    padding-bottom: 10px;
+}
+
+  }
+  .cc-sec{break-inside:auto; page-break-inside:auto; margin: 0 0 18px 0;}
+  .cc-sec-title{font-weight:900; margin: 0 0 6px 0; color:#111; font-size:1.15em;}
+
+  .cc-sec + .cc-sec{
+    border-top: 1px solid rgba(0,0,0,0.15);
+    padding-top: 8px;
+  }
+/* Don’t leave the title stranded at the bottom of a column */
+.cc-sec-title{
+  break-after: avoid-column;
+  break-inside: avoid;
+}
+
+/* Keep the first item with the title (so you don’t get “title only”) */
+.cc-sec > .cc-list > li:first-child,
+.cc-sec > p:first-of-type,
+.cc-sec > div:first-of-type {
+  break-inside: avoid;
+}
+
+/* Optional: prevent an individual list item splitting (rare, but nice) */
+.cc-list li{
+  break-inside: avoid;
+}
+
+  .cc-list{margin:0; padding-left: 18px;}
+  .cc-item{margin: 0 0 6px 0;}
+
+  .cc-muted{color:#555; font-weight: 600;}
+
+
+  @media print{
+    body{-webkit-print-color-adjust:exact; print-color-adjust:exact;}
+    #generated-card-toolbar{display:none !important;}
+    #generated-card-overlay{position:static; padding:0;}
+    .print-card.clean-card{margin:0; box-shadow:none;}
+  }
+
+
+    /* ===== Portrait Cropper Overlay ===== */
+    #portrait-cropper-overlay{
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,.78);
+      display: none;
+      z-index: 99999;
+      padding: 22px 14px;
+      overflow: auto;
+    }
+    #portrait-cropper-overlay.show{ display:block; }
+    #portrait-cropper-overlay .pc-modal{
+      max-width: 1100px;
+      margin: 0 auto;
+      background: #1E2024;
+      border: 1px solid #2a2d31;
+      border-radius: 14px;
+      padding: 14px;
+      display: grid;
+      grid-template-columns: 360px 1fr;
+      gap: 16px;
+      box-shadow: 0 20px 60px rgba(0,0,0,.55);
+    }
+    @media (max-width: 980px){
+      #portrait-cropper-overlay .pc-modal{ grid-template-columns: 1fr; }
+    }
+    .pc-panel .pc-title{ font-size: 1.05rem; font-weight: 700; margin-bottom: 8px; }
+    .pc-panel .pc-sub{ font-size: 0.85rem; color:#9aa1a8; line-height: 1.35; margin-bottom: 12px; }
+    .pc-panel input[type="file"]{
+      width: 100%;
+      padding: 10px;
+      border-radius: 12px;
+      border: 1px dashed #2a2d31;
+      background:#141619;
+      color:#e4e7eb;
+    }
+    .pc-actions{ display:flex; gap:0.5rem; flex-wrap:wrap; margin-top: 10px; }
+    .pc-stage{ position:relative; display:flex; justify-content:center; align-items:center; min-height: 520px; }
+    #pc-canvas{
+      width: 100%;
+      max-width: 760px;
+      height: auto;
+      background:#0b0d12;
+      border: 1px solid #2a2d31;
+      border-radius: 16px;
+      touch-action:none;
+      display:block;
+    }
+    .pc-badge{
+      position:absolute;
+      top: 12px;
+      left: 12px;
+      padding: 6px 10px;
+      border-radius: 999px;
+      background: rgba(20,22,25,.85);
+      border: 1px solid #2a2d31;
+      color:#9aa1a8;
+      font-size: 0.82rem;
+      backdrop-filter: blur(6px);
+    }
+    .pc-warn{
+      margin-top: 10px;
+      padding: 10px;
+      border-radius: 12px;
+      border: 1px solid rgba(255,180,74,.35);
+      background: rgba(255,180,74,.08);
+      color: #ffd7a3;
+      font-size: 0.85rem;
+      line-height: 1.35;
+    }
+
+    /* ===== Fighter Card Portrait Placement ===== */
+    .cc-portrait-wrap{
+      width: 240px;
+      height: 208px;
+      margin-top: 10px;
+      background: transparent;
+    }
+    .cc-portrait-img{
+      width: 100%;
+      height: 100%;
+      object-fit: contain; /* preserves full 682×592 frame */
+      display:block;
+    }
+
+</style>
+
+<script>
+(function(){
+  // --- MV label helper (kept local to this render module) ---
+  function spellMetaLabel(spellObj){
+    var mv = null;
+    if (spellObj){
+      if (spellObj.mv != null && spellObj.mv !== "") mv = spellObj.mv;
+      else if (spellObj.cv != null && spellObj.cv !== "") mv = spellObj.cv; // data field remains 'cv'
+    }
+    return (mv == null || mv === "") ? "MV —" : ("MV " + mv);
+  }
+
+  function esc(s){
+    return (s==null?"":String(s))
+      .replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;")
+      .replace(/"/g,"&quot;").replace(/'/g,"&#39;");
+  }
+  function brToText(html){
+    return (html||"").replace(/<br\s*\/?>/gi,"\n").replace(/&nbsp;/g," ");
+  }
+  function renderRulesHtml(main){
+    if (!main) return "";
+    var txt = String(main).replace(/<br\s*\/?>/gi,"\n");
+    var lines = txt.split(/\n+/);
+    return lines.map(function(l){
+      l = l.trim();
+      return l ? "<div>" + esc(l) + "</div>" : "";
+    }).join("");
+  }
+  function getBaseHref(){
+    var href = (window.location && window.location.href) ? window.location.href : "";
+    return href.replace(/[#?].*$/, "");
+  }
+  function buildHpPips(hp){
+    var n = Math.max(0, Math.min(99, parseInt(hp||0,10)||0));
+    var wrap = document.createElement("span");
+    wrap.className = "hp-pips";
+    for (var i=0;i<n;i++){
+      var d = document.createElement("span");
+      d.className = "hp-pip";
+      wrap.appendChild(d);
+    }
+    return wrap;
+  }
+
+  function ensureOverlay(){
+    var ov = document.getElementById("generated-card-overlay");
+    if (!ov){
+      ov = document.createElement("div");
+      ov.id = "generated-card-overlay";
+      document.body.appendChild(ov);
+    }
+    return ov;
+  }
+
+  // Replace the existing Generate Card with a clean DOM-based renderer.
+  window.generateFighterCard = function(){
+    try{
+      var ov = ensureOverlay();
+      ov.innerHTML = "";
+      document.body.classList.add("print-card-mode");
+
+      // toolbar
+      var tb = document.createElement("div");
+      tb.id = "generated-card-toolbar";
+
+      // texture toggle (card background)
+      var texWrap = document.createElement("label");
+      texWrap.className = "cc-tex-toggle";
+      var texChk = document.createElement("input");
+      texChk.type = "checkbox";
+      texChk.checked = (localStorage.getItem("mortalis_card_texture") !== "0");
+      var texTxt = document.createElement("span");
+      texTxt.textContent = "Texture";
+      texWrap.appendChild(texChk);
+      texWrap.appendChild(texTxt);
+
+
+      var btnBack = document.createElement("button");
+      btnBack.textContent = "Back";
+      btnBack.onclick = function(){
+        ov.style.display = "none";
+        document.body.style.overflow = "";
+        document.body.classList.remove("print-card-mode");
+      };
+
+      var btnPrint = document.createElement("button");
+      btnPrint.textContent = "Print";
+      btnPrint.onclick = function(){ window.print(); };
+
+      tb.appendChild(texWrap);
+      tb.appendChild(btnBack);
+      tb.appendChild(btnPrint);
+      ov.appendChild(tb);
+
+      // base URLs for assets (same as existing builder approach)
+      var baseHref = getBaseHref();
+var texUrl  = (new URL("./img/mortalistexture.jpg", baseHref)).href;
+
+      // card
+      var card = document.createElement("div");
+      card.className = "print-card clean-card";
+      function applyTexture(){
+        var on = (localStorage.getItem("mortalis_card_texture") !== "0");
+        if (on && texUrl) { card.style.backgroundImage = "url('" + texUrl + "')"; }
+        else { card.style.backgroundImage = "none"; }
+      }
+      texChk.addEventListener("change", function(){
+        localStorage.setItem("mortalis_card_texture", this.checked ? "1" : "0");
+        applyTexture();
+      });
+      applyTexture();
+
+      // top wrapper (header + stats) so portrait stops before options pill
+      var topwrap = document.createElement("div");
+      var pendingWeaponsWrap = null;
+      topwrap.className = "cc-topwrap";
+      if (window.fighter && fighter.portraitDataUrl){
+        var bgp = document.createElement("img");
+        bgp.className = "cc-bg-portrait";
+        bgp.src = fighter.portraitDataUrl;
+        bgp.alt = "Portrait";
+        topwrap.appendChild(bgp);
+      }
+      // name + points
+      var nm = (fighter.name && fighter.name.trim()) ? fighter.name.trim() : "Fighter";
+      var total = computeTotal ? computeTotal() : 0;
+      var psyLabel = "No";
+      if (fighter.isMasterWarlock) psyLabel = "Master Psyker";
+      else if (fighter.isWarlock) psyLabel = "Psyker";
+
+      // Header grid: Name | Logo | Points/HP
+      var header = document.createElement("div");
+      header.className = "cc-header";
+
+      var headerLeft = document.createElement("div");
+      headerLeft.className = "cc-header-left";
+
+      var headerCenter = document.createElement("div");
+      headerCenter.className = "cc-header-center";
+var headerRight = document.createElement("div");
+      headerRight.className = "cc-header-right";
+
+      var left = document.createElement("div");
+      left.className = "cc-leftpill";
+      var nameEl = document.createElement("div");
+      nameEl.className = "cc-name";
+      nameEl.textContent = nm;
+      var metaEl = document.createElement("div");
+      metaEl.className = "cc-meta";
+      left.appendChild(nameEl);
+     
+      headerLeft.appendChild(left);
+
+      var right = document.createElement("div");
+      right.className = "cc-right";
+      var pts = document.createElement("div");
+      pts.className = "cc-pts";
+      pts.textContent = total + " pts";
+
+      var hpBox = document.createElement("div");
+      hpBox.className = "cc-hp";
+      var hp = (fighter.stats && (fighter.stats.HP!=null)) ? fighter.stats.HP : (fighter.stats && fighter.stats.hp!=null ? fighter.stats.hp : 0);
+      var hpLabel = document.createElement("span");
+      hpLabel.textContent = ":";
+      hpBox.appendChild(hpLabel);
+      hpBox.appendChild(buildHpPips(hp));
+
+      right.appendChild(pts);
+      right.appendChild(hpBox);
+      headerRight.appendChild(right);
+
+      header.appendChild(headerLeft);
+      header.appendChild(headerCenter);
+      header.appendChild(headerRight);
+      topwrap.appendChild(header);
+
+      // stats pills
+      var statsWrap = document.createElement("div");
+      statsWrap.className = "cc-stats";
+      var s = fighter.stats || {};
+      // order (attempt common Mortalis order; fall back to existing keys)
+      var order = ["Move","M","DEF","Defense","AP","HP","ATK","Attack","Fight","Shoot"];
+      var used = {};
+      order.forEach(function(k){
+                var _kl = String(k).toLowerCase();
+        if (_kl === 'atk' || _kl === 'attack' || _kl === 'fight' || _kl === 'shoot') return;
+var v = (s[k]!=null)?s[k]:null;
+        if (v==null) return;
+        used[k]=true;
+        var p = document.createElement("div");
+        p.className = "cc-stat";
+        var _k = String(k).toLowerCase();
+var _vv = String(v ?? "");
+if (_k === "move") _vv += '"';
+else if (_k === "def" || _k === "fight" || _k === "shoot") _vv += '+';
+
+p.innerHTML = "<div class=\"cc-stat-label\">" + esc(k) + "</div><div class=\"cc-stat-val\">" + esc(_vv) + "</div>";
+        statsWrap.appendChild(p);
+      });
+      Object.keys(s).forEach(function(k){
+                var _kl2 = String(k).toLowerCase();
+        if (_kl2 === 'atk' || _kl2 === 'attack' || _kl2 === 'fight' || _kl2 === 'shoot') return;
+if (used[k]) return;
+        var p = document.createElement("div");
+        p.className = "cc-stat";
+        var _k = String(k).toLowerCase();
+var _vv = String((s && s[k] != null) ? s[k] : "");
+if (_k === "move") _vv += '"';
+else if (_k === "def" || _k === "fight" || _k === "shoot") _vv += '+';
+
+p.innerHTML = "<div class=\"cc-stat-label\">" + esc(k) + "</div><div class=\"cc-stat-val\">" + esc(_vv) + "</div>";
+        statsWrap.appendChild(p);
+      });
+      
+// weapons profile table (auto; flexible rows)
+function pickStat(keys){
+  for (var i=0;i<keys.length;i++){
+    var kk = keys[i];
+    if (s && s[kk] != null) return s[kk];
+  }
+  return null;
+}
+function fmtPlus(v){
+  if (v == null || v === "") return "";
+  return String(v) + "+";
+}
+function parseHitUserMod(profile){
+  // Matches: "Hit User", "Hit User+2", "Hit User-2", with optional spaces
+  var m = String(profile||"").match(/\bHit\s*User\s*([+-]\s*\d+)?\b/i);
+  if (!m) return 0;
+  if (!m[1]) return 0;
+  var n = parseInt(String(m[1]).replace(/\s+/g,""), 10);
+  return isNaN(n) ? 0 : n;
+}
+function applyHitUser(baseToHit, profile){
+  // In this system, a negative "to hit modifier" makes it HARDER (target number goes UP),
+  // so we reverse the sign when converting to the target number.
+  var b = parseInt(baseToHit, 10);
+  if (isNaN(b)) return baseToHit;
+  var mod = parseHitUserMod(profile);
+  return b - mod;
+}
+function parseAtk(profile){
+  var m = String(profile||"").match(/\bATK\s*([^,]+)/i);
+  return m ? m[1].trim() : "";
+}
+function parseDmg(profile){
+  var m = String(profile||"").match(/\bDMG\s*([^,]+)/i);
+  return m ? m[1].trim() : "";
+}
+function stripProfile(p){
+  if (!p) return "";
+  var parts = String(p).split(",").map(function(x){return x.trim();}).filter(Boolean);
+  parts = parts.filter(function(x){
+    var xl = x.toLowerCase();
+    if (xl.startsWith("atk")) return false;
+    if (xl.startsWith("hit")) return false;
+    if (xl.startsWith("dmg")) return false;
+    return true;
+  });
+  return parts.join(", ");
+}
+var atkVal   = pickStat(["ATK","Attack","atk","attack"]);
+var fightVal = pickStat(["Fight","fight"]);
+var shootVal = pickStat(["Shoot","shoot"]);
+var weaponRows = [];
+
+// Optional custom weapon icons (set these globally, e.g. in a <script> before this file runs)
+// window.MORTALIS_WEAPON_ICON_CC = "./img/sword.svg";
+// window.MORTALIS_WEAPON_ICON_RANGED = "./img/gun.svg";
+var ICON_CC = window.MORTALIS_WEAPON_ICON_CC || "./img/sword.svg";
+var ICON_RANGED = window.MORTALIS_WEAPON_ICON_RANGED || "./img/crosshair.svg";
+
+
+(fighter.ccWeapons||[]).forEach(function(w){
+  var prof = (w && (w.profile || w.effect)) || "";
+  weaponRows.push({
+    type: "cc",
+    name:  w ? String(getDisplayName(w)) : "",
+    atk:   (atkVal!=null ? String(atkVal) : ""),
+    dmg:   parseDmg(prof),
+    hit:   fmtPlus(applyHitUser(fightVal, prof)),
+    rules: stripProfile(prof)
+  });
+});
+
+(fighter.rangedWeapons||[]).forEach(function(w){
+  var prof = (w && (w.profile || w.effect)) || "";
+  weaponRows.push({
+    type: "ranged",
+    name:  w ? String(getDisplayName(w)) : "",
+    atk:   parseAtk(prof),
+    dmg:   parseDmg(prof),
+    hit:   fmtPlus(applyHitUser(shootVal, prof)),
+    rules: stripProfile(prof)
+  });
+});
+
+if (weaponRows.length){
+  var wWrap = document.createElement("div");
+  wWrap.className = "cc-weapons";
+  var t = document.createElement("table");
+  var thead = document.createElement("thead");
+  thead.innerHTML = "<tr>"
+    + "<th>Weapon</th>"
+    + "<th style=\"width:80px; text-align:center;\">ATK</th>"
+    + "<th style=\"width:80px; text-align:center;\">To Hit</th>"
+    + "<th style=\"width:80px; text-align:center;\">DMG</th>"
+    + "<th>Special Rules</th>"
+    + "</tr>";
+  t.appendChild(thead);
+
+  var tbody = document.createElement("tbody");
+  weaponRows.forEach(function(r){
+    var tr = document.createElement("tr");
+
+    var tdN = document.createElement("td");
+    tdN.className = "wname";
+    // Weapon icon + name
+    var iconSrc = (r.type === "cc") ? ICON_CC : ICON_RANGED;
+    if (iconSrc) {
+      var im = document.createElement("img");
+      im.className = "wicon";
+      im.src = iconSrc;
+      im.alt = (r.type === "cc") ? "CC" : "Ranged";
+      tdN.appendChild(im);
+    } else {
+      var sp = document.createElement("span");
+      sp.className = "wicon wicon-" + (r.type || "");
+      sp.textContent = (r.type === "cc") ? "⚔" : "🏹";
+      tdN.appendChild(sp);
+    }
+    tdN.appendChild(document.createTextNode(r.name || ""));
+    tr.appendChild(tdN);
+
+    var tdA = document.createElement("td");
+    tdA.className = "wnum";
+    tdA.textContent = (r.atk!=null ? String(r.atk) : "");
+    tr.appendChild(tdA);
+
+    var tdH = document.createElement("td");
+    tdH.className = "wnum";
+    tdH.textContent = (r.hit!=null ? String(r.hit) : "");
+    tr.appendChild(tdH);
+
+    var tdD = document.createElement("td");
+    tdD.className = "wnum";
+    tdD.textContent = (r.dmg!=null ? String(r.dmg) : "");
+    tr.appendChild(tdD);
+
+    var tdR = document.createElement("td");
+    tdR.className = "wrules";
+    tdR.textContent = r.rules || "";
+    tr.appendChild(tdR);
+
+    tbody.appendChild(tr);
+  });
+  t.appendChild(tbody);
+  wWrap.appendChild(t);
+  pendingWeaponsWrap = wWrap;
+}
+      topwrap.appendChild(statsWrap);
+      card.appendChild(topwrap);
+
+      // options pill
+      var optPill = document.createElement("div");
+      optPill.className = "cc-options-pill";
+      var optInner = document.createElement("div");
+      optInner.className = "cc-options-inner";
+      optPill.appendChild(optInner);
+      card.appendChild(optPill);
+
+      
+      if (pendingWeaponsWrap) { optInner.appendChild(pendingWeaponsWrap); }
+function addSection(title, arr, mainKey){
+        if (!arr || !arr.length) return;
+        var sec = document.createElement("div");
+        sec.className = "cc-sec";
+        var t = document.createElement("div");
+        t.className = "cc-sec-title";
+        t.textContent = title;
+        sec.appendChild(t);
+
+        var ul = document.createElement("ul");
+        ul.className = "cc-list";
+        arr.forEach(function(x){
+          var li = document.createElement("li");
+          li.className = "cc-item";
+          var meta = (title === "Psychic Powers") ? spellMetaLabel(x) : ((x.points || 0) + " pts");
+          var main = x.profile || x.effect || "";
+          var rulesHtml = renderRulesHtml(main);
+          li.innerHTML = "<b>" + esc(getDisplayName(x)) + "</b> <span class='cc-muted'>(" + esc(meta) + ")</span>" +
+                         (rulesHtml ? "<br><span class='cc-muted'>" + rulesHtml + "</span>" : "");
+          ul.appendChild(li);
+        });
+        sec.appendChild(ul);
+        optInner.appendChild(sec);
+      }
+addSection("Abilities", fighter.abilities);
+      addSection("Leader Abilities", fighter.leaderAbilities);
+      addSection("Psychic Powers", fighter.spells);
+      addSection("Equipment", fighter.equipment);
+
+      // mount
+      ov.appendChild(card);
+      ov.style.display = "block";
+      document.body.style.overflow = "hidden";
+
+      // autoscale only options: use scrollWidth overflow from columns
+      function fitOptions(){
+        try{
+          var cs = window.getComputedStyle(optPill);
+          var padL = parseFloat(cs.paddingLeft)  || 0;
+          var padR = parseFloat(cs.paddingRight) || 0;
+          var padT = parseFloat(cs.paddingTop)   || 0;
+          var padB = parseFloat(cs.paddingBottom)|| 0;
+
+          // Available content box inside the padded pill
+          var availH = Math.max(0, optPill.clientHeight - padT - padB);
+          var availW = Math.max(0, optPill.clientWidth  - padL - padR);
+
+          optInner.style.boxSizing = "border-box";
+          optInner.style.height = availH + "px";
+          optInner.style.width  = availW + "px";
+
+          function applyScale(s){
+            optInner.style.setProperty("--opt-scale", s.toFixed(4));
+          }
+          function fits(){
+            // With font-size scaling, scrollWidth/scrollHeight reflect the real layout.
+            var w = optInner.scrollWidth || 0;
+            var h = optInner.scrollHeight || 0;
+            return (w <= availW + 1) && (h <= availH + 1);
+          }
+
+          applyScale(1.0);
+          if (fits()) return;
+
+          // Allow deeper shrinking to guarantee fit (prevents text escaping below pill)
+          var lo = 0.20, hi = 1.0, best = 0.20;
+          for (var i=0;i<14;i++){
+            var mid = (lo + hi) / 2;
+            applyScale(mid);
+            if (fits()){
+              best = mid;
+              lo = mid;
+            } else {
+              hi = mid;
+            }
+          }
+          applyScale(best);
+
+          // Final clamp: if still overflowing (e.g. single huge unbreakable entry),
+          // force hidden overflow so nothing draws outside the pill.
+          optInner.style.overflow = "hidden";
+        }catch(e){}
+      }
+      function fitSoon(){
+        requestAnimationFrame(function(){ requestAnimationFrame(fitOptions); });
+      }
+      fitSoon();
+      setTimeout(fitSoon, 120);
+      // re-fit on resize while overlay is open
+      window.addEventListener("resize", function(){
+        if (ov && ov.style && ov.style.display === "block") fitSoon();
+      }, { passive:true });
+
+      requestAnimationFrame(function(){ requestAnimationFrame(fitOptions); });
+
+    }catch(e){
+      alert("Generate Card failed: " + e);
+    }
+  };
+})();
+</script>
+
+</body>
+</html>
