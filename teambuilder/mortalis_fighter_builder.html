@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
- <title>Mortalis Fighter Builder</title>
+ <title>Mortalis Fighter Forge</title>
 
   <style>
     * {
@@ -480,7 +480,7 @@
   <div class="app">
     <header class="top-bar">
 
-     <div class="top-title">Mortalis Fighter Builder</div>
+     <div class="top-title">Fighter Forge</div>
      <div class="top-actions">
        <button class="tab-pill-colour" id="btn-save-json" type="button">Save Profile</button>
        <label class="tab-pill" style="cursor:pointer;">
@@ -489,8 +489,8 @@
        </label>
 
 
-       <button class="tab-pill-colour" id="btn-save-warband" type="button" style="display:none;">Save to Warband</button>
-       <button class="tab-pill" id="btn-back-warband" type="button" style="display:none;">Back to Warband</button>
+       <button class="tab-pill-colour" id="btn-save-warband" type="button" style="display:none;">Save to Team Roster</button>
+       <button class="tab-pill" id="btn-back-warband" type="button" style="display:none;">Back without Saving</button>
        <button class="tab-pill-colour" id="btn-portrait" type="button" title="Crop / set portrait" style="display:none;">Portrait</button>
  
      </div>
@@ -1557,13 +1557,6 @@
           points: 6,
           effect:
             'This Fighter is equipped with unlimited Frag and Krak grenades and has +2 to hit when using them..'
-        },    
-        {
-          id: "suicideBomber",
-          name: "Suicide Bomber",
-          points: 4,
-          effect:
-            "0 AP Action: Roll a D12. On 5+, Every Fighter within 1\” of this Fighter suffers D3+2 MW.   No matter the result of the dice roll, remove the Fighter from the Battlefield, although it does not count as Slain for VP purposes or triggering effects."
         },
         {
           id: "psychicFamiliar",

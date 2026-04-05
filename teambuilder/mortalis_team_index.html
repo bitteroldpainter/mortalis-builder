@@ -21,12 +21,41 @@
   /* NEW: match builders */
   .wrap{max-width:960px;margin:0 auto;padding:18px}
 
-  .topbar{display:flex;gap:10px;flex-wrap:wrap;align-items:center;justify-content:space-between;margin-bottom:14px}
+  .topbar{
+  display:flex;
+  flex-direction:column;          /* stack logo + controls */
+  align-items:center;             /* center everything */
+  gap:6px;                        /* reduce vertical space */
+  margin-bottom:8px;              /* tighter overall spacing */
+}
+  .headerLogo{
+  width:100%;
+  display:flex;
+  justify-content:center;
+  align-items:center;
+}
+
+.headerLogo img{
+  height:150px;
+  width:499px;
+  object-fit:contain;
+  display:block;
+}
   .title{display:flex;flex-direction:column;gap:2px}
   .title h1{margin:0;font-size:25px;letter-spacing:.3px}
   .title .sub{color:var(--muted);font-size:12px}
 
-  .controls{display:flex;gap:8px;flex-wrap:wrap;align-items:center}
+.controls{
+  display:flex;
+  gap:8px;
+  flex-wrap:wrap;
+  justify-content:center;
+  align-items:center;
+  width:100%;
+  margin-top:0;
+}
+
+  
   button,.btn{
     background:var(--panel3); color:var(--text2);
     border:1px solid; var(--line2); border-radius:15px;
@@ -176,12 +205,11 @@
 </head>
 <body>
   <div class="wrap">
-    <div class="topbar">
-      <div class="title">
-        <h1>Mortalis — Team Builder</h1>
-        <div class="sub">Load multiple Fighter .json files, edit, copy and remove Fighters, and export and load entire Teams for later editing.</div>
-      </div>
-      <div class="controls">
+<div class="topbar">
+  <div class="headerLogo">
+    <img src="fighterforge.png" alt="Fighter Forge Logo">
+  </div>
+  <div class="controls">
         <button class="accent" id="addFighterBtn">Build Fighter</button>
         <button class="accent2" id="exportBtn">Export Team (.json)</button>
          <label class="pill" for="fileInput">Load Fighters (.json)</label>
