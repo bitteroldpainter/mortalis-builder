@@ -170,6 +170,10 @@
       font-size: 0.85rem;
       cursor: pointer;
     }
+
+     .tab-pill-colour:hover {
+      background: #FFC24D;
+    }
     .tab-pill:hover {
       background: #FFC24D;
     }
@@ -266,7 +270,7 @@
       cursor: pointer;
     }
     .item-actions button:hover {
-      background: #ffffff;
+      background: #FFC24D;
     }
     .item-actions .remove-btn {
       background: linear-gradient(180deg, rgba(148,18,18,1), rgba(0,0,0,.12));
@@ -482,15 +486,16 @@
 
      <div class="top-title">Fighter Forge</div>
      <div class="top-actions">
-       <button class="tab-pill-colour" id="btn-save-json" type="button">Save Profile</button>
+       <button class="tab-pill-colour" id="btn-save-json" type="button">Export Fighter</button>
        <label class="tab-pill" style="cursor:pointer;">
-         Load Profile
+         Load Fighter
          <input id="file-load-json" type="file" accept="application/json" hidden>
        </label>
 
 
        <button class="tab-pill-colour" id="btn-save-warband" type="button" style="display:none;">Save to Team Roster</button>
        <button class="tab-pill" id="btn-back-warband" type="button" style="display:none;">Back without Saving</button>
+       <button class="tab-pill-colour" id="btn-generate-card-top" type="button">Generate/Print Card</button>
        <button class="tab-pill-colour" id="btn-portrait" type="button" title="Crop / set portrait" style="display:none;">Portrait</button>
  
      </div>
@@ -3681,6 +3686,12 @@ var upgToggles = container.getElementsByClassName("upgrade-toggle");
         document.addEventListener("DOMContentLoaded", function(){
           try { wire(); } catch(e) { console.error(e); }
           try { setupJsonUi(); } catch(e) { console.error(e); }
+          try {
+            var btnGenerateTop = document.getElementById("btn-generate-card-top");
+            if (btnGenerateTop) btnGenerateTop.addEventListener("click", function(){
+              if (typeof window.generateFighterCard === "function") window.generateFighterCard();
+            });
+          } catch(e) { console.error(e); }
    
         });
       })();
@@ -3774,13 +3785,22 @@ function mRerenderAllPanels(){
 function mLoadFromRosterIfNeeded(){
   var ctx = mSafeJsonParse(localStorage.getItem(M_EDIT_KEY) || "");
   if (!ctx || typeof ctx !== "object") return null;
-        window.__mr_current_roster_entry_id = ctx.entryId || null;
+  window.__mr_current_roster_entry_id = ctx.entryId || null;
+  window.__mr_card_mode = (ctx.mode === "card");
+  window.__mr_card_return_url = ctx.returnUrl || "index.html";
 
-  // Show roster buttons (Mortalis uses different ids)
+  // Show roster buttons for edit/new flows; keep them hidden for pure card view.
   var btnSaveRoster = document.getElementById("btn-save-warband");
   var btnBackRoster = document.getElementById("btn-back-warband");
-  if (btnSaveRoster) btnSaveRoster.style.display = "";
-  if (btnBackRoster) btnBackRoster.style.display = "";
+  var btnGenerateTop = document.getElementById("btn-generate-card-top");
+  if (ctx.mode !== "card"){
+    if (btnSaveRoster) btnSaveRoster.style.display = "";
+    if (btnBackRoster) btnBackRoster.style.display = "";
+  } else {
+    if (btnSaveRoster) btnSaveRoster.style.display = "none";
+    if (btnBackRoster) btnBackRoster.style.display = "none";
+    if (btnGenerateTop) btnGenerateTop.style.display = "none";
+  }
 
   if (btnBackRoster){
     btnBackRoster.onclick = function(){
@@ -3788,39 +3808,53 @@ function mLoadFromRosterIfNeeded(){
     };
   }
 
-  // If opened in EDIT mode, load the fighter from the roster immediately
-  try{
-    if (ctx.mode === "edit" && ctx.entryId){
-      (async function(){
+  async function loadRosterEntryAndApply(){
+    try{
+      var ts = mGetTeamState();
+      if (!(ts && Array.isArray(ts.team))) return false;
+      for (var i=0; i<ts.team.length; i++){
+        var ent = ts.team[i];
+        if (!(ent && ent.id === ctx.entryId && ent.data)) continue;
+        var fObj = (ent.data.fighter ? ent.data.fighter : ent.data);
         try{
-          var ts = mGetTeamState();
-          if (ts && Array.isArray(ts.team)){
-            for (var i=0; i<ts.team.length; i++){
-              var ent = ts.team[i];
-              if (ent && ent.id === ctx.entryId && ent.data){
-                var fObj = (ent.data.fighter ? ent.data.fighter : ent.data);
-                try{
-                  var pKey = (fObj && fObj.portraitKey) ? String(fObj.portraitKey) : String(ctx.entryId);
-                  if (pKey){
-                    var pData = await mrPortraitGet(pKey);
-                    if (pData && fObj) fObj.portraitDataUrl = pData;
-                  }
-                }catch(_e){}
-                try{ applyImportedFighterState(fObj); }catch(e){}
-                try{
-                  // Re-render main UI sections (function names differ; safest is trigger existing init if present)
-                  if (typeof initStats === "function") initStats();
-                  if (typeof initWeaponsCC === "function") initWeaponsCC();
-                  if (typeof initWeaponsRanged === "function") initWeaponsRanged();
-                  if (typeof updateSummary === "function") updateSummary();
-                  if (typeof initTabs === "function") initTabs();
-                }catch(e){}
-                break;
-              }
-            }
+          var pKey = (fObj && fObj.portraitKey) ? String(fObj.portraitKey) : String(ctx.entryId);
+          if (pKey){
+            var pData = await mrPortraitGet(pKey);
+            if (pData && fObj) fObj.portraitDataUrl = pData;
           }
+        }catch(_e){}
+        try{ applyImportedFighterState(fObj); }catch(e){}
+        try{
+          if (typeof importFromJsonText === "function") importFromJsonText(JSON.stringify(ent.data));
         }catch(e){}
-      })();
+        try{
+          if (fighter && (!fighter.portraitDataUrl || !String(fighter.portraitDataUrl).trim()) && fighter.portraitKey){
+            var d = await mrPortraitGet(String(fighter.portraitKey));
+            if (d) fighter.portraitDataUrl = d;
+          }
+        }catch(_e){}
+        mRerenderAllPanels();
+        return true;
+      }
+    }catch(e){
+      console.warn("Roster import failed:", e);
+    }
+    return false;
+  }
+
+  // Auto-load for edit/card modes.
+  try{
+    if ((ctx.mode === "edit" || ctx.mode === "card") && ctx.entryId){
+      loadRosterEntryAndApply().then(function(loaded){
+        if (!loaded) return;
+        if (ctx.mode === "card"){
+          setTimeout(function(){
+            try{
+              if (typeof window.generateFighterCard === "function") window.generateFighterCard();
+            }catch(e){ console.warn("Auto generate card failed:", e); }
+          }, 80);
+        }
+      });
     }
   }catch(_e){}
 
@@ -3882,37 +3916,6 @@ function mLoadFromRosterIfNeeded(){
 
       mNavigateBack(ctx.returnUrl);
     };
-  }
-
-  // If editing, load the fighter from roster
-  if (ctx.mode === "edit" && ctx.entryId){
-    var teamState2 = mGetTeamState();
-    if (teamState2 && Array.isArray(teamState2.team)){
-      var entry = null;
-      for (var j=0; j<teamState2.team.length; j++){
-        if (teamState2.team[j] && teamState2.team[j].id === ctx.entryId){
-          entry = teamState2.team[j];
-          break;
-        }
-      }
-      if (entry && entry.data){
-        try{
-          importFromJsonText(JSON.stringify(entry.data));
-          try{
-            if (fighter && (!fighter.portraitDataUrl || !String(fighter.portraitDataUrl).trim()) && fighter.portraitKey){
-              mrPortraitGet(String(fighter.portraitKey)).then(function(d){
-                if (d){ fighter.portraitDataUrl = d; try{ updateSummary(); }catch(e){} try{ refreshTotal(); }catch(e){} }
-                mRerenderAllPanels();
-              }).catch(function(){ mRerenderAllPanels(); });
-              return;
-            }
-          }catch(_e){}
-          mRerenderAllPanels();
-        }catch(e){
-          console.warn("Roster import failed:", e);
-        }
-      }
-    }
   }
 
   return ctx;
@@ -4392,8 +4395,12 @@ document.addEventListener("DOMContentLoaded", function () {
 
 
       var btnBack = document.createElement("button");
-      btnBack.textContent = "Back";
+      btnBack.textContent = window.__mr_card_mode ? "Back to Team" : "Back";
       btnBack.onclick = function(){
+        if (window.__mr_card_mode && window.__mr_card_return_url){
+          window.location.href = window.__mr_card_return_url;
+          return;
+        }
         ov.style.display = "none";
         document.body.style.overflow = "";
         document.body.classList.remove("print-card-mode");

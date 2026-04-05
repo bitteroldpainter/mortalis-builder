@@ -412,14 +412,14 @@
     return href.replace(/[#?].*$/, "");
   }
 
-  function startEditFighter(entryId){
+  function openFighterBuilder(mode, entryId){
     try{
       // persist current roster first
       saveTeamStateToBrowser();
 
       const ctx = {
         version: 1,
-        mode: entryId ? "edit" : "new",
+        mode: mode || (entryId ? "edit" : "new"),
         entryId: entryId || null,
         returnUrl: getReturnUrl(),
         startedAt: new Date().toISOString()
@@ -429,6 +429,15 @@
 
     // navigate to fighter builder
     window.location.href = FIGHTER_BUILDER_URL;
+  }
+
+  function startEditFighter(entryId){
+    openFighterBuilder(entryId ? "edit" : "new", entryId || null);
+  }
+
+  function startGenerateCard(entryId){
+    if (!entryId) return;
+    openFighterBuilder("card", entryId);
   }
 
 
@@ -596,6 +605,7 @@
             </div>
             <div class="right">
               <div class="costTag">${fmtPts(totalPts)}</div>
+              <button class="accent2" data-action="card" data-id="${entry.id}">Generate/Print Card</button>
               <button class="accent" data-action="edit" data-id="${entry.id}">Edit</button>
               <button class="accent" data-action="dup" data-id="${entry.id}">Duplicate</button>
               <button class="danger" data-action="remove" data-id="${entry.id}">Remove</button>
@@ -812,6 +822,7 @@
     if (!btn) return;
     const action = btn.getAttribute("data-action");
     const id = btn.getAttribute("data-id");
+    if (action === "card") startGenerateCard(id);
     if (action === "edit") startEditFighter(id);
     if (action === "remove") removeFighter(id);
     if (action === "dup") duplicateFighter(id);
