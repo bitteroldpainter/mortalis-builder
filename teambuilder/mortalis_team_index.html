@@ -153,7 +153,8 @@
   .fighterHead .left{display:flex;flex-direction:column;gap:2px;min-width:0}
   .fighterHead .name{color:#000000;font-weight:900;font-size:15px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:520px}
   .fighterHead .meta{color:#000000;font-size:12px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:520px}
-  .fighterHead .right{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+  .fighterHead .right{display:flex;flex-direction:column;align-items:flex-end;gap:6px;flex:0 0 auto}
+  .fighterHead .actionsRow{display:flex;gap:8px;align-items:center;justify-content:flex-end;flex-wrap:wrap}
 
   .costTag{
     font-weight:900;
@@ -604,11 +605,15 @@
               <div class="meta">Source: ${escapeHtml(entry.sourceFileName || "—")}</div>
             </div>
             <div class="right">
-              <div class="costTag">${fmtPts(totalPts)}</div>
-              <button class="accent2" data-action="card" data-id="${entry.id}">Generate/Print Card</button>
-              <button class="accent" data-action="edit" data-id="${entry.id}">Edit</button>
-              <button class="accent" data-action="dup" data-id="${entry.id}">Duplicate</button>
-              <button class="danger" data-action="remove" data-id="${entry.id}">Remove</button>
+              <div class="actionsRow">
+                <div class="costTag">${fmtPts(totalPts)}</div>
+                <button class="accent2" data-action="card" data-id="${entry.id}">Generate/Print Card</button>
+              </div>
+              <div class="actionsRow">
+                <button class="accent" data-action="edit" data-id="${entry.id}">Edit</button>
+                <button class="accent" data-action="dup" data-id="${entry.id}">Duplicate</button>
+                <button class="danger" data-action="remove" data-id="${entry.id}">Remove</button>
+              </div>
             </div>
           </div>
 
