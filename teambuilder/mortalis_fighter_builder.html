@@ -617,7 +617,7 @@
   { id: "gaussBlaster", name: "Gauss Blaster", profile: "ATK 4, Hit User, DMG 4/5, Piercing (-2)", points: 7 },
   { id: "hvyShotgun", name: "Hvy. Shotgun", profile: 'ATK 4, Hit User+2, DMG 4/4, Rng 6"', points: 4 },
   { id: "infernoBoltGun", name: "Inferno Bolt Gun", profile: "ATK 4, Hit User, DMG 3/4, Piercing (-2)", points: 5 },
-  { id: "ionRifle", name: "Ion Rifle", profile: "ATK 4, Hit User, DMG 4/5, Piercing Crits (-2)", points: 5 },
+  { id: "ionRifle", name: "Ion Rifle", profile: "ATK 4, Hit User, DMG 4/5, Piercing Crits (-2)", points: 7 },
   { id: "neutronBlaster", name: "Neutron Blaster", profile: "ATK 4, Hit User, DMG 3/3, MW (2)", points: 6 },
   { id: "pulseCarbine", name: "Pulse Carbine", profile: "ATK 4, Hit User, DMG 4/5, Reroll (1)", points: 5 },
   { id: "shotgun", name: "Shotgun", profile: 'ATK 4, Hit User+2, DMG 3/3, Rng 6"', points: 3 },
@@ -769,13 +769,6 @@
       "This Fighter can make Shooting attacks with Pistols even while within 1\" of enemy Fighters."
   },
   {
-    id: "expertDueller",
-    name: "Expert Dueller",
-    points: 4,
-    effect:
-      "This Fighter’s Close Combat weapons gain Reroll (SR)."
-  },
-  {
     id: "horrifyingDismemberment",
     name: "Horrifying Dismemberment",
     points: 2,
@@ -920,7 +913,7 @@
   {
     id: "gunslinger",
     name: "Gunslinger",
-    points: 4,
+    points: 2,
     effect:
       "1 AP: If this Fighter has not yet used a Shoot action this activation, it may make two free Shooting actions with Pistol weapons."
   },
@@ -1419,9 +1412,9 @@
         {
           id: "combatDrugs",
           name: "Combat Drugs",
-          points: 4,
+          points: 6,
           effect:
-            "At start of activation choose: (1) Heal 2D3 HP, (2) Reroll (SR) on CC attacks this turn, or (3) +2\" Move this turn."
+            "At start of activation choose: (1) Heal 2D3 HP, (2) Reroll (SR) on CC attacks this turn, or (3) +2\" Move this turn. One use per Option only."
         },
         {
           id: "mastercraftedForcefield",
@@ -1560,10 +1553,10 @@
         },  
         {
           id: "grenaDier",
-          name: "Grenadier (+)",
-          points: 6,
+          name: "Grenadier",
+          points: 4,
           effect:
-            'This Fighter is equipped with unlimited Frag and Krak grenades and has +2 to hit when using them..'
+            'This Fighter has +2 to hit when using Grenades'
         },
         {
           id: "psychicFamiliar",
