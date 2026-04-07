@@ -2636,6 +2636,7 @@ for (i = 0; i < renames.length; i++) {
               }
 
               fighter[targetArrayName].push({
+                id: found.id,
                 name: found.name,
                 points: (isSpell ? 0 : (found.points || 0)),
                 profile: found.profile,
@@ -2803,6 +2804,7 @@ for (i = 0; i < renames.length; i++) {
               if (!found) return;
 
               fighter.ccWeapons.push({
+                id: found.id,
                 name: found.name,
                 baseProfile: found.profile,
                 profile: found.profile,
@@ -3015,6 +3017,7 @@ var upgToggles = container.getElementsByClassName("upgrade-toggle");
             if (!found) return;
 
             fighter.rangedWeapons.push({
+              id: found.id,
               name: found.name,
               baseProfile: found.profile,
               profile: found.profile,
@@ -3138,6 +3141,121 @@ var upgToggles = container.getElementsByClassName("upgrade-toggle");
       function applyImportedFighterState(imported){
         if (!imported || typeof imported !== "object") throw new Error("Invalid JSON (no fighter object).");
 
+        function normalizeUpgrades(upgrades){
+          return {
+            poison: !!(upgrades && upgrades.poison),
+            enchanted: !!(upgrades && upgrades.enchanted),
+            cursed: !!(upgrades && upgrades.cursed),
+            truestrike: !!(upgrades && upgrades.truestrike),
+            masterCrafted: !!(upgrades && upgrades.masterCrafted)
+          };
+        }
+
+        function findCurrentItem(srcArray, importedItem){
+          if (!Array.isArray(srcArray) || !importedItem) return null;
+          var impId = (importedItem.id != null) ? String(importedItem.id) : "";
+          var impName = (importedItem.name != null) ? String(importedItem.name) : "";
+
+          var i, it;
+          if (impId) {
+            for (i = 0; i < srcArray.length; i++) {
+              it = srcArray[i];
+              if (String(it.id) === impId) return it;
+            }
+          }
+          if (impName) {
+            for (i = 0; i < srcArray.length; i++) {
+              it = srcArray[i];
+              if (String(it.name) === impName) return it;
+            }
+          }
+          return null;
+        }
+
+        function rebindWeaponList(importedList, srcArray){
+          if (!Array.isArray(importedList)) return [];
+          var out = [];
+          for (var i = 0; i < importedList.length; i++) {
+            var item = importedList[i];
+            if (!item || typeof item !== "object") continue;
+
+            var current = findCurrentItem(srcArray, item);
+            if (current) {
+              var rebound = {
+                id: current.id,
+                name: ((item.name != null && String(item.name).trim() && String(item.name) !== String(current.name)) ? String(item.name) : current.name),
+                baseProfile: current.profile,
+                profile: current.profile,
+                basePoints: current.points,
+                points: current.points,
+                upgrades: normalizeUpgrades(item.upgrades)
+              };
+              if (item.displayNameOverride != null && String(item.displayNameOverride).trim()) {
+                rebound.displayNameOverride = String(item.displayNameOverride);
+              }
+              out.push(rebound);
+            } else {
+              var fallback = {
+                id: item.id,
+                name: item.name || "Unknown",
+                baseProfile: item.baseProfile || item.profile || "",
+                profile: item.baseProfile || item.profile || "",
+                basePoints: (item.basePoints != null ? item.basePoints : (item.points || 0)),
+                points: (item.basePoints != null ? item.basePoints : (item.points || 0)),
+                upgrades: normalizeUpgrades(item.upgrades)
+              };
+              if (item.displayNameOverride != null && String(item.displayNameOverride).trim()) {
+                fallback.displayNameOverride = String(item.displayNameOverride);
+              }
+              out.push(fallback);
+            }
+          }
+          return out;
+        }
+
+        function rebindSimpleList(importedList, srcArray, isSpell){
+          if (!Array.isArray(importedList)) return [];
+          var out = [];
+          for (var i = 0; i < importedList.length; i++) {
+            var item = importedList[i];
+            if (!item || typeof item !== "object") continue;
+
+            var current = findCurrentItem(srcArray, item);
+            if (current) {
+              var rebound = {
+                id: current.id,
+                name: ((item.name != null && String(item.name).trim() && String(item.name) !== String(current.name)) ? String(item.name) : current.name),
+                points: (isSpell ? 0 : (current.points || 0)),
+                profile: current.profile,
+                effect: current.effect,
+                dynamicType: current.dynamicType,
+                dynamicFactor: current.dynamicFactor,
+                cv: current.cv
+              };
+              if (item.displayNameOverride != null && String(item.displayNameOverride).trim()) {
+                rebound.displayNameOverride = String(item.displayNameOverride);
+              }
+              out.push(rebound);
+            } else {
+              var fallback = {
+                id: item.id,
+                name: item.name || "Unknown",
+                points: (isSpell ? 0 : (item.points || 0)),
+                profile: item.profile,
+                effect: item.effect,
+                dynamicType: item.dynamicType,
+                dynamicFactor: item.dynamicFactor,
+                cv: item.cv
+              };
+              if (item.displayNameOverride != null && String(item.displayNameOverride).trim()) {
+                fallback.displayNameOverride = String(item.displayNameOverride);
+              }
+              out.push(fallback);
+            }
+          }
+          return out;
+        }
+
         // Replace top-level scalar/flags
         fighter.name = imported.name || "";
         fighter.isWarlock = !!imported.isWarlock;
@@ -3145,18 +3263,19 @@ var upgToggles = container.getElementsByClassName("upgrade-toggle");
 
         // Portrait (optional)
         fighter.portraitDataUrl = (typeof imported.portraitDataUrl === "string") ? imported.portraitDataUrl : (fighter.portraitDataUrl || "");
+        fighter.portraitKey = (typeof imported.portraitKey === "string") ? imported.portraitKey : (fighter.portraitKey || "");
 
         // Stats
         if (!fighter.stats) fighter.stats = {};
         safeAssign(fighter.stats, imported.stats || {});
 
-        // Lists (replace arrays)
-        fighter.ccWeapons = Array.isArray(imported.ccWeapons) ? imported.ccWeapons : [];
-        fighter.rangedWeapons = Array.isArray(imported.rangedWeapons) ? imported.rangedWeapons : [];
-        fighter.abilities = Array.isArray(imported.abilities) ? imported.abilities : [];
-        fighter.leaderAbilities = Array.isArray(imported.leaderAbilities) ? imported.leaderAbilities : [];
-        fighter.spells = Array.isArray(imported.spells) ? imported.spells : [];
-        fighter.equipment = Array.isArray(imported.equipment) ? imported.equipment : [];
+        // Lists: rebuild from CURRENT in-code libraries so updated costs/rules are used
+        fighter.ccWeapons      = rebindWeaponList(imported.ccWeapons, CC_WEAPONS);
+        fighter.rangedWeapons  = rebindWeaponList(imported.rangedWeapons, RANGED_WEAPONS);
+        fighter.abilities      = rebindSimpleList(imported.abilities, FIGHTER_ABILITIES, false);
+        fighter.leaderAbilities= rebindSimpleList(imported.leaderAbilities, LEADER_ABILITIES, false);
+        fighter.spells         = rebindSimpleList(imported.spells, SPELLS, true);
+        fighter.equipment      = rebindSimpleList(imported.equipment, EQUIPMENT, false);
 
         // Points block: keep base if present, otherwise default
         if (!fighter.points) fighter.points = {};

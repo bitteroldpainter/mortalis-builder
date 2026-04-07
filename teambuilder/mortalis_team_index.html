@@ -278,7 +278,1147 @@
   const exportBtn = el("exportBtn");
   const clearBtn = el("clearBtn");
 
+
   const addFighterBtn = el("addFighterBtn");
+
+  // ---- Current Mortalis rules library (mirrors builder data for roster recalculation) ----
+  var STAT_CONFIG = [
+        { key: "move",  label: "Move",  unit: '"', base: 6, min: 5, max: 8,  upCost: 4, downCost: 4, lowerIsBetter: false },
+        { key: "def",   label: "DEF",   unit: "+", base: 9, min: 5, max: 11, upCost: 1, downCost: 1, lowerIsBetter: true  },
+        { key: "ap",    label: "AP",    unit: "",  base: 2, min: 2, max: 4,  upCost: 4, downCost: 4, lowerIsBetter: false },
+        { key: "hp",    label: "HP",    unit: "",  base: 7, min: 3, max: 99, upCost: 1, downCost: 1, lowerIsBetter: false },
+        { key: "atk",   label: "ATK",   unit: "",  base: 3, min: 3, max: 5,  upCost: 2, downCost: 0, lowerIsBetter: false },
+        { key: "fight", label: "Fight", unit: "+", base: 7, min: 5, max: 11, upCost: 2, downCost: 1, lowerIsBetter: true  },
+        { key: "shoot", label: "Shoot", unit: "+", base: 7, min: 5, max: 11, upCost: 2, downCost: 1, lowerIsBetter: true  }
+      ];
+
+  var CC_WEAPONS = [
+  { id: "fistsClaws", name: "Fists/Claws", profile: "ATK User, Hit User, DMG 2/3", points: 0 },
+  { id: "beastClawsBite", name: "Beast Claws/Bite", profile: "ATK User, Hit User, DMG 3/4", points: 2 },
+  { id: "bigBladeAxe", name: "Big Blade/Axe", profile: "ATK User, Hit User, DMG 3/5", points: 3 },
+  { id: "bigChainblade", name: "Big Chainblade", profile: "ATK User, Hit User, DMG 5/6", points: 5 },
+  { id: "bladeAxe", name: "Blade/Axe", profile: "ATK User, Hit User, DMG 3/4", points: 2 },
+  { id: "chainsword", name: "Chainsword", profile: "ATK User, Hit User, DMG 4/5", points: 4 },
+  { id: "flail", name: "Flail", profile: "ATK User, Hit User-1, DMG 4/5, Rng 2", points: 4 },
+  { id: "hugeHammerAxeBlade", name: "Huge Hammer/Axe/Blade", profile: "ATK User, Hit User, DMG 5/6, Reroll (1)", points: 6 },
+  { id: "monstrousClaws", name: "Monstrous Claws", profile: "ATK User, Hit User, DMG 5/6, MW (1)", points: 6 },
+  { id: "poisonedKnife", name: "Poisoned Knife", profile: "ATK User, Hit User, DMG 3/4, Poison", points: 3 },
+  { id: "poisonedWeapon", name: "Poisoned Weapon", profile: "ATK User, Hit User, DMG 4/5, Poison, Reroll (SR)", points: 6 },
+  { id: "powerFist", name: "Power Fist", profile: "ATK User, Hit User-2, DMG 5/7, Crits on 9+, MW (1)", points: 7 },
+  { id: "powerKnife", name: "Power Knife", profile: "ATK User, Hit User, DMG 3/5, Crits on 9+", points: 4 },
+  { id: "powerRapier", name: "Power Rapier", profile: "ATK User, Hit User, DMG 4/5, Crits on 9+", points: 6 },
+  { id: "powerSpear", name: "Power Spear", profile: "ATK User, Hit User, DMG 4/6, , Rng 2, Crits on 9+", points: 8 },
+  { id: "powerWeapon", name: "Power Weapon", profile: "ATK User, Hit User, DMG 4/6, Crits on 9+", points: 7 },
+  { id: "psychicStaff", name: "Psychic Staff", profile: "ATK User, Hit User, DMG 4/6, Crits on 9+, Fire", points: 8 },
+  { id: "thunderHammer", name: "Thunder Hammer", profile: "ATK User, Hit User-2, DMG 5/7, Crits on 9+, MW (2)", points: 8 },
+  { id: "whip", name: "Whip", profile: "ATK User, Hit User-1, DMG 3/4, Rng 2", points: 2 }
+];
+
+  var RANGED_WEAPONS = [
+  // --- Pistols / Grenades ---
+  { id: "arcPistol", name: "Arc Pistol", profile: 'ATK 4, Hit User, DMG 4/5, Rng 8", Piercing (-3)', points: 6 },
+  { id: "autoLaspistol", name: "Auto/Laspistol", profile: 'ATK 4, Hit User, DMG 2/3, Rng 8", Quick', points: 2 },
+  { id: "boltPistol", name: "Bolt Pistol", profile: 'ATK 4, Hit User, DMG 3/4, Rng 8", Piercing Crits (-2), Quick', points: 3 },
+  { id: "handFlamer", name: "Hand Flamer", profile: 'ATK 4, Hit User+2, DMG 3/4, Rng 6", Ignores Cover, Torrent (1"), Fire', points: 4 },
+  { id: "meltaPistol", name: "Melta Pistol", profile: 'ATK 4, Hit User, DMG 6/3, Rng 3", Piercing (-5), MW (4)', points: 7 },
+  { id: "phosphorBlastPistol", name: "Phosphor Blast Pistol", profile: 'ATK 4, Hit User, DMG 3/4, Rng 8", Blast (1"), Quick', points: 4 },
+  { id: "plasmaPistol", name: "Plasma Pistol", profile: 'ATK 4, Hit User, DMG (Std) 5/6, Rng 8", Piercing (-3), Crits on 9+; (Supercharged): DMG 6/6, Rng 8", Piercing (-4), Crits on 9+, Risky', points: 7 },
+  { id: "rokkitPistol", name: "Rokkit Pistol", profile: 'ATK 6, Hit User, DMG 4/5, Rng 8", Blast (1")', points: 7 },
+  { id: "slugga", name: "Slugga", profile: 'ATK 6, Hit User, DMG 1/2, Rng 8, Quick"', points: 2 },
+  { id: "warpflamePistol", name: "Warpflame Pistol", profile: 'ATK 4, Hit User+2, DMG 3/4, Rng 6", Ignores Cover, Piercing (-2), Torrent (1"), Fire', points: 6 },
+  { id: "fragGrenade", name: "Frag Grenade", profile: 'ATK 4, Hit User-2, DMG 2/4, Rng 6", Blast (2"), Ignores Cover, Quick, One Use Only', points: 2 },
+  { id: "krakGrenade", name: "Krak Grenade", profile: 'ATK 4, Hit User-2, DMG 4/5, Rng 6", Piercing (-2), Ignores Cover, Quick, One Use Only', points: 2 },
+  { id: "meltaBomb", name: "Melta Bomb", profile: 'ATK 4, Hit User-2, DMG 5/6, Rng 6", Blast (2"), Piercing (-2), Ignores Cover, One Use Only, 2 AP action', points: 4 },
+
+  // --- Light / Medium Ranged ---
+  { id: "autoLasgun", name: "Auto/Lasgun", profile: "ATK 4, Hit User, DMG 2/3", points: 3 },
+  { id: "boltGun", name: "Bolt Gun", profile: "ATK 4, Hit User, DMG 3/4, Piercing Crits (-2)", points: 4 },
+  { id: "gaussBlaster", name: "Gauss Blaster", profile: "ATK 4, Hit User, DMG 4/5, Piercing (-2)", points: 7 },
+  { id: "hvyShotgun", name: "Hvy. Shotgun", profile: 'ATK 4, Hit User+2, DMG 4/4, Rng 6"', points: 4 },
+  { id: "infernoBoltGun", name: "Inferno Bolt Gun", profile: "ATK 4, Hit User, DMG 3/4, Piercing (-2)", points: 5 },
+  { id: "ionRifle", name: "Ion Rifle", profile: "ATK 4, Hit User, DMG 4/5, Piercing Crits (-2)", points: 7 },
+  { id: "neutronBlaster", name: "Neutron Blaster", profile: "ATK 4, Hit User, DMG 3/3, MW (2)", points: 6 },
+  { id: "pulseCarbine", name: "Pulse Carbine", profile: "ATK 4, Hit User, DMG 4/5, Reroll (1)", points: 5 },
+  { id: "shotgun", name: "Shotgun", profile: 'ATK 4, Hit User+2, DMG 3/3, Rng 6"', points: 3 },
+  { id: "shurikenRifle", name: "Shuriken Rifle", profile: "ATK 4, Hit User, DMG 3/4, Piercing (-2)", points: 5 },
+  { id: "teslaCarbine", name: "Tesla Carbine", profile: 'ATK 5, Hit User, DMG 3/3, Deals MW (2) to Fighters within 2" of target', points: 6 },
+
+  // --- Special ---
+  { id: "flamer", name: "Flamer", profile: 'ATK 4, Hit User+2, DMG 4/4, Rng 10", Ignores Cover, Torrent (2"), Fire', points: 8 },
+  { id: "grenadeLauncher", name: "Grenade Launcher", profile: 'ATK 4, Hit User, DMG (Frag) 2/4, Blast (2"); (Krak): DMG 4/5, Piercing (-2)', points: 8 },
+  { id: "meltaGun", name: "Melta Gun", profile: 'ATK 4, Hit User, DMG 6/3, Rng 6", Piercing (-5), MW (4)', points: 10 },
+  { id: "neutronRailRifle", name: "Neutron Rail Rifle", profile: "ATK 4, Hit User, DMG 4/4, MW (2)", points: 6 },
+  { id: "plasmaGun", name: "Plasma Gun", profile: 'ATK 4, Hit User, DMG (Std) 5/6, Piercing (-3), Crits on 9+; (Supercharged): DMG 6/6, Piercing (-4), Crits on 9+, Risky', points: 10 },
+  { id: "scopedBigShoota", name: "Scoped Big Shoota", profile: 'ATK 5, Hit User+1, DMG 3/3, MW (2), Heavy (Dash)', points: 10 },
+  { id: "shredder", name: "Shredder", profile: "ATK 4, Hit User, DMG 4/5, Piercing (-3)", points: 9 },
+  { id: "sniperRifle", name: "Sniper Rifle", profile: 'ATK 4, Hit User+1, DMG 3/3, Piercing (-2), Ignores Cover, MW (3)', points: 12 },
+  { id: "synapticDisintegrator", name: "Synaptic Disintegrator", profile: 'ATK 4, Hit User+1, DMG 4/3, Piercing (-2), Ignores Cover, MW (2)', points: 14 },
+  { id: "warpflamer", name: "Warpflamer", profile: 'ATK 4, Hit User+2, DMG 4/4, Rng 8", Ignores Cover, Torrent (2"), Piercing (-2), Fire', points: 10 },
+
+  // --- Heavy ---
+  { id: "eavyRokkitLauncha", name: "‘Eavy Rokkit Launcha", profile: 'ATK 6, Hit User+2, DMG 4/5, Blast (1"), Heavy (Dash)', points: 13 },
+  { id: "bigShoota", name: "Big Shoota", profile: "ATK 6, Hit User, DMG 3/4", points: 7 },
+  { id: "chaincannon", name: "Chaincannon", profile: 'ATK 6, Hit User, DMG 4/4, Reroll (1), Heavy (Dash)', points: 10 },
+  { id: "fragCannon", name: "Frag Cannon", profile: 'ATK 4, Hit User, DMG (Shell) 5/7, Piercing (-3); (Shrapnel): DMG 4/5, Blast (2")', points: 10 },
+  { id: "heavyBolter", name: "Heavy Bolter", profile: 'ATK 5, Hit User, DMG 5/6, Reroll (1), Heavy (Dash)', points: 10 },
+  { id: "heavyFlamer", name: "Heavy Flamer", profile: 'ATK 4, Hit User+2, DMG 5/5, Rng 10", Ignores Cover, Piercing (-2), Torrent (2"), Fire', points: 11 },
+  { id: "heavyStubber", name: "Heavy Stubber", profile: 'ATK 5, Hit User, DMG 4/5, Heavy (Dash)', points: 6 },
+  { id: "lascannon", name: "Lascannon", profile: 'ATK 4, Hit User, DMG 6/7, Piercing (-2), MW (2), Heavy (Dash)', points: 10 },
+  { id: "missileLauncher", name: "Missile Launcher", profile: 'Mode (Krak): ATK 4, Hit User, DMG 6/7, Piercing (-4), Heavy (Dash); (Frag): DMG 3/5, Blast (2"), Piercing Crits (-2), Heavy (Dash)', points: 10 },
+  { id: "multiMelta", name: "Multi Melta", profile: 'ATK 4, Hit User, DMG 6/3, MW (4), Heavy (Dash), Piercing (-5)', points: 13 },
+  { id: "plasmaCannon", name: "Plasma Cannon", profile: 'Mode (Std): ATK 4, Hit User, DMG 5/6, Blast (2"), Piercing (-3), Heavy (Dash); (Supercharged): DMG 6/6, Blast (2"), Piercing (-3), Heavy (Dash), Risky', points: 12 },
+  { id: "rokkitLauncha", name: "Rokkit Launcha", profile: 'ATK 6, Hit User, DMG 4/5, Blast (1")', points: 9 },
+  { id: "shurikenCannon", name: "Shuriken Cannon", profile: "ATK 5, Hit User, DMG 4/5", points: 7 },
+  { id: "soulreaperCannon", name: "Soulreaper Cannon", profile: "ATK 6, Hit User, DMG 4/5, Piercing Crits (-2)", points: 12 },
+  { id: "wraithCannon", name: "Wraith Cannon", profile: 'ATK 4, Hit User, DMG 6/3, MW (3), Heavy (Dash), Piercing (-4), Crits on 9+', points: 13 }
+];
+
+  var FIGHTER_ABILITIES = [
+  {
+    id: "counterstrike",
+    name: "Counterstrike",
+    points: 4,
+    effect:
+      "Each time an enemy Fighter deals this Fighter damage from an attack dice in Close Combat, this Fighter deals that Fighter 1 MW."
+  },
+  {
+    id: "terrifying",
+    name: "Terrifying",
+    points: 3,
+    effect:
+      'Enemy Fighters within 1" of this Fighter have -2 to hit in Close Combat.'
+  },
+  {
+    id: "expertGunfighter",
+    name: "Expert Gunfighter",
+    points: 4,
+    effect:
+      "This Fighter can make Shooting attacks with Pistols even while within 1\" of enemy Fighters."
+  },
+  {
+    id: "horrifyingDismemberment",
+    name: "Horrifying Dismemberment",
+    points: 2,
+    effect:
+      "When this Fighter slays an enemy in Close Combat, enemy Fighters within 6\" of the slain Fighter get -1 AP for the rest of the turn."
+  },
+  {
+    id: "experiencedBrawler",
+    name: "Experienced Brawler",
+    points: 2,
+    effect:
+      "This Fighter does not suffer -2 to hit from being outnumbered in CC, and enemies do not gain +2 to hit from outnumbering this Fighter."
+  },
+  {
+    id: "nullPariah",
+    name: "Null / Pariah",
+    points: 5,
+    effect:
+      "This Fighter cannot be targeted by Psychic Powers and cannot be a Psyker. Psykers (friend or foe) within 6\" cannot use Psychic Powers."
+  },
+  {
+    id: "zealot",
+    name: "Zealot",
+    points: 3,
+    effect:
+      "When this Fighter fights in Close Combat after Charging this activation, it gains +1 to hit."
+  },
+  {
+    id: "fast",
+    name: "Fast",
+    points: 2,
+    effect:
+      "This Fighter may perform a free Dash action during its activation (no AP cost)."
+  },
+  {
+    id: "hyperAggressive",
+    name: "Hyper Aggressive",
+    points: 4,
+    effect:
+      "This Fighter may perform either 2 Shooting actions (Pistols/Light/Medium only) or 2 Close Combat actions during its activation."
+  },
+  {
+    id: "gestaltMind",
+    name: "Gestalt Mind",
+    points: 2,
+    effect:
+      "This Fighter may share its AP with other Fighters in the Team that also have Gestalt Mind. When activating a Fighter, you may give 1 AP to another unactivated Gestalt Mind Fighter (max 4 AP on a Fighter)."
+  },
+  {
+    id: "reanimation",
+    name: "Reanimation",
+    points: 4,
+    effect:
+      "When a Fighter with Reanimation is slain, place a token within 1\". At the start of each turn, on 5+ it is reanimated within 1\" with D3+2 HP and may act as normal. A Fighter can only be reanimated once; fail = leave the token and try next turn."
+  },
+  {
+    id: "vengeance",
+    name: "Vengeance",
+    points: 2,
+    effect:
+      "When an enemy slays one of your Fighters, that enemy gains a Vengeance token. Fighters with Vengeance may turn one normal hit into a Crit when attacking an enemy with a Vengeance token. Remove the token when the enemy is slain; Vengeance tokens stack."
+  },
+  {
+    id: "powerFromPain",
+    name: "Power from Pain",
+    points: 4,
+    effect:
+      "This Fighter gains a PfP token each time it injures or slays an enemy. During its activation it may spend PfP to: gain 1 AP (this turn), regain D3+1 HP, or gain Reroll (SR) on all weapons (this turn)."
+  },
+  {
+    id: "ruthless",
+    name: "Ruthless",
+    points: 2,
+    effect:
+      "This Fighter may shoot at enemies locked in Combat. Any failed To Hit rolls of 1–2 hit the friendly model as normal damage."
+  },
+  {
+    id: "regenerate",
+    name: "Regenerate",
+    points: 4,
+    effect:
+      "At the beginning of this Fighter’s activation, it regains D3+1 lost HP."
+  },
+  {
+    id: "extremelyResilient",
+    name: "Extremely Resilient",
+    points: "+33% of HP Stat",
+    dynamicType: "percentHp",
+    dynamicFactor: 1/3,
+    effect:
+      "Whenever this Fighter takes damage from an attack, remove 1 point of damage from the Normal/Crit Damage characteristic of the weapon, to a minimum of 1. (Eg. Damage 3/4 becomes Damage 2/3, etc.)"
+  },
+  {
+    id: "unfetteredRage",
+    name: "Unfettered Rage",
+    points: 4,
+    effect:
+      "If this Fighter does not score any Critical Hits in Close Combat, you may change one normal hit to a Critical Hit."
+  },
+  {
+    id: "noxiousPresence",
+    name: "Noxious Presence",
+    points: 4,
+    effect:
+      'Enemy Fighters within 3" reduce their DEF by 1. This stacks with other Noxious Presence auras.'
+  },
+  {
+    id: "scarred",
+    name: "Scarred",
+    points: 3,
+    effect:
+      "Once per turn in Close Combat, this Fighter may lose 1 HP to reroll one attack die. If the reroll hits, add +1 Damage; if it misses, the Fighter loses 1 additional HP."
+  },
+  {
+    id: "bornInDarkness",
+    name: "Born in Darkness",
+    points: 5,
+    effect:
+      'This Fighter cannot be targeted by Shooting attacks from 12" or more away, and cannot make Shooting attacks at targets 12" or more away.'
+  },
+  {
+    id: "alchemist",
+    name: "Alchemist",
+    points: 3,
+    effect:
+      "Damage from Poison/Fire tokens applied by this Fighter’s weapons instead deals D3+1 damage."
+  },
+  {
+    id: "trenchWarrior",
+    name: "Trench Warrior",
+    points: 4,
+    effect:
+      "This Fighter can use the Shoot action even while Hidden."
+  },
+  {
+    id: "safeguard",
+    name: "Safeguard",
+    points: 3,
+    effect:
+      "Whenever this Fighter is within proximity of an Objective, its weapons gain Reroll (SR)."
+  },
+  {
+    id: "gunslinger",
+    name: "Gunslinger",
+    points: 2,
+    effect:
+      "1 AP: If this Fighter has not yet used a Shoot action this activation, it may make two free Shooting actions with Pistol weapons."
+  },
+  {
+    id: "headTaker",
+    name: "Head-taker",
+    points: 3,
+    effect:
+      "Whenever this Fighter kills an enemy in Melee, increase Crit Damage for all its Melee weapons by +2 for the rest of the battle."
+  },
+  {
+    id: "overwatch",
+    name: "Overwatch",
+    points: 4,
+    effect:
+      'When an enemy ends a Move within 6" and visible (but not within 1"), this Fighter may immediately Shoot with -2 to hit. Counts as its Counteract action for the turn.'
+  },
+  {
+    id: "endlessHorde",
+    name: "Endless Horde",
+    points: "= HP Stat",
+    dynamicType: "hpStat",
+    dynamicFactor: 1,
+    effect:
+      "Cost equals this Fighter’s current HP stat. When this Fighter dies, at the start of the next turn it returns at your Rearguard Deployment Zone edge. Only for Fighters with 2 AP or less and 10 HP or less."
+  },
+  {
+    id: "volatileExpiration",
+    name: "Volatile Expiration",
+    points: 3,
+    effect:
+      "When this Fighter is slain, you may roll a D12 (subtract 2 if within 1\" of another enemy). On 6+, each Fighter within 2\" suffers D3 MW."
+  },
+  {
+    id: "expendable",
+    name: "Expendable",
+    points: 3,
+    effect:
+      "When this Fighter dies, roll a D12; on 6+ you gain 1 FP."
+  },
+  {
+    id: "agent",
+    name: "Agent",
+    points: 2,
+    effect:
+      "The AP cost of all Interact actions for this Fighter is reduced by 1 (to a minimum of 0)."
+  },  
+  {
+    id: "sacrificialFollower",
+    name: "Sacrificial Follower",
+    points: 4,
+    effect:
+      'When within 6" of a Friendly Psyker, add 1 Warp Token to your Pool each turn. When within 6", may also suffer any MW suffered by use of Warp Tokens, instead of Psyker.'
+  },
+  {
+    id: "patientandReactive",
+    name: "Patient and Reactive",
+    points: 10,
+    effect:
+      'This Fighter may make two activations per turn, and split his AP between 2 those activations. For all intents and purposes, this counts as two separate activations. '
+  },
+  {
+    id: "finalDefiance",
+    name: "Final Defiance",
+    points: 4,
+    effect:
+      'When this Fighter is slain, it may immediately perform one last action before removing it from play. '
+  },
+  {
+    id: "superhumanWarrior",
+    name: "Superhuman Warrior",
+    points: 10,
+    effect:
+      "This Fighter may perform 2 Shooting actions or 2 Close Combat actions in its activation. If using a Special/Heavy weapon, the second Shoot costs 2 AP. When Counteracting, it may perform 2 different actions."
+  }
+];
+
+  var LEADER_ABILITIES = [
+        {
+          id: "inspiringPresence",
+          name: "Inspiring Presence",
+          points: 0,
+          effect: '1 AP: Friendly Fighters within 3" of your Leader gain 1 AP until end of turn.'
+        },
+        {
+          id: "masterTactician",
+          name: "Master Tactician",
+          points: 0,
+          effect: "1 AP: You immediately gain 1 FP."
+        },
+        {
+          id: "guidance",
+          name: "Guidance",
+          points: 0,
+          effect: '1 AP: Choose a friendly Fighter within Line of Sight. That Fighter gains 1 AP until end of turn.'
+        },
+        {
+          id: "grizzledVeteran",
+          name: "Grizzled Veteran",
+          points: 0,
+          effect: "As long as this Fighter is on the battlefield, you can use the Tactical Reroll once per turn for 0 FP."
+        },
+        {
+          id: "heroicLeader",
+          name: "Heroic Leader",
+          points: 0,
+          effect: "May use a Feat for free once per turn, but only during this Fighter’s activation."
+        },
+        {
+          id: "giveOrders",
+          name: "Give Orders",
+          points: 0,
+          effect:
+            '1 AP: All friendly Fighters within 6" gain ONE of the following (chosen once for all) until end of turn: +1 to Hit, +1" Charge range, or Hide action for 0 AP.'
+        },
+        {
+          id: "noEscape",
+          name: "No Escape",
+          points: 0,
+          effect:
+            'Enemy Fighters within this Fighter’s melee range reduce their Move by 2" when performing a Fall Back action.'
+        },
+        {
+          id: "getHimMark",
+          name: "Get Him!",
+          points: 0,
+          effect:
+            '1 AP: Select an enemy Fighter within Line of Sight. All shooting attacks against that Fighter gain Reroll (SR) until end of turn.'
+        },
+        {
+          id: "perfectDuellist",
+          name: "Perfect Duellist",
+          points: 0,
+          effect: "This Fighter can defend against Critical Hits in Close Combat using normal Defence rolls."
+        },
+        {
+          id: "implacable",
+          name: "Implacable",
+          points: 0,
+          effect: "This Fighter is immune to Glancing Hits."
+        },
+        {
+          id: "impermeable",
+          name: "Impermeable",
+          points: 0,
+          effect: "This Fighter is immune to effects from the Poison/Fire keyword."
+        },
+        {
+          id: "infernal",
+          name: "Infernal",
+          points: 0,
+          effect:
+            "This Fighter’s weapons gain Poison/Fire. When attacking enemy Fighters that have a Poison/Fire token, the weapon’s Damage values are improved by +1/+1."
+        },
+        {
+          id: "uncontrolledEruption",
+          name: "Uncontrolled Eruption",
+          points: 0,
+          effect:
+            '2 AP: Inflict D3+2 Mortal Wounds to each other Fighter that is within 2" and visible to this Fighter.'
+        },
+        {
+          id: "whispersWarp",
+          name: "Whispers of the Warp",
+          points: 0,
+          effect:
+            'Whenever an opponent activates a Fighter within 6", roll a D6. If the result is higher than that Fighter’s AP, it loses 1 AP for this activation.'
+        },
+        {
+          id: "spiritualPariah",
+          name: "Spiritual Pariah",
+          points: 0,
+          effect:
+            'Enemy Fighters within 6" and visible to this Fighter cannot reroll attack or defence rolls.'
+        },
+        {
+          id: "mercilessOnslaught",
+          name: "Merciless Onslaught",
+          points: 0,
+          effect:
+            "1 AP: Activate before rolling to Hit with a Close Combat attack. For that attack, Glancing Hits deal 2 Damage."
+        },
+        {
+          id: "mindOnMission",
+          name: "Mind on the Mission",
+          points: 0,
+          effect:
+            'All friendly Fighters within 6" may use the Interact action for 0 AP.'
+        },
+        {
+          id: "feedOnPain",
+          name: "Feed on Pain",
+          points: 0,
+          effect:
+            "If this Fighter slays an enemy Fighter with an attack, it regains 3 lost HP."
+        }
+      ];
+
+  var SPELLS = [
+        {
+          id: "tempest",
+          name: "TEMPEST",
+          cv: 7,
+          points: 0,
+          effect:
+            'Range: 16"<br><br>' +
+            'Target suffers D3 MW; roll a D12: on 11–12, push target D6" directly away and Knock Prone (loses 1 AP next activation).<br><br>' +
+            "Power Surge (MV 9): Deals +2 MW before the push."
+        },
+        {
+          id: "graviticMaelstrom",
+          name: "GRAVITIC MAELSTROM",
+          cv: 9,
+          points: 0,
+          effect:
+            'Range: 12", 3" AoE<br><br>' +
+            'All models inside must roll 7+ or be dragged D3" toward the center and suffer D3 MW.<br><br>' +
+            "Power Surge (MV 11): Fighters dragged suffer D3+2 MW."
+        },
+               {
+          id: "spectralChains",
+          name: "SPECTRAL CHAINS",
+          cv: 9,
+          points: 0,
+          effect:
+            'Range: 10"<br><br>' +
+            "Target Fighter may immediately be moved up to 6” by the Conjuring Warlock’s Player.<br><br>" +
+            "Power Surge (CV 11): Target also suffers D3 MW if it repositions in it's own activation this turn."
+        },
+        {
+          id: "stolenSight",
+          name: "STOLEN SIGHT",
+          cv: 7,
+          points: 0,
+          effect:
+            'Range: 12"<br><br>' +
+            "In its next activation, Target suffers –3 to Shoot; if Engaged, suffers –2 to Fight instead.<br><br>" +
+            "Power Surge (MV 9): –4 to Shoot, –3 to Fight."
+        },
+        {
+          id: "twistOfWill",
+          name: "TWIST OF WILL",
+          cv: 7,
+          points: 0,
+          effect:
+            'Range: 12"<br><br>' +
+            "Target must reroll all successful attack rolls on its next activation.<br><br>" +
+            "Power Surge (MV 9): Target also cannot Charge until next turn."
+        },
+        {
+          id: "voidfireBlast",
+          name: "VOIDFIRE BLAST",
+          cv: 9,
+          points: 0,
+          effect:
+            'Range: 12"<br><br>' +
+            "Pick any point. All models within 2\" suffer 2D3 MW. Psyker suffers 1 MW.<br><br>" +
+            "Power Surge (MV 11): Radius becomes 4\"."
+        },
+        {
+          id: "blazingWind",
+          name: "BLAZING WIND",
+          cv: 7,
+          points: 0,
+          effect:
+            'Range: 12"<br><br>' +
+            'Target suffers D3 Damage and is moved 2" directly away.<br><br>' +
+            "Power Surge (MV 9): D3+1 Damage and 4\" push."
+        },
+        {
+          id: "fireblast",
+          name: "FIREBLAST",
+          cv: 7,
+          points: 0,
+          effect:
+            'Range: 12"<br><br>' +
+            "Target suffers D3+1 Damage.<br><br>" +
+            "Power Surge (MV 9): Target also gains a Fire token."
+        },
+        {
+          id: "lightningBolt",
+          name: "LIGHTNING BOLT",
+          cv: 8,
+          points: 0,
+          effect:
+            "Range: —<br><br>" +
+            "Target suffers D3+2 MW.<br><br>" +
+            "Power Surge (MV 10): D3+3 MW."
+        },
+        {
+          id: "mendFlesh",
+          name: "MEND FLESH",
+          cv: 6,
+          points: 0,
+          effect:
+            'Range: 12"<br><br>' +
+            "Restore D3+1 HP to a friendly Fighter.<br><br>" +
+            "Power Surge (MV 10): Restore D3+2 HP and remove 1 Poison/Burning token."
+        },
+        {
+          id: "circleOfWarding",
+          name: "WARP FIELD",
+          cv: 6,
+          points: 0,
+          effect:
+            'Range: 3" aura<br><br>' +
+            "Friendly Fighters inside gain +2 DEF (max 5+) and cannot be Charged this turn.<br><br>" +
+            "Power Surge (MV 8): Circle lasts until next activation."
+        },
+        {
+          id: "arcaneAegis",
+          name: "IMMATERIAL SHIELD",
+          cv: 7,
+          points: 0,
+          effect:
+            'Range: 6"<br><br>' +
+            "Target gains +2 DEF (max 5+) until next turn.<br><br>" +
+            "Power Surge (MV 9): Target ignores first 2 Damage from next attack."
+        },
+        {
+          id: "spectralDecoy",
+          name: "SPECTRAL DECOY",
+          cv: 6,
+          points: 0,
+          effect:
+            "Range: Self<br><br>" +
+            "First attack against the Psyker before next activation automatically misses.<br><br>" +
+            "Power Surge (MV 8): On 5+, reflect that missed ranged attack for D3 Damage."
+        },
+        {
+          id: "soulflameSurge",
+          name: "SOULFLAME SURGE",
+          cv: 8,
+          points: 0,
+          effect:
+            'Range: 12"<br><br>' +
+            'A friendly Fighter gains +1 ATK and “Crits on 9+” on CC weapons until end of Turn.<br><br>' +
+            "Power Surge (MV 10): Affect two Fighters instead of one."
+        },
+        {
+          id: "veilOfShadows",
+          name: "VEIL OF SHADOWS",
+          cv: 7,
+          points: 0,
+          effect:
+            'Range: 6"<br><br>' +
+            "Target becomes Hidden, removed from engagement, placed up to 3\" away from enemies.<br><br>" +
+            "Power Surge (MV 9): Target may act normally; remove Hidden immediately."
+        },
+   
+        {
+          id: "phantasmalHorror",
+          name: "PHANTASMAL HORROR",
+          cv: 8,
+          points: 0,
+          effect:
+            'Range: 12"<br><br>' +
+            "Target must roll ≤ AP×2 on D12 or cannot Charge/move closer this turn.<br><br>" +
+            "Power Surge (MV 10): Must roll ≤ AP instead."
+        },
+        {
+          id: "siphonLife",
+          name: "SIPHON LIFE",
+          cv: 7,
+          points: 0,
+          effect:
+            'Range: 8"<br><br>' +
+            "Target suffers D3 MW; Psyker heals the same amount.<br><br>" +
+            "Power Surge (MV 9): D3+2 MW/heal."
+        },
+        {
+          id: "veilOfSouls",
+          name: "VEIL OF SOULS",
+          cv: 8,
+          points: 0,
+          effect:
+            "Range: Self<br><br>" +
+            "Until next activation, Psyker gains +1 DEF; enemies within 3\" suffer –1 to Hit.<br><br>" +
+            "Power Surge (MV 10): Psyker instead gains +2 DEF."
+        },
+        {
+          id: "etherealBody",
+          name: "ETHEREAL BODY",
+          cv: 7,
+          points: 0,
+          effect:
+            "Range: Self<br><br>" +
+            "Move through models and terrain (cannot end inside them or within 1\" of enemies unless Charging).<br><br>" +
+            "Power Surge (MV 9): Also gain +2 DEF until next turn."
+        }
+      ];
+
+  var EQUIPMENT = [
+        {
+          id: "medipackKIT",
+          name: "Medipack Kit (+)",
+          points: 4,
+          effect: '1 AP: Friendly Fighter within 1" regains 2D3 lost HP.'
+        },
+        {
+          id: "scannerAuspex",
+          name: "Scanner/Auspex",
+          points: 4,
+          effect: "1 AP: Mark an enemy in LoS. Shooting vs that Fighter gains Reroll (SR) until next turn."
+        },
+        {
+          id: "blinkPack",
+          name: "Blink Pack/Personal Teleporter (+)",
+          points: "+50% Stat cost",
+          dynamicType: "percentStats",
+          dynamicFactor: 0.5,
+          effect:
+            '1 AP: Reposition up to 12", ignoring terrain/height. Then roll D12; on 1–2 suffer D3 MW and may take no further actions this activation.'
+        },
+        {
+          id: "flightDevice",
+          name: "Jump Pack/Rokkit Pack/Wings",
+          points: "+33% Stat cost",
+          dynamicType: "percentStats",
+          dynamicFactor: 1/3,
+          effect:
+            'Gains Jump Move: +3" Move and may ignore terrain and vertical height when repositioning.'
+        },
+        {
+          id: "banner",
+          name: "Banner (+)",
+          points: 2,
+          effect: 'Friendly Fighters within 3" gain +1 to Hit with CC and Shooting attacks.'
+        },
+        {
+          id: "demolitions",
+          name: "Demolitions (+)",
+          points: 6,
+          effect:
+            "Once per game plant an Explosive Device while moving. 1 AP to detonate: ATK 4, Hit 2+, DMG 5/6, Piercing (-2), Blast (2\")."
+        },
+        {
+          id: "climbingEquipment",
+          name: "Climbing Equipment",
+          points: 2,
+          effect: 'Ignore the first 2" of vertical repositioning.'
+        },
+        {
+          id: "holyRelic",
+          name: "Holy Relic (+)",
+          points: 3,
+          effect: "User may ignore 1 normal damage attack per game."
+        },
+        {
+          id: "camoCloak",
+          name: "Camo Cloak",
+          points: 4,
+          effect:
+            "User gains -1 to be hit when in Cover or Hidden (stacks with Cover/Hidden)."
+        },
+        {
+          id: "forceField",
+          name: "Force Field (+)",
+          points: 5,
+          effect: "User gains a 9+ Aegis save."
+        },
+        {
+          id: "combatDrugs",
+          name: "Combat Drugs",
+          points: 6,
+          effect:
+            "At start of activation choose: (1) Heal 2D3 HP, (2) Reroll (SR) on CC attacks this turn, or (3) +2\" Move this turn. One use per Option only."
+        },
+        {
+          id: "mastercraftedForcefield",
+          name: "Mastercrafted Force Field (+)",
+          points: 10,
+          effect: "User gains a 7+ Aegis save."
+        },
+        {
+          id: "suspensorSystem",
+          name: "Suspensor System",
+          points: 3,
+          effect: "User’s Heavy Weapons gain the “Heavy (Move)” Special Rule."
+        },
+        {
+          id: "reconDrone",
+          name: "Recon Drone/Servo Skull",
+          points: 4,
+          effect:
+            "1 AP: Mark an enemy in LoS. Shooting vs that Fighter ignores negative To Hit modifiers from Light Cover and Hidden until end of turn."
+        },
+        {
+          id: "commsEquipment",
+          name: "Comms Equipment (+)",
+          points: 4,
+          effect: '1 AP: Grant a friendly Fighter within 9" +1 AP this round.'
+        },
+        {
+          id: "shimmerShield",
+          name: "Shimmershield (+)",
+          points: 4,
+          effect:
+            "User and friendly Fighters within 2\" reduce Piercing of enemy Shooting attacks by 2."
+        },
+        {
+          id: "breachingRam",
+          name: "Breaching Ram (+)",
+          points: 5,
+          effect:
+            'Treat any wall <1" thick as Accessible Terrain (may move through at cost of 1" Move).'
+        },
+        {
+          id: "digitalWeapons",
+          name: "Digital Weapons (+)",
+          points: 2,
+          effect:
+            "At the start of this Fighter’s CC activation, deal 2 MW to the engaged enemy Fighter."
+        },
+        {
+          id: "stormShield",
+          name: "Storm Shield (+)",
+          points: 5,
+          effect:
+            "User gains a 7+ Aegis save and 4 Defense dice in CC when using this shield. May only have Pistol and/or CC weapons as ranged options."
+        },
+        {
+          id: "commsJammer",
+          name: "Comms Jammer (+)",
+          points: 5,
+          effect:
+            "1 AP: Select a visible enemy Fighter; that Fighter must be activated last by your opponent this turn."
+        },
+        {
+          id: "grapplingHookGun",
+          name: "Grappling Hook Gun (+)",
+          points: 5,
+          effect:
+            '1 AP Move action: Place this Fighter within 1" of a chosen visible point on terrain, not within 1" of enemies. This Fighter may not have any Ranged Weapons.'
+        },
+        {
+          id: "macabreMemento",
+          name: "Macabre Memento (+)",
+          points: 6,
+          effect:
+            'While visible and within 3" of enemy Fighters, those Fighters reduce the Attack characteristic of their Melee and Ranged weapons by 1.'
+        },
+        {
+          id: "commandUplink",
+          name: "Command Uplink (+)",
+          points: 5,
+          effect: "Gain 1 extra FP at the start of the battle."
+        },
+        {
+          id: "blessedAmmunition",
+          name: "Blessed / Tainted Ammunition (+)",
+          points: 5,
+          effect:
+            "Add +1 to both Damage values of this Fighter’s Ranged weapons. Cannot be used on Heavy Weapons."
+        },
+        {
+          id: "targetingDesignator",
+          name: "Targeting Designator (+)",
+          points: 14,
+          effect:
+            'Gain an additional Ranged weapon: Cannon Strike – ATK 4, Hit 6+, DMG 3/5, Blast (2"), Heavy (Dash), may be used while Hidden.'
+        },
+        {
+          id: "laserSight",
+          name: "Laser Sight",
+          points: 3,
+          effect:
+            'This Fighter’s Ranged weapons with “Rng X” gain +1" range (except Flamers and Grenades).'
+        },
+        {
+          id: "gravShute",
+          name: "Grav Shute/Sliders",
+          points: 3,
+          effect: "This Fighter ignores vertical height when dropping down."
+        },
+        {
+          id: "gorgetProtection",
+          name: "Gorget Protection",
+          points: 4,
+          effect:
+            "Enemy Fighters can only score Critical Hits on 11+ in CC against this Fighter."
+        },
+        {
+          id: "operationalIntelligence",
+          name: "Operational Intelligence",
+          points: 4,
+          effect:
+            "Once per battle you may reroll the initiative roll. With Random Activation, return the drawn token and pull another."
+        },
+          {
+          id: "markerLights",
+          name: "Markerlights",
+          points: 5,
+          effect:
+            "1 AP action: Place a Markerlight token on an enemy Fighter in this Fighters line of sight. When a Fighter with the Markerlights ability is shooting at a Fighter with Markerlights tokens, its weapons gain No Cover (if 1 token) and No Cover + Reroll(1) (if 2 tokens)"
+        },
+          {
+          id: "hyperstaticField",
+          name: "Hyperstatic Field",
+          points: 5,
+          effect:
+            'Whenever an enemy Fighter moves within 1", roll 3D12; for each 9+ that enemy suffers 1 MW.'
+        },  
+        {
+          id: "grenaDier",
+          name: "Grenadier",
+          points: 4,
+          effect:
+            'This Fighter has +2 to hit when using Grenades'
+        },
+        {
+          id: "psychicFamiliar",
+          name: "Psychic Familiar",
+          points: 4,
+          effect:
+            'Add one Warp Token to your Pool each turn.'
+        }
+          
+      ];
+
+  function deepClone(obj) {
+    try { return JSON.parse(JSON.stringify(obj)); }
+    catch (e) { return null; }
+  }
+
+  function normalizeUpgrades(upgrades) {
+    return {
+      poison: !!(upgrades && upgrades.poison),
+      enchanted: !!(upgrades && upgrades.enchanted),
+      cursed: !!(upgrades && upgrades.cursed),
+      truestrike: !!(upgrades && upgrades.truestrike),
+      masterCrafted: !!(upgrades && upgrades.masterCrafted)
+    };
+  }
+
+  function findCurrentItem(srcArray, importedItem) {
+    if (!Array.isArray(srcArray) || !importedItem) return null;
+    const impId = (importedItem.id != null) ? String(importedItem.id) : "";
+    const impName = (importedItem.name != null) ? String(importedItem.name) : "";
+
+    if (impId) {
+      for (const it of srcArray) {
+        if (String(it.id) === impId) return it;
+      }
+    }
+    if (impName) {
+      for (const it of srcArray) {
+        if (String(it.name) === impName) return it;
+      }
+    }
+    return null;
+  }
+
+  function rebindWeaponList(importedList, srcArray) {
+    if (!Array.isArray(importedList)) return [];
+    const out = [];
+    for (const item of importedList) {
+      if (!item || typeof item !== "object") continue;
+      const current = findCurrentItem(srcArray, item);
+      if (current) {
+        const rebound = {
+          id: current.id,
+          name: ((item.name != null && String(item.name).trim() && String(item.name) !== String(current.name)) ? String(item.name) : current.name),
+          baseProfile: current.profile,
+          profile: current.profile,
+          basePoints: current.points,
+          points: current.points,
+          upgrades: normalizeUpgrades(item.upgrades)
+        };
+        if (item.displayNameOverride != null && String(item.displayNameOverride).trim()) {
+          rebound.displayNameOverride = String(item.displayNameOverride);
+        }
+        out.push(rebound);
+      } else {
+        const fallback = {
+          id: item.id,
+          name: item.name || "Unknown",
+          baseProfile: item.baseProfile || item.profile || "",
+          profile: item.baseProfile || item.profile || "",
+          basePoints: (item.basePoints != null ? item.basePoints : (item.points || 0)),
+          points: (item.basePoints != null ? item.basePoints : (item.points || 0)),
+          upgrades: normalizeUpgrades(item.upgrades)
+        };
+        if (item.displayNameOverride != null && String(item.displayNameOverride).trim()) {
+          fallback.displayNameOverride = String(item.displayNameOverride);
+        }
+        out.push(fallback);
+      }
+    }
+    return out;
+  }
+
+  function rebindSimpleList(importedList, srcArray, isSpell) {
+    if (!Array.isArray(importedList)) return [];
+    const out = [];
+    for (const item of importedList) {
+      if (!item || typeof item !== "object") continue;
+      const current = findCurrentItem(srcArray, item);
+      if (current) {
+        const rebound = {
+          id: current.id,
+          name: ((item.name != null && String(item.name).trim() && String(item.name) !== String(current.name)) ? String(item.name) : current.name),
+          points: (isSpell ? 0 : (current.points || 0)),
+          profile: current.profile,
+          effect: current.effect,
+          dynamicType: current.dynamicType,
+          dynamicFactor: current.dynamicFactor,
+          cv: current.cv
+        };
+        if (item.displayNameOverride != null && String(item.displayNameOverride).trim()) {
+          rebound.displayNameOverride = String(item.displayNameOverride);
+        }
+        out.push(rebound);
+      } else {
+        const fallback = {
+          id: item.id,
+          name: item.name || "Unknown",
+          points: (isSpell ? 0 : (item.points || 0)),
+          profile: item.profile,
+          effect: item.effect,
+          dynamicType: item.dynamicType,
+          dynamicFactor: item.dynamicFactor,
+          cv: item.cv
+        };
+        if (item.displayNameOverride != null && String(item.displayNameOverride).trim()) {
+          fallback.displayNameOverride = String(item.displayNameOverride);
+        }
+        out.push(fallback);
+      }
+    }
+    return out;
+  }
+
+  function computeWeaponUpgradeCostFor(weapon) {
+    if (!weapon || !weapon.upgrades) return 0;
+    let count = 0;
+    if (weapon.upgrades.poison) count++;
+    if (weapon.upgrades.enchanted) count++;
+    if (weapon.upgrades.cursed) count++;
+    if (weapon.upgrades.truestrike) count++;
+    if (weapon.upgrades.masterCrafted) count++;
+    if (count === 0) return 0;
+    return 2 + (count - 1) * 4;
+  }
+
+  function recalcStatCostFor(f) {
+    let total = 0;
+    for (const cfg of STAT_CONFIG) {
+      const base = cfg.base;
+      const cur = f?.stats?.[cfg.key];
+      if (cur === base) continue;
+      const step = (cur > base) ? 1 : -1;
+      const lowerIsBetter = !!cfg.lowerIsBetter;
+
+      for (let v = base; v !== cur; v += step) {
+        const next = v + step;
+        const improving = lowerIsBetter ? (next < v) : (next > v);
+        if (improving) total += cfg.upCost || 0;
+        else total -= cfg.downCost || 0;
+      }
+    }
+    f.points.stats = total;
+  }
+
+  function recalcWarlockCostFor(f) {
+    let baseline = (f.points.base || 0) + (f.points.stats || 0);
+    if (baseline < 0) baseline = 0;
+
+    if (f.isMasterWarlock) f.points.warlock = Math.ceil(baseline * 0.66);
+    else if (f.isWarlock) f.points.warlock = Math.ceil(baseline * 0.5);
+    else f.points.warlock = 0;
+  }
+
+  function recalcWeaponPointsFor(f) {
+    let sumCC = 0;
+    let sumR = 0;
+
+    for (const wc of (f.ccWeapons || [])) {
+      const base = (wc.basePoints != null) ? wc.basePoints : (wc.points || 0);
+      wc.points = base + computeWeaponUpgradeCostFor(wc);
+      sumCC += wc.points;
+    }
+
+    for (const rw of (f.rangedWeapons || [])) {
+      const baseR = (rw.basePoints != null) ? rw.basePoints : (rw.points || 0);
+      rw.points = baseR + computeWeaponUpgradeCostFor(rw);
+      sumR += rw.points;
+    }
+
+    f.points.ccWeapons = sumCC;
+    f.points.rangedWeapons = sumR;
+  }
+
+  function recalcAbilityPointsFor(f) {
+    let sumA = 0, sumL = 0, sumS = 0, sumE = 0;
+
+    for (const ab of (f.abilities || [])) {
+      let p = 0;
+      if (ab.dynamicType === "percentHp") {
+        const hp = f?.stats?.hp || 0;
+        const factor = ab.dynamicFactor || 0;
+        p = Math.ceil(hp * factor);
+        ab.points = p;
+      } else if (ab.dynamicType === "hpStat") {
+        const hp2 = f?.stats?.hp || 0;
+        const factor2 = (ab.dynamicFactor != null) ? ab.dynamicFactor : 1;
+        p = Math.round(hp2 * factor2);
+        ab.points = p;
+      } else {
+        p = ab.points || 0;
+      }
+      sumA += p;
+    }
+
+    for (const la of (f.leaderAbilities || [])) sumL += la.points || 0;
+    for (const sp of (f.spells || [])) sumS += sp.points || 0;
+
+    let baseline = (f.points.base || 0) + (f.points.stats || 0);
+    if (baseline < 0) baseline = 0;
+
+    for (const eq of (f.equipment || [])) {
+      let ep = 0;
+      if (eq.dynamicType === "percentStats") {
+        const factorEq = eq.dynamicFactor || 0;
+        ep = Math.ceil(baseline * factorEq);
+        eq.points = ep;
+      } else {
+        ep = eq.points || 0;
+      }
+      sumE += ep;
+    }
+
+    f.points.abilities = sumA;
+    f.points.leaderAbilities = sumL;
+    f.points.spells = sumS;
+    f.points.equipment = sumE;
+  }
+
+  function normalizeImportedFighter(f) {
+    if (!f || typeof f !== "object") return f;
+
+    const normalized = {
+      name: f.name || "",
+      isWarlock: !!f.isWarlock,
+      isMasterWarlock: !!f.isMasterWarlock,
+      portraitDataUrl: (typeof f.portraitDataUrl === "string") ? f.portraitDataUrl : "",
+      portraitKey: (typeof f.portraitKey === "string") ? f.portraitKey : "",
+      stats: Object.assign({}, f.stats || {}),
+      ccWeapons: rebindWeaponList(f.ccWeapons, CC_WEAPONS),
+      rangedWeapons: rebindWeaponList(f.rangedWeapons, RANGED_WEAPONS),
+      abilities: rebindSimpleList(f.abilities, FIGHTER_ABILITIES, false),
+      leaderAbilities: rebindSimpleList(f.leaderAbilities, LEADER_ABILITIES, false),
+      spells: rebindSimpleList(f.spells, SPELLS, true),
+      equipment: rebindSimpleList(f.equipment, EQUIPMENT, false),
+      points: {}
+    };
+
+    const importedPoints = (f.points && typeof f.points === "object") ? f.points : {};
+    normalized.points.base = (typeof importedPoints.base === "number") ? importedPoints.base : 16;
+
+    recalcStatCostFor(normalized);
+    recalcWarlockCostFor(normalized);
+    recalcWeaponPointsFor(normalized);
+    recalcAbilityPointsFor(normalized);
+
+    return normalized;
+  }
+
+  function normalizePayloadWithCurrentRules(payload) {
+    if (!payload || typeof payload !== "object") return payload;
+    const cloned = deepClone(payload) || payload;
+    if (cloned.fighter && typeof cloned.fighter === "object") {
+      cloned.fighter = normalizeImportedFighter(cloned.fighter);
+      return cloned;
+    }
+    return { fighter: normalizeImportedFighter(cloned) };
+  }
+
 
   // ---- Roster <-> Fighter Builder bridge (localStorage) ----
   const TEAM_KEY = "mortalis_roster_team_state_v1";
@@ -383,8 +1523,13 @@
       const obj = JSON.parse(raw);
       if (!obj || typeof obj !== "object" || !Array.isArray(obj.team)) return false;
 
-      // restore team
-      team = obj.team;
+      // restore team and normalize fighters against current Mortalis rules
+      team = obj.team.map(entry => {
+        if (!entry || typeof entry !== "object") return entry;
+        const cloned = deepClone(entry) || entry;
+        if (cloned.data) cloned.data = normalizePayloadWithCurrentRules(cloned.data);
+        return cloned;
+      });
 
       // restore warband name / limit
       if (typeof obj.warbandName === "string" && warbandNameEl){
@@ -677,9 +1822,10 @@
         const obj = JSON.parse(txt);
         const err = validateFighterJson(obj);
         if (err) { skipped++; continue; }
-                const id = uid();
-        await ensurePortraitStoredOnFighter(obj?.fighter, id);
-        team.push({ id, sourceFileName: file.name, data: obj });
+        const normalized = normalizePayloadWithCurrentRules(obj);
+        const id = uid();
+        await ensurePortraitStoredOnFighter(normalized?.fighter, id);
+        team.push({ id, sourceFileName: file.name, data: normalized });
         added++;
       } catch {
         skipped++;
@@ -709,7 +1855,8 @@
     const clone = JSON.parse(JSON.stringify(entry.data));
     const name = clone?.fighter?.name || "Fighter";
     clone.fighter.name = name + " (Copy)";
-    team.push({ id: uid(), sourceFileName: entry.sourceFileName, data: clone });
+    const normalizedClone = normalizePayloadWithCurrentRules(clone);
+    team.push({ id: uid(), sourceFileName: entry.sourceFileName, data: normalizedClone });
     // Persist roster in-browser (used by the Fighter Builder bridge)
     saveTeamStateToBrowser();
 
@@ -773,9 +1920,10 @@
         const fighterFile = item?.fighterFile;
         const err = validateFighterJson(fighterFile);
         if (err) continue;
-                const id = uid();
-        await ensurePortraitStoredOnFighter(fighterFile?.fighter, id);
-        loaded.push({ id, sourceFileName: item?.sourceFileName || "", data: fighterFile });
+        const normalized = normalizePayloadWithCurrentRules(fighterFile);
+        const id = uid();
+        await ensurePortraitStoredOnFighter(normalized?.fighter, id);
+        loaded.push({ id, sourceFileName: item?.sourceFileName || "", data: normalized });
       }
       team = loaded;
       setStatus(`Imported team: ${team.length} fighter(s).`);
