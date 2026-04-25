@@ -478,6 +478,12 @@
       display:block;
     }
 
+
+/* Nudge fighter name slightly right */
+.cc-name, .cc-title, .card h2 {
+  padding-left: 6px;
+}
+
 </style>
 </head>
 <body>
@@ -598,60 +604,78 @@
       var RANGED_WEAPONS = [
   // --- Pistols / Grenades ---
   { id: "arcPistol", name: "Arc Pistol", profile: 'ATK 4, Hit User, DMG 4/5, Rng 8", Piercing (-3)', points: 6 },
-  { id: "autoLaspistol", name: "Auto/Laspistol", profile: 'ATK 4, Hit User, DMG 2/3, Rng 8", Quick', points: 2 },
+  { id: "autoLaspistol", name: "Auto/Laspistol", profile: 'ATK 4, Hit User, DMG 2/3, Rng 8", Quick', points: 1 },
   { id: "boltPistol", name: "Bolt Pistol", profile: 'ATK 4, Hit User, DMG 3/4, Rng 8", Piercing Crits (-2), Quick', points: 3 },
   { id: "handFlamer", name: "Hand Flamer", profile: 'ATK 4, Hit User+2, DMG 3/4, Rng 6", Ignores Cover, Torrent (1"), Fire', points: 4 },
   { id: "meltaPistol", name: "Melta Pistol", profile: 'ATK 4, Hit User, DMG 6/3, Rng 3", Piercing (-5), MW (4)', points: 7 },
   { id: "phosphorBlastPistol", name: "Phosphor Blast Pistol", profile: 'ATK 4, Hit User, DMG 3/4, Rng 8", Blast (1"), Quick', points: 4 },
-  { id: "plasmaPistol", name: "Plasma Pistol", profile: 'ATK 4, Hit User, DMG (Std) 5/6, Rng 8", Piercing (-3), Crits on 9+; (Supercharged): DMG 6/6, Rng 8", Piercing (-4), Crits on 9+, Risky', points: 7 },
+  { id: "plasmaPistol", name: "Plasma Pistol", profile: 'ATK 4, Hit User, DMG (Std) 4/5, Rng 8", Piercing (-3), Crits on 9+; (Supercharged): DMG 5/6, Rng 8", Piercing (-4), Crits on 9+, Risky', points: 7, cardProfiles: [
+    { label: "Standard", profile: 'ATK 4, Hit User, DMG 4/5, Rng 8", Piercing (-3), Crits on 9+' },
+    { label: "Supercharged", profile: 'ATK 4, Hit User, DMG 5/6, Rng 8", Piercing (-4), Crits on 9+, Risky' }
+  ] },
   { id: "rokkitPistol", name: "Rokkit Pistol", profile: 'ATK 6, Hit User, DMG 4/5, Rng 8", Blast (1")', points: 7 },
   { id: "slugga", name: "Slugga", profile: 'ATK 6, Hit User, DMG 1/2, Rng 8, Quick"', points: 2 },
   { id: "warpflamePistol", name: "Warpflame Pistol", profile: 'ATK 4, Hit User+2, DMG 3/4, Rng 6", Ignores Cover, Piercing (-2), Torrent (1"), Fire', points: 6 },
-  { id: "fragGrenade", name: "Frag Grenade", profile: 'ATK 4, Hit User-2, DMG 2/4, Rng 6", Blast (2"), Ignores Cover, Quick, One Use Only', points: 2 },
-  { id: "krakGrenade", name: "Krak Grenade", profile: 'ATK 4, Hit User-2, DMG 4/5, Rng 6", Piercing (-2), Ignores Cover, Quick, One Use Only', points: 2 },
-  { id: "meltaBomb", name: "Melta Bomb", profile: 'ATK 4, Hit User-2, DMG 5/6, Rng 6", Blast (2"), Piercing (-2), Ignores Cover, One Use Only, 2 AP action', points: 4 },
+  { id: "fragGrenade", name: "Frag Grenades", profile: 'ATK 4, Hit User-2, DMG 2/4, Rng 6", Blast (2"), Ignores Cover, Quick', points: 5 },
+  { id: "krakGrenade", name: "Krak Grenades", profile: 'ATK 4, Hit User-2, DMG 4/5, Rng 6", Piercing (-2), Ignores Cover, Quick', points: 6 },
+  { id: "meltaBomb", name: "Melta Grenades", profile: 'ATK 4, Hit User-2, DMG 5/6, Rng 6", Blast (2"), Piercing (-2), Ignores Cover', points: 8 },
 
   // --- Light / Medium Ranged ---
   { id: "autoLasgun", name: "Auto/Lasgun", profile: "ATK 4, Hit User, DMG 2/3", points: 3 },
-  { id: "boltGun", name: "Bolt Gun", profile: "ATK 4, Hit User, DMG 3/4, Piercing Crits (-2)", points: 4 },
+  { id: "boltGun", name: "Bolt Gun", profile: "ATK 4, Hit User, DMG 3/4, Piercing Crits (-2)", points: 5 },
   { id: "gaussBlaster", name: "Gauss Blaster", profile: "ATK 4, Hit User, DMG 4/5, Piercing (-2)", points: 7 },
-  { id: "hvyShotgun", name: "Hvy. Shotgun", profile: 'ATK 4, Hit User+2, DMG 4/4, Rng 6"', points: 4 },
-  { id: "infernoBoltGun", name: "Inferno Bolt Gun", profile: "ATK 4, Hit User, DMG 3/4, Piercing (-2)", points: 5 },
+  { id: "hvyShotgun", name: "Hvy. Shotgun", profile: 'ATK 4, Hit User+2, DMG 4/4, Rng 8"', points: 4 },
+  { id: "infernoBoltGun", name: "Inferno Bolt Gun", profile: "ATK 4, Hit User, DMG 3/4, Piercing (-2)", points: 6 },
   { id: "ionRifle", name: "Ion Rifle", profile: "ATK 4, Hit User, DMG 4/5, Piercing Crits (-2)", points: 7 },
-  { id: "neutronBlaster", name: "Neutron Blaster", profile: "ATK 4, Hit User, DMG 3/3, MW (2)", points: 6 },
+  { id: "neutronBlaster", name: "Neutron Blaster", profile: "ATK 4, Hit User, DMG 3/3, MW (2)", points: 5 },
   { id: "pulseCarbine", name: "Pulse Carbine", profile: "ATK 4, Hit User, DMG 4/5, Reroll (1)", points: 5 },
-  { id: "shotgun", name: "Shotgun", profile: 'ATK 4, Hit User+2, DMG 3/3, Rng 6"', points: 3 },
-  { id: "shurikenRifle", name: "Shuriken Rifle", profile: "ATK 4, Hit User, DMG 3/4, Piercing (-2)", points: 5 },
+  { id: "shotgun", name: "Shotgun", profile: 'ATK 4, Hit User+2, DMG 3/3, Rng 8"', points: 3 },
+  { id: "shurikenRifle", name: "Shuriken Rifle", profile: "ATK 4, Hit User, DMG 3/4, Piercing (-2)", points: 6 },
   { id: "teslaCarbine", name: "Tesla Carbine", profile: 'ATK 5, Hit User, DMG 3/3, Deals MW (2) to Fighters within 2" of target', points: 6 },
 
   // --- Special ---
   { id: "flamer", name: "Flamer", profile: 'ATK 4, Hit User+2, DMG 4/4, Rng 10", Ignores Cover, Torrent (2"), Fire', points: 8 },
-  { id: "grenadeLauncher", name: "Grenade Launcher", profile: 'ATK 4, Hit User, DMG (Frag) 2/4, Blast (2"); (Krak): DMG 4/5, Piercing (-2)', points: 8 },
+  { id: "grenadeLauncher", name: "Grenade Launcher", profile: 'ATK 4, Hit User, DMG (Frag) 2/4, Blast (2"); (Krak): DMG 4/5, Piercing (-2)', points: 8 , cardProfiles: [
+    { label: "Frag", profile: 'ATK 4, Hit User, DMG 2/4, Blast (2")' },
+    { label: "Krak", profile: 'ATK 4, Hit User, DMG 4/5, Piercing (-2)' }
+  ] },
   { id: "meltaGun", name: "Melta Gun", profile: 'ATK 4, Hit User, DMG 6/3, Rng 6", Piercing (-5), MW (4)', points: 10 },
   { id: "neutronRailRifle", name: "Neutron Rail Rifle", profile: "ATK 4, Hit User, DMG 4/4, MW (2)", points: 6 },
-  { id: "plasmaGun", name: "Plasma Gun", profile: 'ATK 4, Hit User, DMG (Std) 5/6, Piercing (-3), Crits on 9+; (Supercharged): DMG 6/6, Piercing (-4), Crits on 9+, Risky', points: 10 },
-  { id: "scopedBigShoota", name: "Scoped Big Shoota", profile: 'ATK 5, Hit User+1, DMG 3/3, MW (2), Heavy (Dash)', points: 10 },
-  { id: "shredder", name: "Shredder", profile: "ATK 4, Hit User, DMG 4/5, Piercing (-3)", points: 9 },
-  { id: "sniperRifle", name: "Sniper Rifle", profile: 'ATK 4, Hit User+1, DMG 3/3, Piercing (-2), Ignores Cover, MW (3)', points: 12 },
-  { id: "synapticDisintegrator", name: "Synaptic Disintegrator", profile: 'ATK 4, Hit User+1, DMG 4/3, Piercing (-2), Ignores Cover, MW (2)', points: 14 },
+  { id: "plasmaGun", name: "Plasma Gun", profile: 'ATK 4, Hit User, DMG (Std) 4/6, Piercing (-3), Crits on 9+; (Supercharged): DMG 5/6, Piercing (-4), Crits on 9+, Risky', points: 10, cardProfiles: [
+    { label: "Standard", profile: 'ATK 4, Hit User, DMG 4/6, Piercing (-3), Crits on 9+' },
+    { label: "Supercharged", profile: 'ATK 4, Hit User, DMG 5/6, Piercing (-4), Crits on 9+, Risky' }
+  ] },
+  { id: "scopedBigShoota", name: "Scoped Big Shoota", profile: 'ATK 5, Hit User+1, DMG 3/3, MW (2), Heavy (Dash)', points: 8 },
+  { id: "shredder", name: "Shredder", profile: "ATK 4, Hit User, DMG 4/5, Piercing (-3)", points: 8 },
+  { id: "sniperRifle", name: "Sniper Rifle", profile: 'ATK 4, Hit User+1, DMG 3/3, Piercing (-2), Ignores Cover, MW (3), Crits on 9+', points: 12 },
+  { id: "synapticDisintegrator", name: "Synaptic Disintegrator", profile: 'ATK 4, Hit User+1, DMG 4/3, Piercing (-4), Ignores Cover, MW (1), Crits on 9+', points: 11 },
   { id: "warpflamer", name: "Warpflamer", profile: 'ATK 4, Hit User+2, DMG 4/4, Rng 8", Ignores Cover, Torrent (2"), Piercing (-2), Fire', points: 10 },
 
   // --- Heavy ---
-  { id: "eavyRokkitLauncha", name: "‘Eavy Rokkit Launcha", profile: 'ATK 6, Hit User+2, DMG 4/5, Blast (1"), Heavy (Dash)', points: 13 },
-  { id: "bigShoota", name: "Big Shoota", profile: "ATK 6, Hit User, DMG 3/4", points: 7 },
+  { id: "eavyRokkitLauncha", name: "‘Eavy Rokkit Launcha", profile: 'ATK 6, Hit User+2, DMG 4/5, Blast (1"), Heavy (Dash)', points: 12 },
+  { id: "bigShoota", name: "Big Shoota", profile: "ATK 6, Hit User, DMG 3/4", points: 8 },
   { id: "chaincannon", name: "Chaincannon", profile: 'ATK 6, Hit User, DMG 4/4, Reroll (1), Heavy (Dash)', points: 10 },
-  { id: "fragCannon", name: "Frag Cannon", profile: 'ATK 4, Hit User, DMG (Shell) 5/7, Piercing (-3); (Shrapnel): DMG 4/5, Blast (2")', points: 10 },
+  { id: "fragCannon", name: "Frag Cannon", profile: 'ATK 4, Hit User, DMG (Shell) 5/7, Piercing (-3); (Shrapnel): DMG 4/5, Blast (2")', points: 10, cardProfiles: [
+    { label: "Shrapnel", profile: 'ATK 4, Hit User, DMG 4/5, Blast (2")' },
+    { label: "Shell", profile: 'ATK 4, Hit User, DMG 5/7, Piercing (-3)' }
+  ] },
   { id: "heavyBolter", name: "Heavy Bolter", profile: 'ATK 5, Hit User, DMG 5/6, Reroll (1), Heavy (Dash)', points: 10 },
   { id: "heavyFlamer", name: "Heavy Flamer", profile: 'ATK 4, Hit User+2, DMG 5/5, Rng 10", Ignores Cover, Piercing (-2), Torrent (2"), Fire', points: 11 },
   { id: "heavyStubber", name: "Heavy Stubber", profile: 'ATK 5, Hit User, DMG 4/5, Heavy (Dash)', points: 6 },
-  { id: "lascannon", name: "Lascannon", profile: 'ATK 4, Hit User, DMG 6/7, Piercing (-2), MW (2), Heavy (Dash)', points: 10 },
-  { id: "missileLauncher", name: "Missile Launcher", profile: 'Mode (Krak): ATK 4, Hit User, DMG 6/7, Piercing (-4), Heavy (Dash); (Frag): DMG 3/5, Blast (2"), Piercing Crits (-2), Heavy (Dash)', points: 10 },
-  { id: "multiMelta", name: "Multi Melta", profile: 'ATK 4, Hit User, DMG 6/3, MW (4), Heavy (Dash), Piercing (-5)', points: 13 },
-  { id: "plasmaCannon", name: "Plasma Cannon", profile: 'Mode (Std): ATK 4, Hit User, DMG 5/6, Blast (2"), Piercing (-3), Heavy (Dash); (Supercharged): DMG 6/6, Blast (2"), Piercing (-3), Heavy (Dash), Risky', points: 12 },
+  { id: "lascannon", name: "Lascannon", profile: 'ATK 4, Hit User, DMG 6/7, Piercing (-4), MW (2), Heavy (Dash)', points: 12 },
+  { id: "missileLauncher", name: "Missile Launcher", profile: 'Mode (Krak): ATK 4, Hit User, DMG 6/7, Piercing (-3), Heavy (Dash); (Frag): DMG 4/5, Blast (2"), Piercing Crits (-2), Heavy (Dash)', points: 10, cardProfiles: [
+    { label: "Krak", profile: 'ATK 4, Hit User, DMG 6/7, Piercing (-3), Heavy (Dash)' },
+    { label: "Frag", profile: 'ATK 4, Hit User, DMG 4/5, Piercing Crits (-2), Blast 2", Heavy (Dash)' }
+  ] },
+  { id: "multiMelta", name: "Multi Melta", profile: 'ATK 4, Hit User, DMG 6/3, MW (4), Heavy (Dash), Piercing (-5)', points: 11 },
+  { id: "plasmaCannon", name: "Plasma Cannon", profile: 'Mode (Std): ATK 4, Hit User, DMG 5/6, Blast (2"), Piercing (-3), Heavy (Dash), Crits on 9+; (Supercharged): DMG 6/6, Blast (2"), Piercing (-4), Heavy (Dash), Crits on 9+, Risky', points: 12, cardProfiles: [
+    { label: "Standard", profile: 'ATK 4, Hit User, DMG 5/6, Piercing (-3), Blast (2"),Heavy (Dash), Crits on 9+' },
+    { label: "Supercharge", profile: 'ATK 4, Hit User, DMG 6/6, Piercing (-4), Blast 2", Heavy (Dash), Crits on 9+, Risky' }
+  ] },
   { id: "rokkitLauncha", name: "Rokkit Launcha", profile: 'ATK 6, Hit User, DMG 4/5, Blast (1")', points: 9 },
   { id: "shurikenCannon", name: "Shuriken Cannon", profile: "ATK 5, Hit User, DMG 4/5", points: 7 },
   { id: "soulreaperCannon", name: "Soulreaper Cannon", profile: "ATK 6, Hit User, DMG 4/5, Piercing Crits (-2)", points: 12 },
-  { id: "wraithCannon", name: "Wraith Cannon", profile: 'ATK 4, Hit User, DMG 6/3, MW (3), Heavy (Dash), Piercing (-4), Crits on 9+', points: 13 }
+  { id: "wraithCannon", name: "Wraith Cannon", profile: 'ATK 4, Hit User, DMG 6/3, MW (3), Heavy (Dash), Piercing (-4), Crits on 9+', points: 11 }
 ];
 
       // --- Ranged weapon sub-categories ---
@@ -2562,7 +2586,7 @@ var upBtn = pill.querySelector(".stat-up");
               + '<div class="item-row" data-idx="' + i + '">'
               + '  <div class="item-row-header">'
               + '    <div class="item-main">'
-              + '      <div class="item-name">' + a.name + '</div>'
+              + '      <div class="item-name">' + getDisplayName(a) + '</div>'
               + '      <div class="item-detail">' + (a.profile || a.effect || "") + '</div>'
               + '    </div>'
               + '    <div class="item-points">' + rightLabel + '</div>'
@@ -2708,7 +2732,7 @@ for (i = 0; i < renames.length; i++) {
                 + '<div class="item-row" data-idx="' + i + '" data-group="cc">'
                 + '  <div class="item-row-header">'
                 + '    <div class="item-main">'
-                + '      <div class="item-name">' + wc.name + '</div>'
+                + '      <div class="item-name">' + getDisplayName(wc) + '</div>'
                 + '      <div class="item-detail">' + prof + '</div>'
                 + '    </div>'
                 + '    <div class="item-points">' + wc.points + ' pts</div>'
@@ -2912,7 +2936,7 @@ for (i = 0; i < renames.length; i++) {
                 + '<div class="item-row" data-idx="' + i + '" data-group="ranged">'
                 + '  <div class="item-row-header">'
                 + '    <div class="item-main">'
-                + '      <div class="item-name">' + rw.name + '</div>'
+                + '      <div class="item-name">' + getDisplayName(rw) + '</div>'
                 + '      <div class="item-detail">' + profR + '</div>'
                 + '    </div>'
                 + '    <div class="item-points">' + rw.points + ' pts</div>'
@@ -2991,53 +3015,74 @@ var upgToggles = container.getElementsByClassName("upgrade-toggle");
           }
         }
 
-        // Handle ranged sub-category tabs + adding weapons via event delegation
-        container.addEventListener("click", function (e) {
-          var t = e.target;
+        // Handle ranged sub-category tabs + adding weapons via event delegation.
+        // IMPORTANT: initWeaponsRanged() can run many times. Bind this listener ONCE only,
+        // otherwise Add clicks stack up and one click can add the same ranged weapon several times.
+        container.__mortalisRangedRenderSelected = renderSelected;
+        container.__mortalisRangedRenderOptions = renderRangedOptions;
+        container.__mortalisRangedSetActivePills = setActiveRangedCategoryPills;
 
-          // Switch sub-category
-          if (t && t.classList && t.classList.contains("ranged-cat-pill")) {
-            var cat = t.getAttribute("data-cat") || "pistols";
-            currentRangedCategory = cat;
-            renderRangedOptions();
-            setActiveRangedCategoryPills();
-            return;
-          }
+        if (!container.__mortalisRangedClickBound) {
+          container.__mortalisRangedClickBound = true;
 
-          // Add weapon
-          if (t && t.classList && t.classList.contains("add-weapon")) {
-            var row = t.closest(".item-row");
-            if (!row) return;
-            var id = row.getAttribute("data-id");
+          container.addEventListener("click", function (e) {
+            if (e.__mortalisRangedHandled) return;
+            var t = e.target;
 
-            var i, found = null;
-            for (i = 0; i < RANGED_WEAPONS.length; i++) {
-              if (RANGED_WEAPONS[i].id === id) { found = RANGED_WEAPONS[i]; break; }
+            // Switch sub-category
+            if (t && t.classList && t.classList.contains("ranged-cat-pill")) {
+              e.__mortalisRangedHandled = true;
+              e.preventDefault();
+
+              var cat = t.getAttribute("data-cat") || "pistols";
+              currentRangedCategory = cat;
+
+              if (container.__mortalisRangedRenderOptions) container.__mortalisRangedRenderOptions();
+              if (container.__mortalisRangedSetActivePills) container.__mortalisRangedSetActivePills();
+              return;
             }
-            if (!found) return;
 
-            fighter.rangedWeapons.push({
-              id: found.id,
-              name: found.name,
-              baseProfile: found.profile,
-              profile: found.profile,
-              basePoints: found.points,
-              points: found.points,
-              upgrades: {
-                poison: false,
-                enchanted: false,
-                cursed: false,
-                truestrike: false,
-                masterCrafted: false
+            // Add weapon
+            if (t && t.classList && t.classList.contains("add-weapon")) {
+              e.__mortalisRangedHandled = true;
+              e.preventDefault();
+              e.stopImmediatePropagation();
+
+              var row = t.closest(".item-row");
+              if (!row) return;
+              var id = row.getAttribute("data-id");
+
+              var i, found = null;
+              for (i = 0; i < RANGED_WEAPONS.length; i++) {
+                if (RANGED_WEAPONS[i].id === id) { found = RANGED_WEAPONS[i]; break; }
               }
-            });
+              if (!found) return;
 
-            recalcWeaponPoints();
-            refreshTotal();
-            updateSummary();
-            renderSelected();
-          }
-        });
+              fighter.rangedWeapons.push({
+                id: found.id,
+                name: found.name,
+                baseProfile: found.profile,
+                profile: found.profile,
+                cardProfiles: found.cardProfiles ? deepClone(found.cardProfiles) : undefined,
+                basePoints: found.points,
+                points: found.points,
+                upgrades: {
+                  poison: false,
+                  enchanted: false,
+                  cursed: false,
+                  truestrike: false,
+                  masterCrafted: false
+                }
+              });
+
+              recalcWeaponPoints();
+              refreshTotal();
+              updateSummary();
+              if (container.__mortalisRangedRenderSelected) container.__mortalisRangedRenderSelected();
+              return;
+            }
+          });
+        }
 
         recalcWeaponPoints();
         renderSelected();
@@ -3186,6 +3231,7 @@ var upgToggles = container.getElementsByClassName("upgrade-toggle");
                 name: ((item.name != null && String(item.name).trim() && String(item.name) !== String(current.name)) ? String(item.name) : current.name),
                 baseProfile: current.profile,
                 profile: current.profile,
+                cardProfiles: current.cardProfiles ? deepClone(current.cardProfiles) : (item.cardProfiles ? deepClone(item.cardProfiles) : undefined),
                 basePoints: current.points,
                 points: current.points,
                 upgrades: normalizeUpgrades(item.upgrades)
@@ -3200,6 +3246,7 @@ var upgToggles = container.getElementsByClassName("upgrade-toggle");
                 name: item.name || "Unknown",
                 baseProfile: item.baseProfile || item.profile || "",
                 profile: item.baseProfile || item.profile || "",
+                cardProfiles: item.cardProfiles ? deepClone(item.cardProfiles) : undefined,
                 basePoints: (item.basePoints != null ? item.basePoints : (item.points || 0)),
                 points: (item.basePoints != null ? item.basePoints : (item.points || 0)),
                 upgrades: normalizeUpgrades(item.upgrades)
@@ -3812,6 +3859,255 @@ var upgToggles = container.getElementsByClassName("upgrade-toggle");
 
 
       
+      // Duplicate-click guard patch: delegated capture handlers for panel actions
+      function installDuplicateClickGuard(){
+        if (window.__E28_DUPLICATE_GUARD_INSTALLED__) return;
+        window.__E28_DUPLICATE_GUARD_INSTALLED__ = true;
+
+        function getSimpleCfg(sectionId){
+          var map = {
+            "section-abilities": { title: "Fighter Abilities", srcArray: FIGHTER_ABILITIES, targetArrayName: "abilities", isSpell: false, maxSelect: null },
+            "section-leader":   { title: "Leader Abilities",  srcArray: LEADER_ABILITIES,  targetArrayName: "leaderAbilities", isSpell: false, maxSelect: 2 },
+            "section-spells":   { title: "Psychic Powers",   srcArray: SPELLS,            targetArrayName: "spells", isSpell: true, maxSelect: null },
+            "section-equipment":{ title: "Equipment",         srcArray: EQUIPMENT,         targetArrayName: "equipment", isSpell: false, maxSelect: null }
+          };
+          return map[sectionId] || null;
+        }
+
+        function rerenderSimplePanel(sectionId){
+          var cfg = getSimpleCfg(sectionId);
+          if (!cfg) return;
+          initSimplePanel(sectionId, cfg.title, cfg.srcArray, cfg.targetArrayName, cfg.isSpell, cfg.maxSelect);
+        }
+
+        ["section-abilities","section-leader","section-spells","section-equipment"].forEach(function(sectionId){
+          var container = document.getElementById(sectionId);
+          if (!container || container.__e28SimpleGuardBound) return;
+          container.__e28SimpleGuardBound = true;
+
+          container.addEventListener("click", function(e){
+            var btn = e.target && e.target.closest ? e.target.closest("button") : null;
+            if (!btn || !container.contains(btn)) return;
+            if (!btn.classList.contains("add-btn") && !btn.classList.contains("remove-btn") && !btn.classList.contains("rename-btn")) return;
+
+            var cfg = getSimpleCfg(sectionId);
+            if (!cfg) return;
+            if (!fighter[cfg.targetArrayName]) fighter[cfg.targetArrayName] = [];
+
+            e.preventDefault();
+            e.stopImmediatePropagation();
+
+            if (btn.classList.contains("add-btn")){
+              var row = btn.closest(".item-row");
+              var id = row && row.getAttribute("data-id");
+              if (!id) return;
+              var found = null;
+              for (var i = 0; i < cfg.srcArray.length; i++) {
+                if (cfg.srcArray[i].id === id) { found = cfg.srcArray[i]; break; }
+              }
+              if (!found) return;
+              if (cfg.isSpell && !fighter.isWarlock && !fighter.isMasterWarlock) {
+                alert("You must be a Warlock or Master Warlock to add spells.");
+                return;
+              }
+              if (cfg.maxSelect && fighter[cfg.targetArrayName].length >= cfg.maxSelect) {
+                alert("You may only select up to " + cfg.maxSelect + " " + cfg.title + ".");
+                return;
+              }
+              fighter[cfg.targetArrayName].push({
+                name: found.name,
+                points: (cfg.isSpell ? 0 : (found.points || 0)),
+                profile: found.profile,
+                effect: found.effect,
+                dynamicType: found.dynamicType,
+                dynamicFactor: found.dynamicFactor,
+                cv: found.cv
+              });
+              recalcAbilityPoints();
+              refreshTotal();
+              updateSummary();
+              rerenderSimplePanel(sectionId);
+              return;
+            }
+
+            var srow = btn.closest(".item-row");
+            var idx = srow ? parseInt(srow.getAttribute("data-idx"), 10) : -1;
+            if (!(idx >= 0)) return;
+
+            if (btn.classList.contains("remove-btn")){
+              fighter[cfg.targetArrayName].splice(idx, 1);
+              recalcAbilityPoints();
+              refreshTotal();
+              updateSummary();
+              rerenderSimplePanel(sectionId);
+              return;
+            }
+
+            if (btn.classList.contains("rename-btn")){
+              var it = fighter[cfg.targetArrayName][idx];
+              if (it && promptRename(it)) {
+                refreshTotal();
+                updateSummary();
+                rerenderSimplePanel(sectionId);
+              }
+            }
+          }, true);
+        });
+
+        var ccContainer = document.getElementById("section-weapons-cc");
+        if (ccContainer && !ccContainer.__e28WeaponGuardBound) {
+          ccContainer.__e28WeaponGuardBound = true;
+          ccContainer.addEventListener("click", function(e){
+            var btn = e.target && e.target.closest ? e.target.closest("button") : null;
+            if (!btn || !ccContainer.contains(btn)) return;
+            if (!btn.classList.contains("add-weapon") && !btn.classList.contains("remove-btn") && !btn.classList.contains("rename-btn")) return;
+
+            e.preventDefault();
+            e.stopImmediatePropagation();
+
+            if (btn.classList.contains("add-weapon")) {
+              var row = btn.closest(".item-row");
+              var id = row && row.getAttribute("data-id");
+              var found = null;
+              for (var i = 0; i < CC_WEAPONS.length; i++) {
+                if (CC_WEAPONS[i].id === id) { found = CC_WEAPONS[i]; break; }
+              }
+              if (!found) return;
+              fighter.ccWeapons.push({
+                name: found.name,
+                baseProfile: found.profile,
+                profile: found.profile,
+                basePoints: found.points,
+                points: found.points,
+                upgrades: { poison:false, enchanted:false, cursed:false, truestrike:false, masterCrafted:false }
+              });
+              recalcWeaponPoints();
+              refreshTotal();
+              updateSummary();
+              initWeaponsCC();
+              return;
+            }
+
+            var srow = btn.closest(".item-row");
+            var idx = srow ? parseInt(srow.getAttribute("data-idx"), 10) : -1;
+            if (!(idx >= 0)) return;
+            if (btn.classList.contains("remove-btn")) {
+              fighter.ccWeapons.splice(idx, 1);
+              recalcWeaponPoints();
+              refreshTotal();
+              updateSummary();
+              initWeaponsCC();
+              return;
+            }
+            if (btn.classList.contains("rename-btn")) {
+              var it = fighter.ccWeapons[idx];
+              if (it && promptRename(it)) {
+                refreshTotal();
+                updateSummary();
+                initWeaponsCC();
+              }
+            }
+          }, true);
+
+          ccContainer.addEventListener("change", function(e){
+            var input = e.target;
+            if (!input || !ccContainer.contains(input) || !input.classList || !input.classList.contains("upgrade-toggle")) return;
+            e.preventDefault();
+            e.stopImmediatePropagation();
+            var row = input.closest(".item-row");
+            var idx = row ? parseInt(row.getAttribute("data-idx"), 10) : -1;
+            if (!(idx >= 0)) return;
+            var upgKey = input.getAttribute("data-upg");
+            var wObj = fighter.ccWeapons[idx];
+            if (!wObj) return;
+            if (!wObj.upgrades) wObj.upgrades = { poison:false, enchanted:false, cursed:false, truestrike:false, masterCrafted:false };
+            wObj.upgrades[upgKey] = !!input.checked;
+            recalcWeaponPoints();
+            refreshTotal();
+            updateSummary();
+            initWeaponsCC();
+          }, true);
+        }
+
+        var rangedContainer = document.getElementById("section-weapons-ranged");
+        if (rangedContainer && !rangedContainer.__e28WeaponGuardBound) {
+          rangedContainer.__e28WeaponGuardBound = true;
+          rangedContainer.addEventListener("click", function(e){
+            var btn = e.target && e.target.closest ? e.target.closest("button") : null;
+            if (!btn || !rangedContainer.contains(btn)) return;
+            if (!btn.classList.contains("add-weapon") && !btn.classList.contains("remove-btn") && !btn.classList.contains("rename-btn")) return;
+
+            e.preventDefault();
+            e.stopImmediatePropagation();
+
+            if (btn.classList.contains("add-weapon")) {
+              var row = btn.closest(".item-row");
+              var id = row && row.getAttribute("data-id");
+              var found = null;
+              for (var i = 0; i < RANGED_WEAPONS.length; i++) {
+                if (RANGED_WEAPONS[i].id === id) { found = RANGED_WEAPONS[i]; break; }
+              }
+              if (!found) return;
+              fighter.rangedWeapons.push({
+                id: found.id,
+                name: found.name,
+                baseProfile: found.profile,
+                profile: found.profile,
+                cardProfiles: found.cardProfiles ? deepClone(found.cardProfiles) : undefined,
+                basePoints: found.points,
+                points: found.points,
+                upgrades: { poison:false, enchanted:false, cursed:false, truestrike:false, masterCrafted:false }
+              });
+              recalcWeaponPoints();
+              refreshTotal();
+              updateSummary();
+              initWeaponsRanged();
+              return;
+            }
+
+            var srow = btn.closest(".item-row");
+            var idx = srow ? parseInt(srow.getAttribute("data-idx"), 10) : -1;
+            if (!(idx >= 0)) return;
+            if (btn.classList.contains("remove-btn")) {
+              fighter.rangedWeapons.splice(idx, 1);
+              recalcWeaponPoints();
+              refreshTotal();
+              updateSummary();
+              initWeaponsRanged();
+              return;
+            }
+            if (btn.classList.contains("rename-btn")) {
+              var it = fighter.rangedWeapons[idx];
+              if (it && promptRename(it)) {
+                refreshTotal();
+                updateSummary();
+                initWeaponsRanged();
+              }
+            }
+          }, true);
+
+          rangedContainer.addEventListener("change", function(e){
+            var input = e.target;
+            if (!input || !rangedContainer.contains(input) || !input.classList || !input.classList.contains("upgrade-toggle")) return;
+            e.preventDefault();
+            e.stopImmediatePropagation();
+            var row = input.closest(".item-row");
+            var idx = row ? parseInt(row.getAttribute("data-idx"), 10) : -1;
+            if (!(idx >= 0)) return;
+            var upgKey = input.getAttribute("data-upg");
+            var wObj = fighter.rangedWeapons[idx];
+            if (!wObj) return;
+            if (!wObj.upgrades) wObj.upgrades = { poison:false, enchanted:false, cursed:false, truestrike:false, masterCrafted:false };
+            wObj.upgrades[upgKey] = !!input.checked;
+            recalcWeaponPoints();
+            refreshTotal();
+            updateSummary();
+            initWeaponsRanged();
+          }, true);
+        }
+      }
+
+
 
       // ---- IndexedDB Portrait Store (shared with Team Builder) ----
       var PORTRAIT_DB_NAME = "warband_portraits_v1";
@@ -4046,6 +4342,7 @@ document.addEventListener("DOMContentLoaded", function () {
         refreshTotal();
         updateSummary();
         initTabs();
+        installDuplicateClickGuard();
         try{ mLoadFromRosterIfNeeded(); }catch(e){}
       });
     })();
@@ -4259,7 +4556,7 @@ document.addEventListener("DOMContentLoaded", function () {
     border-bottom: 1px solid rgba(0,0,0,0.15);
   }
   .cc-weapons tr:last-child td{ border-bottom:none; } 
-  .cc-weapons .wname{ font-weight: 900; width: 24%; } /* Weapon Title */
+  .cc-weapons .wname{ font-weight: 900; width: 30%; white-space: nowrap; } /* Weapon Title */
   .cc-weapons .wname .wicon{
     display:inline-block;
     width:14px; height:14px;
@@ -4427,6 +4724,12 @@ document.addEventListener("DOMContentLoaded", function () {
       object-fit: contain; /* preserves full 682×592 frame */
       display:block;
     }
+
+
+/* Nudge fighter name slightly right */
+.cc-name, .cc-title, .card h2 {
+  padding-left: 6px;
+}
 
 </style>
 
@@ -4723,14 +5026,39 @@ var ICON_RANGED = window.MORTALIS_WEAPON_ICON_RANGED || "./img/crosshair.svg";
 
 (fighter.rangedWeapons||[]).forEach(function(w){
   var prof = (w && (w.profile || w.effect)) || "";
-  weaponRows.push({
-    type: "ranged",
-    name:  w ? String(getDisplayName(w)) : "",
-    atk:   parseAtk(prof),
-    dmg:   parseDmg(prof),
-    hit:   fmtPlus(applyHitUser(shootVal, prof)),
-    rules: stripProfile(prof)
-  });
+  var displayName = w ? String(getDisplayName(w)) : "";
+  var profiles = (w && w.cardProfiles && w.cardProfiles.length) ? w.cardProfiles : null;
+  // Local safety net for older saved/selected Plasma Guns that predate cardProfiles.
+  // Keep this card-popup-safe: no lookup against builder-scoped weapon arrays here.
+  if (!profiles && w && w.id === "plasmaGun") {
+    profiles = [
+      { label: "Standard", profile: 'ATK 4, Hit User, DMG 5/6, Piercing (-3), Crits on 9+' },
+      { label: "Supercharged", profile: 'ATK 4, Hit User, DMG 6/6, Piercing (-4), Crits on 9+, Risky' }
+    ];
+  }
+  if (profiles && profiles.length) {
+    profiles.forEach(function(cp){
+      var cpProf = (cp && cp.profile) || "";
+      var cpLabel = (cp && cp.label) ? String(cp.label) : "";
+      weaponRows.push({
+        type: "ranged",
+        name:  cpLabel ? (displayName + " (" + cpLabel + ")") : displayName,
+        atk:   parseAtk(cpProf),
+        dmg:   parseDmg(cpProf),
+        hit:   fmtPlus(applyHitUser(shootVal, cpProf)),
+        rules: stripProfile(cpProf)
+      });
+    });
+  } else {
+    weaponRows.push({
+      type: "ranged",
+      name:  displayName,
+      atk:   parseAtk(prof),
+      dmg:   parseDmg(prof),
+      hit:   fmtPlus(applyHitUser(shootVal, prof)),
+      rules: stripProfile(prof)
+    });
+  }
 });
 
 if (weaponRows.length){
