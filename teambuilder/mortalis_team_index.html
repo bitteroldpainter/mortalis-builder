@@ -98,6 +98,27 @@
   }
   .pill:hover{background: #ffa200}
 
+#prebuiltTeamSelect {
+  border-radius:999px;
+  padding:10px 30px 10px 12px; /* ← extra right padding for arrow */
+  background:linear-gradient(180deg, rgb(98, 98, 98), rgb(24, 24, 24));
+  color:var(--text);
+  font-weight:700;
+  border:1px solid var(--line);
+  cursor:pointer;
+  text-shadow: #000000 2px 2px 4px;
+
+  width: 220px;          /* ← control overall width */
+  appearance: none;      /* ← removes default browser styling (important) */
+  -webkit-appearance: none;
+  -moz-appearance: none;
+
+  background-image: url("data:image/svg+xml;utf8,<svg fill='white' height='24' viewBox='0 0 24 24' width='24' xmlns='http://www.w3.org/2000/svg'><path d='M7 10l5 5 5-5z'/></svg>");
+  background-repeat: no-repeat;
+  background-position: right 8px center; /* ← moves arrow inward */
+  background-size: 16px;
+}
+
   .statsRow{display:grid;grid-template-columns:1fr;gap:10px;margin:10px 0 14px}
   @media (min-width:900px){
     .statsRow{grid-template-columns:repeat(auto-fit, minmax(220px, 1fr))}
@@ -114,7 +135,7 @@
   .field, select{
     background:#0E2226;
     border:1px solid var(--line);
-    border-radius:10px;
+    border-radius:999px;
     padding:8px 10px;
     color:var(--text);
     font-weight:800;
@@ -217,6 +238,9 @@
         <input id="fileInput" type="file" multiple accept=".json,application/json" />
         <label class="pill" for="teamInput">Load Team (.json)</label>
         <input id="teamInput" type="file" accept=".json,application/json" />
+        <select id="prebuiltTeamSelect" title="Load one of the prebuilt teams">
+          <option value="">Load Prebuilt Team...</option>
+        </select>
         <button class="danger" id="clearBtn">Clear Team</button>
       </div>
     </div>
@@ -277,9 +301,19 @@
   const teamInput = el("teamInput");
   const exportBtn = el("exportBtn");
   const clearBtn = el("clearBtn");
+  const prebuiltTeamSelect = el("prebuiltTeamSelect");
 
 
   const addFighterBtn = el("addFighterBtn");
+
+  // ---- Prebuilt team dropdown ----
+  // Put your exported team JSON files in a /teams/ folder next to this HTML file,
+  // then edit/add entries below. Example URL: teams/ashen-corsairs.json
+  const PREBUILT_TEAMS = [
+    { label: "Eldar Aspect Warriors", url: "teams/Eldar_Aspect_Warriors.json" },
+    { label: "Kroot Hunters", url: "teams/Kroot.json" },
+    { label: "Necron Destroyer Cult", url: "teams/Necron_Destroyers.json" }
+  ];
 
   // ---- Current Mortalis rules library (mirrors builder data for roster recalculation) ----
   var STAT_CONFIG = [
@@ -1203,7 +1237,7 @@
       if (current) {
         const rebound = {
           id: current.id,
-          name: ((item.name != null && String(item.name).trim() && String(item.name) !== String(current.name)) ? String(item.name) : current.name),
+          name: current.name,
           baseProfile: current.profile,
           profile: current.profile,
           basePoints: current.points,
@@ -1242,7 +1276,7 @@
       if (current) {
         const rebound = {
           id: current.id,
-          name: ((item.name != null && String(item.name).trim() && String(item.name) !== String(current.name)) ? String(item.name) : current.name),
+          name: current.name,
           points: (isSpell ? 0 : (current.points || 0)),
           profile: current.profile,
           effect: current.effect,
@@ -1896,43 +1930,78 @@
     URL.revokeObjectURL(a.href);
     setStatus("Exported team_roster.json");
   }
+  function populatePrebuiltTeams() {
+    if (!prebuiltTeamSelect) return;
+    // Keep first placeholder option, then add configured teams.
+    while (prebuiltTeamSelect.options.length > 1) {
+      prebuiltTeamSelect.remove(1);
+    }
+    for (const teamInfo of PREBUILT_TEAMS) {
+      const opt = document.createElement("option");
+      opt.value = teamInfo.url;
+      opt.textContent = teamInfo.label;
+      prebuiltTeamSelect.appendChild(opt);
+    }
+  }
+
+  async function importTeamObject(obj, sourceLabel) {
+    if (!obj || typeof obj !== "object" || !Array.isArray(obj.fighters)) {
+      setStatus("Not a valid team file (missing fighters array).", true);
+      return false;
+    }
+
+    // Restore warband name if present
+    if (typeof obj.warbandName === "string" && warbandNameEl) {
+      warbandNameEl.value = obj.warbandName;
+      saveWarbandName(obj.warbandName);
+    }
+
+    // Restore limit if present (optional)
+    if (typeof obj.limit === "number") limitInput.value = String(Math.max(0, obj.limit));
+
+    const loaded = [];
+    for (const item of obj.fighters) {
+      const fighterFile = item?.fighterFile;
+      const err = validateFighterJson(fighterFile);
+      if (err) continue;
+      const normalized = normalizePayloadWithCurrentRules(fighterFile);
+      const id = uid();
+      await ensurePortraitStoredOnFighter(normalized?.fighter, id);
+      loaded.push({ id, sourceFileName: item?.sourceFileName || sourceLabel || "", data: normalized });
+    }
+
+    team = loaded;
+    setStatus(`Imported team: ${team.length} fighter(s).`);
+    // Persist roster in-browser (used by the Fighter Builder bridge)
+    saveTeamStateToBrowser();
+
+    render();
+    return true;
+  }
+
   async function importTeamFile(file) {
     if (!file) return;
     try {
       const txt = await readFileAsText(file);
       const obj = JSON.parse(txt);
-      if (!obj || typeof obj !== "object" || !Array.isArray(obj.fighters)) {
-        setStatus("Not a valid team file (missing fighters array).", true);
-        return;
-      }
-
-      // Restore warband name if present
-      if (typeof obj.warbandName === "string" && warbandNameEl) {
-        warbandNameEl.value = obj.warbandName;
-        saveWarbandName(obj.warbandName);
-      }
-
-      // Restore limit if present (optional)
-      if (typeof obj.limit === "number") limitInput.value = String(Math.max(0, obj.limit));
-
-      const loaded = [];
-      for (const item of obj.fighters) {
-        const fighterFile = item?.fighterFile;
-        const err = validateFighterJson(fighterFile);
-        if (err) continue;
-        const normalized = normalizePayloadWithCurrentRules(fighterFile);
-        const id = uid();
-        await ensurePortraitStoredOnFighter(normalized?.fighter, id);
-        loaded.push({ id, sourceFileName: item?.sourceFileName || "", data: normalized });
-      }
-      team = loaded;
-      setStatus(`Imported team: ${team.length} fighter(s).`);
-      // Persist roster in-browser (used by the Fighter Builder bridge)
-      saveTeamStateToBrowser();
-
-      render();
+      await importTeamObject(obj, file.name || "team file");
     } catch (e) {
       setStatus(`Failed importing team file: ${e?.message || e}`, true);
+    }
+  }
+
+  async function importPrebuiltTeam(url) {
+    if (!url) return;
+    try {
+      setStatus("Loading prebuilt team...");
+      const response = await fetch(url, { cache: "no-store" });
+      if (!response.ok) {
+        throw new Error(`Could not load ${url} (${response.status})`);
+      }
+      const obj = await response.json();
+      await importTeamObject(obj, url.split("/").pop() || "prebuilt team");
+    } catch (e) {
+      setStatus(`Failed loading prebuilt team: ${e?.message || e}`, true);
     }
   }
 
@@ -1949,6 +2018,15 @@
     await importTeamFile(file);
     teamInput.value = "";
   });
+
+  if (prebuiltTeamSelect) {
+    prebuiltTeamSelect.addEventListener("change", async (e) => {
+      const url = e.target.value;
+      if (!url) return;
+      await importPrebuiltTeam(url);
+      prebuiltTeamSelect.value = "";
+    });
+  }
 
   exportBtn.addEventListener("click", async () => {
     if (team.length === 0) return setStatus("Nothing to export.", true);
@@ -1988,6 +2066,8 @@
     warbandNameEl.value = loadWarbandName();
     warbandNameEl.addEventListener("input", () => { saveWarbandName(warbandNameEl.value); saveTeamStateToBrowser(); });
   }
+
+  populatePrebuiltTeams();
 
   // Try to restore an in-browser roster (used by the Fighter Builder bridge)
   loadTeamStateFromBrowser();
