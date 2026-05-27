@@ -604,7 +604,7 @@
       var RANGED_WEAPONS = [
   // --- Pistols / Grenades ---
   { id: "arcPistol", name: "Arc Pistol", profile: 'ATK 4, Hit User, DMG 4/5, Rng 8", Piercing (-3)', points: 6 },
-  { id: "autoLaspistol", name: "Auto/Laspistol", profile: 'ATK 4, Hit User, DMG 2/3, Rng 8", Quick', points: 1 },
+  { id: "autoLaspistol", name: "Auto/Laspistol", profile: 'ATK 4, Hit User, DMG 2/3, Rng 8", Quick', points: 2 },
   { id: "boltPistol", name: "Bolt Pistol", profile: 'ATK 4, Hit User, DMG 3/4, Rng 8", Piercing Crits (-2), Quick', points: 3 },
   { id: "handFlamer", name: "Hand Flamer", profile: 'ATK 4, Hit User+2, DMG 3/4, Rng 6", Ignores Cover, Torrent (1"), Fire', points: 4 },
   { id: "meltaPistol", name: "Melta Pistol", profile: 'ATK 4, Hit User, DMG 6/3, Rng 3", Piercing (-5), MW (4)', points: 7 },
@@ -619,6 +619,9 @@
   { id: "fragGrenade", name: "Frag Grenades", profile: 'ATK 4, Hit User-2, DMG 2/4, Rng 6", Blast (2"), Ignores Cover, Quick', points: 5 },
   { id: "krakGrenade", name: "Krak Grenades", profile: 'ATK 4, Hit User-2, DMG 4/5, Rng 6", Piercing (-2), Ignores Cover, Quick', points: 6 },
   { id: "meltaBomb", name: "Melta Grenades", profile: 'ATK 4, Hit User-2, DMG 5/6, Rng 6", Blast (2"), Piercing (-2), Ignores Cover', points: 8 },
+  { id: "diylightPistol", name: "DIY Light Pistol", profile: 'ATK 4, Hit User, DMG 2/3, Rng 8", Quick', points: 2 },
+  { id: "diymediumPistol", name: "DIY Medium Pistol", profile: 'ATK 4, Hit User, DMG 3/4, Rng 8", Quick', points: 3 },
+  { id: "diyheavyPistol", name: "DIY Heavy Pistol", profile: 'ATK 4, Hit User, DMG 4/5, Rng 8"', points: 4 },
 
   // --- Light / Medium Ranged ---
   { id: "autoLasgun", name: "Auto/Lasgun", profile: "ATK 4, Hit User, DMG 2/3", points: 3 },
@@ -698,7 +701,10 @@
           "warpflamePistol",
           "fragGrenade",
           "krakGrenade",
-          "meltaBomb"
+          "meltaBomb",
+          "diylightPistol",
+          "diymediumPistol",
+          "diyheavyPistol"
         ]},
         { key: "light", label: "Light/Medium Ranged", ids: [
           "autoLasgun",
