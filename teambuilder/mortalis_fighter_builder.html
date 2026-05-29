@@ -922,6 +922,16 @@
       "At the beginning of this Fighter’s activation, it regains D3+1 lost HP."
   },
   {
+    id: "resilient",
+    name: "Resilient",
+    category: "Defensive",
+    points: "+25% of HP Stat",
+    dynamicType: "percentHp",
+    dynamicFactor: 1/4,
+    effect:
+      "Whenever this Fighter takes damage from an attack, remove 1 point of damage from the Normal Damage characteristic of the weapon, to a minimum of 1. (Eg. Damage 3/4 becomes Damage 2/4, etc.)"
+  },
+  {
     id: "extremelyResilient",
     name: "Extremely Resilient",
     category: "Defensive",
