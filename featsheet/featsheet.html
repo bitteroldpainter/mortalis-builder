@@ -480,6 +480,21 @@ button.btn-danger:hover{
   }
 }
 
+
+/* ===== Auto-fit generated card text ===== */
+.cardBody{
+  gap:var(--cardBodyGap, 26px);
+}
+
+.cardFeatTitle{
+  font-size:var(--cardFitTitleSize, var(--cardFeatTitleSize));
+}
+
+.cardFeatDesc{
+  font-size:var(--cardFitDescSize, var(--cardFeatDescSize));
+  line-height:var(--cardFitLineHeight, 1.15);
+}
+
 </style>
 </head>
 
@@ -897,6 +912,48 @@ nameRow.appendChild(n);
       .split("'").join("&#039;");
   }
 
+
+  function fitGeneratedCardText(){
+    const cardBody = document.getElementById("cardBody");
+    if(!cardBody) return;
+
+    let titleSize = 13;
+    let descSize = 12.5;
+    let gap = 26;
+    let lineHeight = 1.15;
+
+    const minTitleSize = 8.5;
+    const minDescSize = 8.2;
+    const minGap = 6;
+    const minLineHeight = 1.02;
+
+    function apply(){
+      cardBody.style.setProperty("--cardFitTitleSize", titleSize + "px");
+      cardBody.style.setProperty("--cardFitDescSize", descSize + "px");
+      cardBody.style.setProperty("--cardBodyGap", gap + "px");
+      cardBody.style.setProperty("--cardFitLineHeight", String(lineHeight));
+    }
+
+    apply();
+
+    let guard = 0;
+    while(cardBody.scrollHeight > cardBody.clientHeight && guard < 100){
+      if(gap > minGap){
+        gap -= 1;
+      } else if(descSize > minDescSize){
+        descSize -= 0.25;
+      } else if(titleSize > minTitleSize){
+        titleSize -= 0.25;
+      } else if(lineHeight > minLineHeight){
+        lineHeight -= 0.01;
+      } else {
+        break;
+      }
+      apply();
+      guard++;
+    }
+  }
+
   function generateCardPage(){
     const feats = selected.map(getFeatById).filter(Boolean);
 
@@ -938,6 +995,11 @@ nameRow.appendChild(n);
     const cp = document.getElementById("cardPage");
     cp.style.display = "block";
     cp.setAttribute("aria-hidden", "false");
+
+    requestAnimationFrame(() => {
+      fitGeneratedCardText();
+      requestAnimationFrame(fitGeneratedCardText);
+    });
   }
 
   // Card buttons
@@ -948,7 +1010,10 @@ nameRow.appendChild(n);
     window.scrollTo(0, 0);
   });
 
-  document.getElementById("btnCardPrint").addEventListener("click", () => window.print());
+  document.getElementById("btnCardPrint").addEventListener("click", () => {
+    fitGeneratedCardText();
+    window.print();
+  });
 
   btnGenerate.addEventListener("click", () => {
     if(selected.length === 0){
@@ -994,6 +1059,10 @@ nameRow.appendChild(n);
   }
 
   loadFeatSheetState();
+
+  if(document.fonts && document.fonts.ready){
+    document.fonts.ready.then(fitGeneratedCardText).catch(() => {});
+  }
 
   render();
 });
