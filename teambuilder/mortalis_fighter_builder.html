@@ -606,6 +606,8 @@
   { id: "arcPistol", name: "Arc Pistol", profile: 'ATK 4, Hit User, DMG 4/5, Rng 8", Piercing (-3)', points: 6 },
   { id: "autoLaspistol", name: "Auto/Laspistol", profile: 'ATK 4, Hit User, DMG 2/3, Rng 8", Quick', points: 1 },
   { id: "boltPistol", name: "Bolt Pistol", profile: 'ATK 4, Hit User, DMG 3/4, Rng 8", Piercing Crits (-2), Quick', points: 3 },
+  { id: "autochBoltPistol", name: "Autoch Bolt Pistol", profile: 'ATK 4, Hit User +2, DMG 3/4, Rng 8", Quick', points: 4 },
+  { id: "boltRevolver", name: "Bolt Revolver", profile: 'ATK 4, Hit User, DMG 4/5, Rng 8", Quick', points: 4 },
   { id: "handFlamer", name: "Hand Flamer", profile: 'ATK 4, Hit User+2, DMG 3/4, Rng 6", Ignores Cover, Torrent (1"), Fire', points: 4 },
   { id: "meltaPistol", name: "Melta Pistol", profile: 'ATK 4, Hit User, DMG 6/3, Rng 3", Piercing (-5), MW (4)', points: 7 },
   { id: "phosphorBlastPistol", name: "Phosphor Blast Pistol", profile: 'ATK 4, Hit User, DMG 3/4, Rng 8", Blast (1"), Quick', points: 4 },
@@ -623,8 +625,11 @@
   // --- Light / Medium Ranged ---
   { id: "autoLasgun", name: "Auto/Lasgun", profile: "ATK 4, Hit User, DMG 2/3", points: 3 },
   { id: "boltGun", name: "Bolt Gun", profile: "ATK 4, Hit User, DMG 3/4, Piercing Crits (-2)", points: 5 },
+  { id: "autochBolter", name: "Autoch Bolter", profile: 'ATK 4, Hit User +2, DMG 3/4', points: 6 },
   { id: "gaussBlaster", name: "Gauss Blaster", profile: "ATK 4, Hit User, DMG 4/5, Piercing (-2)", points: 7 },
   { id: "hvyShotgun", name: "Hvy. Shotgun", profile: 'ATK 4, Hit User+2, DMG 4/4, Rng 8"', points: 4 },
+  { id: "phosphorBlaster", name: "Phosphor Blaster", profile: 'ATK 4, Hit User, DMG 3/4, Blast (2")', points: 6 },
+  { id: "sniperCarbine", name: "Sniper Carbine", profile: 'ATK 4, Hit User+1, DMG 3/3, Ignores Cover, MW (3)', points: 9 },
   { id: "infernoBoltGun", name: "Inferno Bolt Gun", profile: "ATK 4, Hit User, DMG 3/4, Piercing (-2)", points: 6 },
   { id: "ionRifle", name: "Ion Rifle", profile: "ATK 4, Hit User, DMG 4/5, Piercing Crits (-2)", points: 6 },
   { id: "neutronBlaster", name: "Neutron Blaster", profile: "ATK 4, Hit User, DMG 3/3, MW (2)", points: 5 },
@@ -640,6 +645,7 @@
     { label: "Frag", profile: 'ATK 4, Hit User, DMG 2/4, Blast (2")' },
     { label: "Krak", profile: 'ATK 4, Hit User, DMG 4/5, Piercing (-2)' }
   ] },
+  { id: "hylasAutoRifle", name: "HYLas Auto Rifle", profile: "ATK 4, Hit User, DMG 4/5, Piercing (-4), Reroll (1)", points: 10 },
   { id: "meltaGun", name: "Melta Gun", profile: 'ATK 4, Hit User, DMG 6/3, Rng 6", Piercing (-5), MW (4)', points: 10 },
   { id: "neutronRailRifle", name: "Neutron Rail Rifle", profile: "ATK 4, Hit User, DMG 4/4, MW (2)", points: 6 },
   { id: "plasmaGun", name: "Plasma Gun", profile: 'ATK 4, Hit User, DMG (Std) 4/6, Piercing (-3), Crits on 9+; (Supercharged): DMG 5/6, Piercing (-4), Crits on 9+, Risky', points: 10, cardProfiles: [
@@ -661,6 +667,7 @@
     { label: "Shell", profile: 'ATK 4, Hit User, DMG 5/7, Piercing (-3)' }
   ] },
   { id: "heavyBolter", name: "Heavy Bolter", profile: 'ATK 5, Hit User, DMG 5/6, Reroll (1), Heavy (Dash)', points: 10 },
+  { id: "heavyPhosphorBlaster", name: "Heavy Phosphor Blaster", profile: 'ATK 4, Hit User, DMG 5/6, Piercing (-2), Blast (2"), Heavy (Dash)', points: 10 },
   { id: "heavyFlamer", name: "Heavy Flamer", profile: 'ATK 4, Hit User+2, DMG 5/5, Rng 10", Ignores Cover, Piercing (-2), Torrent (2"), Fire', points: 11 },
   { id: "heavyStubber", name: "Heavy Stubber", profile: 'ATK 5, Hit User, DMG 4/5, Heavy (Dash)', points: 6 },
   { id: "lascannon", name: "Lascannon", profile: 'ATK 4, Hit User, DMG 6/7, Piercing (-4), MW (2), Heavy (Dash)', points: 12 },
@@ -686,6 +693,8 @@
           "arcPistol",
           "autoLaspistol",
           "boltPistol",
+          "boltRevolver",
+          "autochBoltPistol",
           "handFlamer",
           "meltaPistol",
           "phosphorBlastPistol",
@@ -700,8 +709,11 @@
         { key: "light", label: "Light/Medium Ranged", ids: [
           "autoLasgun",
           "boltGun",
+          "autochBolter",
           "gaussBlaster",
           "hvyShotgun",
+          "phosphorBlaster",
+          "sniperCarbine",
           "infernoBoltGun",
           "ionRifle",
           "neutronBlaster",
@@ -714,6 +726,7 @@
         { key: "special", label: "Special", ids: [
           "flamer",
           "grenadeLauncher",
+		  "hylasAutoRifle",
           "meltaGun",
           "neutronRailRifle",
           "plasmaGun",
@@ -730,6 +743,7 @@
           "fragCannon",
           "heavyBolter",
           "heavyFlamer",
+          "heavyPhosphorBlaster",
           "heavyStubber",
           "lascannon",
           "missileLauncher",
@@ -1102,6 +1116,14 @@
     points: 10,
     effect:
       "This Fighter may perform 2 Shooting actions or 2 Close Combat actions in its activation. If using a Special/Heavy weapon, the second Shoot costs 2 AP. When Counteracting, it may perform 2 different actions."
+  },
+  {
+    id: "cleave",
+    name: "Cleave",
+    category: "Defensive",
+    points: 4,
+    effect:
+       '2 AP: Inflict D3+1 Mortal Wounds to each enemy Fighter that is within 2" and visible to this Fighter.'
   }
 ];
 
@@ -1198,11 +1220,11 @@
         },
         {
           id: "uncontrolledEruption",
-          name: "Uncontrolled Eruption",
+          name: "uncontrolledEruption",
     category: "Defensive",
           points: 0,
           effect:
-            '2 AP: Inflict D3+2 Mortal Wounds to each other Fighter that is within 2" and visible to this Fighter.'
+            '2 AP: Inflict D3+3 Mortal Wounds to each other Fighter that is within 4" of this Fighter.'
         },
         {
           id: "whispersWarp",
