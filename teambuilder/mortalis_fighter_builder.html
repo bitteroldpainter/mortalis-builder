@@ -1014,14 +1014,6 @@
       "Whenever this Fighter kills an enemy in Melee, increase Crit Damage for all its Melee weapons by +2 for the rest of the battle."
   },
   {
-    id: "overwatch",
-    name: "Overwatch",
-    category: "Offensive",
-    points: 4,
-    effect:
-      'When an enemy ends a Move within 6" and visible (but not within 1"), this Fighter may immediately Shoot with -2 to hit. Counts as its Counteract action for the turn.'
-  },
-  {
     id: "endlessHorde",
     name: "Endless Horde",
     category: "Mobility",
@@ -1242,7 +1234,7 @@
     category: "Utility",
           points: 0,
           effect:
-            "If this Fighter slays an enemy Fighter with an attack, it regains 3 lost HP."
+            "If this Fighter slays an enemy Fighter with a Close Combat attack, it regains 3+D3 lost HP."
         }
       ];
 
@@ -1269,17 +1261,6 @@
             'Range: 12", 3" AoE<br><br>' +
             'All models inside must roll 7+ or be dragged D3" toward the center and suffer D3 MW.<br><br>' +
             "Power Surge (MV 11): Fighters dragged suffer D3+2 MW."
-        },
-               {
-          id: "spectralChains",
-          name: "SPECTRAL CHAINS",
-    category: "Control",
-          cv: 9,
-          points: 0,
-          effect:
-            'Range: 10"<br><br>' +
-            "Target Fighter may immediately be moved up to 6” by the Conjuring Warlock’s Player.<br><br>" +
-            "Power Surge (CV 11): Target also suffers D3 MW if it repositions in it's own activation this turn."
         },
         {
           id: "stolenSight",
@@ -1388,7 +1369,7 @@
           points: 0,
           effect:
             "Range: Self<br><br>" +
-            "First attack against the Psyker before next activation automatically misses.<br><br>" +
+            "First Ranged attack against the Psyker before next activation automatically misses.<br><br>" +
             "Power Surge (MV 8): On 5+, reflect that missed ranged attack for D3 Damage."
         },
         {
@@ -1653,7 +1634,7 @@
     category: "Mobility",
           points: 5,
           effect:
-            '1 AP Move action: Place this Fighter within 1" of a chosen visible point on terrain, not within 1" of enemies. This Fighter may not have any Ranged Weapons.'
+            '1 AP Move action: Place this Fighter within 1" of a chosen visible point on terrain, not within 1" of enemies. This Fighter may not have any Ranged Weapons, and no more than 2 AP and 10 HP.'
         },
         {
           id: "macabreMemento",
@@ -1747,7 +1728,7 @@
     category: "Mobility",
           points: 12,
           effect:
-            'Fighter gains 12" move. Cannot move through terrain or scale walls of any kind. Only exception is stairs. The Fighter gains no extra movement from Dash or Charge actions either. Fighter has +1 normal and crit damage when fighting in Close Combat in the same activation as the Fighter charges. Fighter -2 to Hit modifier when shooting, if the Fighter moves more than 8" in its activation.'
+            'Fighter gains 12" move. Cannot move through terrain or scale walls of any kind. Only exception is stairs. The Fighter gains no extra movement from Dash or Charge actions either. Fighter has +1 normal and crit damage when fighting in Close Combat in the same activation as the Fighter charges. The mounted Fighter gets a -2 to Hit modifier when shooting, if it moves more than 8" in its activation.'
         },
         {
           id: "suicideBomber",
