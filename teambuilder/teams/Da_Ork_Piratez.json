@@ -1,0 +1,895 @@
+{
+  "app": "Mortalis / Dark Realms Team Builder",
+  "version": 1,
+  "savedAt": "2026-07-08T08:51:20.079Z",
+  "warbandName": "Da Ork Piratez!",
+  "limit": 400,
+  "fighters": [
+    {
+      "sourceFileName": "mortalis_Weirdboy.json",
+      "fighterFile": {
+        "app": "Mortalis Fighter Builder",
+        "version": 1,
+        "savedAt": "2026-07-04T22:17:05.063Z",
+        "fighter": {
+          "name": "Weirdboy",
+          "isWarlock": true,
+          "isMasterWarlock": false,
+          "portraitDataUrl": "",
+          "portraitKey": "",
+          "stats": {
+            "move": 6,
+            "def": 8,
+            "ap": 2,
+            "hp": 12,
+            "atk": 4,
+            "fight": 5,
+            "shoot": 11
+          },
+          "ccWeapons": [
+            {
+              "id": "psychicStaff",
+              "name": "Psychic Staff",
+              "baseProfile": "ATK User, Hit User, DMG 4/6, Crits on 9+, Fire",
+              "profile": "ATK User, Hit User, DMG 4/6, Crits on 9+, Fire",
+              "basePoints": 8,
+              "points": 8,
+              "upgrades": {
+                "poison": false,
+                "enchanted": false,
+                "cursed": false,
+                "truestrike": false,
+                "masterCrafted": false
+              },
+              "displayNameOverride": "Waagh Staff!"
+            }
+          ],
+          "rangedWeapons": [],
+          "abilities": [],
+          "leaderAbilities": [],
+          "spells": [
+            {
+              "id": "lightningBolt",
+              "name": "LIGHTNING BOLT",
+              "points": 0,
+              "effect": "Range: —<br><br>Target suffers D3+2 MW.<br><br>Power Surge (MV 10): D3+3 MW.",
+              "cv": 8,
+              "category": "Destructive",
+              "displayNameOverride": "EYES OF GORK"
+            },
+            {
+              "id": "soulflameSurge",
+              "name": "SOULFLAME SURGE",
+              "points": 0,
+              "effect": "Range: 12\"<br><br>A friendly Fighter gains +1 ATK and “Crits on 9+” on CC weapons until end of Turn.<br><br>Power Surge (MV 10): Affect two Fighters instead of one.",
+              "cv": 8,
+              "category": "Destructive",
+              "displayNameOverride": "WAAAAGH!"
+            }
+          ],
+          "equipment": [],
+          "points": {
+            "base": 16,
+            "stats": 8,
+            "warlock": 12,
+            "ccWeapons": 8,
+            "rangedWeapons": 0,
+            "abilities": 0,
+            "leaderAbilities": 0,
+            "spells": 0,
+            "equipment": 0
+          }
+        }
+      }
+    },
+    {
+      "sourceFileName": "mortalis_Weirdboy.json",
+      "fighterFile": {
+        "app": "Mortalis Fighter Builder",
+        "version": 1,
+        "savedAt": "2026-07-04T22:26:51.462Z",
+        "fighter": {
+          "name": "Stormboy 1",
+          "isWarlock": false,
+          "isMasterWarlock": false,
+          "portraitDataUrl": "",
+          "portraitKey": "",
+          "stats": {
+            "move": 6,
+            "def": 7,
+            "ap": 2,
+            "hp": 11,
+            "atk": 3,
+            "fight": 5,
+            "shoot": 7
+          },
+          "ccWeapons": [
+            {
+              "id": "chainsword",
+              "name": "Chainsword",
+              "baseProfile": "ATK User, Hit User, DMG 4/5",
+              "profile": "ATK User, Hit User, DMG 4/5",
+              "basePoints": 4,
+              "points": 4,
+              "upgrades": {
+                "poison": false,
+                "enchanted": false,
+                "cursed": false,
+                "truestrike": false,
+                "masterCrafted": false
+              }
+            }
+          ],
+          "rangedWeapons": [
+            {
+              "id": "slugga",
+              "name": "Slugga",
+              "baseProfile": "ATK 6, Hit User, DMG 1/2, Rng 8, Quick\"",
+              "profile": "ATK 6, Hit User, DMG 1/2, Rng 8, Quick\"",
+              "basePoints": 2,
+              "points": 2,
+              "upgrades": {
+                "poison": false,
+                "enchanted": false,
+                "cursed": false,
+                "truestrike": false,
+                "masterCrafted": false
+              }
+            }
+          ],
+          "abilities": [],
+          "leaderAbilities": [],
+          "spells": [],
+          "equipment": [
+            {
+              "id": "flightDevice",
+              "name": "Jump Pack/Rokkit Pack/Wings",
+              "points": 9,
+              "effect": "Gains Jump Move: +3\" Move and may ignore terrain and vertical height when repositioning.",
+              "dynamicType": "percentStats",
+              "dynamicFactor": 0.3333333333333333,
+              "category": "Mobility"
+            }
+          ],
+          "points": {
+            "base": 16,
+            "stats": 10,
+            "warlock": 0,
+            "ccWeapons": 4,
+            "rangedWeapons": 2,
+            "abilities": 0,
+            "leaderAbilities": 0,
+            "spells": 0,
+            "equipment": 9
+          }
+        }
+      }
+    },
+    {
+      "sourceFileName": "mortalis_Weirdboy.json",
+      "fighterFile": {
+        "app": "Mortalis Fighter Builder",
+        "version": 1,
+        "savedAt": "2026-07-08T08:45:43.783Z",
+        "fighter": {
+          "name": "Stormboy 2",
+          "isWarlock": false,
+          "isMasterWarlock": false,
+          "portraitDataUrl": "",
+          "portraitKey": "",
+          "stats": {
+            "move": 6,
+            "def": 7,
+            "ap": 2,
+            "hp": 11,
+            "atk": 4,
+            "fight": 5,
+            "shoot": 11
+          },
+          "ccWeapons": [
+            {
+              "id": "powerWeapon",
+              "name": "Power Weapon",
+              "baseProfile": "ATK User, Hit User, DMG 4/6, Crits on 9+",
+              "profile": "ATK User, Hit User, DMG 4/6, Crits on 9+",
+              "basePoints": 7,
+              "points": 7,
+              "upgrades": {
+                "poison": false,
+                "enchanted": false,
+                "cursed": false,
+                "truestrike": false,
+                "masterCrafted": false
+              },
+              "displayNameOverride": "'Uge Powa Choppa"
+            }
+          ],
+          "rangedWeapons": [],
+          "abilities": [],
+          "leaderAbilities": [],
+          "spells": [],
+          "equipment": [
+            {
+              "id": "flightDevice",
+              "name": "Jump Pack/Rokkit Pack/Wings",
+              "points": 8,
+              "effect": "Gains Jump Move: +3\" Move and may ignore terrain and vertical height when repositioning.",
+              "dynamicType": "percentStats",
+              "dynamicFactor": 0.3333333333333333,
+              "category": "Mobility"
+            }
+          ],
+          "points": {
+            "base": 16,
+            "stats": 8,
+            "warlock": 0,
+            "ccWeapons": 7,
+            "rangedWeapons": 0,
+            "abilities": 0,
+            "leaderAbilities": 0,
+            "spells": 0,
+            "equipment": 8
+          }
+        }
+      }
+    },
+    {
+      "sourceFileName": "mortalis_Weirdboy.json",
+      "fighterFile": {
+        "app": "Mortalis Fighter Builder",
+        "version": 1,
+        "savedAt": "2026-07-08T08:41:38.290Z",
+        "fighter": {
+          "name": "Flash Git",
+          "isWarlock": false,
+          "isMasterWarlock": false,
+          "portraitDataUrl": "",
+          "portraitKey": "",
+          "stats": {
+            "move": 6,
+            "def": 7,
+            "ap": 2,
+            "hp": 11,
+            "atk": 3,
+            "fight": 6,
+            "shoot": 6
+          },
+          "ccWeapons": [
+            {
+              "id": "beastClawsBite",
+              "name": "Beast Claws/Bite",
+              "baseProfile": "ATK User, Hit User, DMG 3/4",
+              "profile": "ATK User, Hit User, DMG 3/4",
+              "basePoints": 2,
+              "points": 2,
+              "upgrades": {
+                "poison": false,
+                "enchanted": false,
+                "cursed": false,
+                "truestrike": false,
+                "masterCrafted": false
+              },
+              "displayNameOverride": "Orky Fists"
+            }
+          ],
+          "rangedWeapons": [
+            {
+              "id": "soulreaperCannon",
+              "name": "Soulreaper Cannon",
+              "baseProfile": "ATK 6, Hit User, DMG 4/5, Piercing Crits (-2)",
+              "profile": "ATK 6, Hit User, DMG 4/5, Piercing Crits (-2)",
+              "basePoints": 12,
+              "points": 12,
+              "upgrades": {
+                "poison": false,
+                "enchanted": false,
+                "cursed": false,
+                "truestrike": false,
+                "masterCrafted": false
+              },
+              "displayNameOverride": "Snazz Gun"
+            }
+          ],
+          "abilities": [],
+          "leaderAbilities": [],
+          "spells": [],
+          "equipment": [],
+          "points": {
+            "base": 16,
+            "stats": 10,
+            "warlock": 0,
+            "ccWeapons": 2,
+            "rangedWeapons": 12,
+            "abilities": 0,
+            "leaderAbilities": 0,
+            "spells": 0,
+            "equipment": 0
+          }
+        }
+      }
+    },
+    {
+      "sourceFileName": "mortalis_Weirdboy.json",
+      "fighterFile": {
+        "app": "Mortalis Fighter Builder",
+        "version": 1,
+        "savedAt": "2026-07-08T08:50:03.745Z",
+        "fighter": {
+          "name": "Shokk Attack Gun",
+          "isWarlock": false,
+          "isMasterWarlock": false,
+          "portraitDataUrl": "",
+          "portraitKey": "",
+          "stats": {
+            "move": 6,
+            "def": 7,
+            "ap": 2,
+            "hp": 11,
+            "atk": 3,
+            "fight": 7,
+            "shoot": 6
+          },
+          "ccWeapons": [
+            {
+              "id": "beastClawsBite",
+              "name": "Beast Claws/Bite",
+              "baseProfile": "ATK User, Hit User, DMG 3/4",
+              "profile": "ATK User, Hit User, DMG 3/4",
+              "basePoints": 2,
+              "points": 2,
+              "upgrades": {
+                "poison": false,
+                "enchanted": false,
+                "cursed": false,
+                "truestrike": false,
+                "masterCrafted": false
+              },
+              "displayNameOverride": "Orky Fists"
+            }
+          ],
+          "rangedWeapons": [
+            {
+              "id": "multiMelta",
+              "name": "Multi Melta",
+              "baseProfile": "ATK 4, Hit User, DMG 6/3, MW (4), Heavy (Dash), Piercing (-5)",
+              "profile": "ATK 4, Hit User, DMG 6/3, MW (4), Heavy (Dash), Piercing (-5)",
+              "basePoints": 11,
+              "points": 11,
+              "upgrades": {
+                "poison": false,
+                "enchanted": false,
+                "cursed": false,
+                "truestrike": false,
+                "masterCrafted": false
+              },
+              "displayNameOverride": "Shokk Attack Gun"
+            }
+          ],
+          "abilities": [],
+          "leaderAbilities": [],
+          "spells": [],
+          "equipment": [],
+          "points": {
+            "base": 16,
+            "stats": 8,
+            "warlock": 0,
+            "ccWeapons": 2,
+            "rangedWeapons": 11,
+            "abilities": 0,
+            "leaderAbilities": 0,
+            "spells": 0,
+            "equipment": 0
+          }
+        }
+      }
+    },
+    {
+      "sourceFileName": "mortalis_Weirdboy.json",
+      "fighterFile": {
+        "app": "Mortalis Fighter Builder",
+        "version": 1,
+        "savedAt": "2026-07-04T22:28:10.748Z",
+        "fighter": {
+          "name": "Kaptin Jack",
+          "isWarlock": false,
+          "isMasterWarlock": false,
+          "portraitDataUrl": "",
+          "portraitKey": "",
+          "stats": {
+            "move": 6,
+            "def": 5,
+            "ap": 3,
+            "hp": 21,
+            "atk": 5,
+            "fight": 5,
+            "shoot": 7
+          },
+          "ccWeapons": [
+            {
+              "id": "monstrousClaws",
+              "name": "Monstrous Claws",
+              "baseProfile": "ATK User, Hit User, DMG 5/6, MW (1)",
+              "profile": "ATK User, Hit User, DMG 5/6, MW (1)",
+              "basePoints": 6,
+              "points": 8,
+              "upgrades": {
+                "poison": false,
+                "enchanted": true,
+                "cursed": false,
+                "truestrike": false,
+                "masterCrafted": false
+              },
+              "displayNameOverride": "Da Klaw!"
+            }
+          ],
+          "rangedWeapons": [
+            {
+              "id": "ionRifle",
+              "name": "Ion Rifle",
+              "baseProfile": "ATK 4, Hit User, DMG 4/5, Piercing Crits (-2)",
+              "profile": "ATK 4, Hit User, DMG 4/5, Piercing Crits (-2)",
+              "basePoints": 7,
+              "points": 7,
+              "upgrades": {
+                "poison": false,
+                "enchanted": false,
+                "cursed": false,
+                "truestrike": false,
+                "masterCrafted": false
+              },
+              "displayNameOverride": "Da Shooty Gun"
+            }
+          ],
+          "abilities": [],
+          "leaderAbilities": [
+            {
+              "id": "heroicLeader",
+              "name": "Heroic Leader",
+              "points": 0,
+              "effect": "May use a Feat for free once per turn, but only during this Fighter’s activation.",
+              "category": "Utility",
+              "displayNameOverride": "Da Greatest Pirate Evarh!"
+            },
+            {
+              "id": "guidance",
+              "name": "Guidance",
+              "points": 0,
+              "effect": "1 AP: Choose a friendly Fighter within Line of Sight. That Fighter gains 1 AP until end of turn.",
+              "category": "Utility",
+              "displayNameOverride": "Get it Done, Ladz!"
+            }
+          ],
+          "spells": [],
+          "equipment": [
+            {
+              "id": "breachingRam",
+              "name": "Breaching Ram (+)",
+              "points": 5,
+              "effect": "Treat any wall <1\" thick as Accessible Terrain (may move through at cost of 1\" Move).",
+              "category": "Mobility",
+              "displayNameOverride": "Walking Tank"
+            }
+          ],
+          "points": {
+            "base": 16,
+            "stats": 30,
+            "warlock": 0,
+            "ccWeapons": 8,
+            "rangedWeapons": 7,
+            "abilities": 0,
+            "leaderAbilities": 0,
+            "spells": 0,
+            "equipment": 5
+          }
+        }
+      }
+    },
+    {
+      "sourceFileName": "mortalis_Killa_Kan.json",
+      "fighterFile": {
+        "app": "Mortalis Fighter Builder",
+        "version": 1,
+        "savedAt": "2026-07-08T08:49:29.320Z",
+        "fighter": {
+          "name": "Killa Kan",
+          "isWarlock": false,
+          "isMasterWarlock": false,
+          "portraitDataUrl": "",
+          "portraitKey": "",
+          "stats": {
+            "move": 6,
+            "def": 7,
+            "ap": 2,
+            "hp": 18,
+            "atk": 4,
+            "fight": 7,
+            "shoot": 6
+          },
+          "ccWeapons": [
+            {
+              "id": "monstrousClaws",
+              "name": "Monstrous Claws",
+              "baseProfile": "ATK User, Hit User, DMG 5/6, MW (1)",
+              "profile": "ATK User, Hit User, DMG 5/6, MW (1)",
+              "basePoints": 6,
+              "points": 6,
+              "upgrades": {
+                "poison": false,
+                "enchanted": false,
+                "cursed": false,
+                "truestrike": false,
+                "masterCrafted": false
+              }
+            }
+          ],
+          "rangedWeapons": [
+            {
+              "id": "rokkitLauncha",
+              "name": "Rokkit Launcha",
+              "baseProfile": "ATK 6, Hit User, DMG 4/5, Blast (1\")",
+              "profile": "ATK 6, Hit User, DMG 4/5, Blast (1\")",
+              "basePoints": 9,
+              "points": 9,
+              "upgrades": {
+                "poison": false,
+                "enchanted": false,
+                "cursed": false,
+                "truestrike": false,
+                "masterCrafted": false
+              }
+            }
+          ],
+          "abilities": [],
+          "leaderAbilities": [],
+          "spells": [],
+          "equipment": [],
+          "points": {
+            "base": 16,
+            "stats": 17,
+            "warlock": 0,
+            "ccWeapons": 6,
+            "rangedWeapons": 9,
+            "abilities": 0,
+            "leaderAbilities": 0,
+            "spells": 0,
+            "equipment": 0
+          }
+        }
+      }
+    },
+    {
+      "sourceFileName": "mortalis_Bomb_Squig.json",
+      "fighterFile": {
+        "app": "Mortalis Fighter Builder",
+        "version": 1,
+        "savedAt": "2026-07-08T08:36:09.647Z",
+        "fighter": {
+          "name": "Bomb Squig 1",
+          "isWarlock": false,
+          "isMasterWarlock": false,
+          "portraitDataUrl": "",
+          "portraitKey": "",
+          "stats": {
+            "move": 6,
+            "def": 9,
+            "ap": 2,
+            "hp": 6,
+            "atk": 3,
+            "fight": 7,
+            "shoot": 11
+          },
+          "ccWeapons": [
+            {
+              "id": "chainsword",
+              "name": "Chainsword",
+              "baseProfile": "ATK User, Hit User, DMG 4/5",
+              "profile": "ATK User, Hit User, DMG 4/5",
+              "basePoints": 4,
+              "points": 4,
+              "upgrades": {
+                "poison": false,
+                "enchanted": false,
+                "cursed": false,
+                "truestrike": false,
+                "masterCrafted": false
+              },
+              "displayNameOverride": "Gnashing Teeth"
+            }
+          ],
+          "rangedWeapons": [],
+          "abilities": [
+            {
+              "id": "instinctive",
+              "name": "Instinctive",
+              "points": 0,
+              "effect": "The Fighter can perform a free Dash action during its activation (no AP cost). This fighter cannot control objectives, and cannot perform Interact actions. No more than 1/3 your Team can be Instinctive.",
+              "category": "Mobility"
+            },
+            {
+              "id": "endlessHorde",
+              "name": "Endless Horde",
+              "points": 6,
+              "effect": "Cost equals this Fighter’s current HP stat. When this Fighter dies, at the start of the next turn it returns at your Rearguard Deployment Zone edge. Only for Fighters with 2 AP or less and 10 HP or less.",
+              "dynamicType": "hpStat",
+              "dynamicFactor": 1,
+              "category": "Mobility",
+              "displayNameOverride": "We gotz more where they came from..."
+            }
+          ],
+          "leaderAbilities": [],
+          "spells": [],
+          "equipment": [
+            {
+              "id": "climbingEquipment",
+              "name": "Climbing Equipment",
+              "points": 2,
+              "effect": "Ignore the first 2\" of vertical repositioning.",
+              "category": "Mobility",
+              "displayNameOverride": "Fast little Buggerz..."
+            },
+            {
+              "id": "suicideBomber",
+              "name": "Suicide Bomber",
+              "points": 4,
+              "effect": "The Fighter gains following:  0 AP Action: Roll a D12. On 5+, Every Fighter within 1” of this Fighter suffers D3+2 MW. No matter the result of the dice roll, Remove the Fighter from the Battlefield, although it does not count as Slain for VP purposes or triggering effects.",
+              "category": "Mobility"
+            }
+          ],
+          "points": {
+            "base": 16,
+            "stats": -5,
+            "warlock": 0,
+            "ccWeapons": 4,
+            "rangedWeapons": 0,
+            "abilities": 6,
+            "leaderAbilities": 0,
+            "spells": 0,
+            "equipment": 6
+          }
+        }
+      }
+    },
+    {
+      "sourceFileName": "mortalis_Grot.json",
+      "fighterFile": {
+        "app": "Mortalis Fighter Builder",
+        "version": 1,
+        "savedAt": "2026-07-08T08:48:57.328Z",
+        "fighter": {
+          "name": "Grot 1",
+          "isWarlock": false,
+          "isMasterWarlock": false,
+          "portraitDataUrl": "",
+          "portraitKey": "",
+          "stats": {
+            "move": 6,
+            "def": 10,
+            "ap": 2,
+            "hp": 6,
+            "atk": 3,
+            "fight": 9,
+            "shoot": 7
+          },
+          "ccWeapons": [
+            {
+              "id": "fistsClaws",
+              "name": "Fists/Claws",
+              "baseProfile": "ATK User, Hit User, DMG 2/3",
+              "profile": "ATK User, Hit User, DMG 2/3",
+              "basePoints": 0,
+              "points": 0,
+              "upgrades": {
+                "poison": false,
+                "enchanted": false,
+                "cursed": false,
+                "truestrike": false,
+                "masterCrafted": false
+              },
+              "displayNameOverride": "Weedy Little Fists"
+            }
+          ],
+          "rangedWeapons": [
+            {
+              "id": "autoLasgun",
+              "name": "Auto/Lasgun",
+              "baseProfile": "ATK 4, Hit User, DMG 2/3",
+              "profile": "ATK 4, Hit User, DMG 2/3",
+              "basePoints": 3,
+              "points": 3,
+              "upgrades": {
+                "poison": false,
+                "enchanted": false,
+                "cursed": false,
+                "truestrike": false,
+                "masterCrafted": false
+              },
+              "displayNameOverride": "Grot Gun"
+            }
+          ],
+          "abilities": [],
+          "leaderAbilities": [],
+          "spells": [],
+          "equipment": [],
+          "points": {
+            "base": 16,
+            "stats": -4,
+            "warlock": 0,
+            "ccWeapons": 0,
+            "rangedWeapons": 3,
+            "abilities": 0,
+            "leaderAbilities": 0,
+            "spells": 0,
+            "equipment": 0
+          }
+        }
+      }
+    },
+    {
+      "sourceFileName": "mortalis_Bomb_Squig.json",
+      "fighterFile": {
+        "app": "Mortalis Fighter Builder",
+        "version": 1,
+        "savedAt": "2026-07-08T08:36:31.817Z",
+        "fighter": {
+          "name": "Bomb Squig 2",
+          "isWarlock": false,
+          "isMasterWarlock": false,
+          "portraitDataUrl": "",
+          "portraitKey": "",
+          "stats": {
+            "move": 6,
+            "def": 9,
+            "ap": 2,
+            "hp": 6,
+            "atk": 3,
+            "fight": 7,
+            "shoot": 11
+          },
+          "ccWeapons": [
+            {
+              "id": "chainsword",
+              "name": "Chainsword",
+              "baseProfile": "ATK User, Hit User, DMG 4/5",
+              "profile": "ATK User, Hit User, DMG 4/5",
+              "basePoints": 4,
+              "points": 4,
+              "upgrades": {
+                "poison": false,
+                "enchanted": false,
+                "cursed": false,
+                "truestrike": false,
+                "masterCrafted": false
+              },
+              "displayNameOverride": "Gnashing Teeth"
+            }
+          ],
+          "rangedWeapons": [],
+          "abilities": [
+            {
+              "id": "instinctive",
+              "name": "Instinctive",
+              "points": 0,
+              "effect": "The Fighter can perform a free Dash action during its activation (no AP cost). This fighter cannot control objectives, and cannot perform Interact actions. No more than 1/3 your Team can be Instinctive.",
+              "category": "Mobility"
+            },
+            {
+              "id": "endlessHorde",
+              "name": "Endless Horde",
+              "points": 6,
+              "effect": "Cost equals this Fighter’s current HP stat. When this Fighter dies, at the start of the next turn it returns at your Rearguard Deployment Zone edge. Only for Fighters with 2 AP or less and 10 HP or less.",
+              "dynamicType": "hpStat",
+              "dynamicFactor": 1,
+              "category": "Mobility",
+              "displayNameOverride": "We gotz more where they came from..."
+            }
+          ],
+          "leaderAbilities": [],
+          "spells": [],
+          "equipment": [
+            {
+              "id": "climbingEquipment",
+              "name": "Climbing Equipment",
+              "points": 2,
+              "effect": "Ignore the first 2\" of vertical repositioning.",
+              "category": "Mobility",
+              "displayNameOverride": "Fast little Buggerz..."
+            },
+            {
+              "id": "suicideBomber",
+              "name": "Suicide Bomber",
+              "points": 4,
+              "effect": "The Fighter gains following:  0 AP Action: Roll a D12. On 5+, Every Fighter within 1” of this Fighter suffers D3+2 MW. No matter the result of the dice roll, Remove the Fighter from the Battlefield, although it does not count as Slain for VP purposes or triggering effects.",
+              "category": "Mobility"
+            }
+          ],
+          "points": {
+            "base": 16,
+            "stats": -5,
+            "warlock": 0,
+            "ccWeapons": 4,
+            "rangedWeapons": 0,
+            "abilities": 6,
+            "leaderAbilities": 0,
+            "spells": 0,
+            "equipment": 6
+          }
+        }
+      }
+    },
+    {
+      "sourceFileName": "mortalis_Grot.json",
+      "fighterFile": {
+        "app": "Mortalis Fighter Builder",
+        "version": 1,
+        "savedAt": "2026-07-08T08:49:09.948Z",
+        "fighter": {
+          "name": "Grot 2",
+          "isWarlock": false,
+          "isMasterWarlock": false,
+          "portraitDataUrl": "",
+          "portraitKey": "",
+          "stats": {
+            "move": 6,
+            "def": 10,
+            "ap": 2,
+            "hp": 6,
+            "atk": 3,
+            "fight": 9,
+            "shoot": 7
+          },
+          "ccWeapons": [
+            {
+              "id": "fistsClaws",
+              "name": "Fists/Claws",
+              "baseProfile": "ATK User, Hit User, DMG 2/3",
+              "profile": "ATK User, Hit User, DMG 2/3",
+              "basePoints": 0,
+              "points": 0,
+              "upgrades": {
+                "poison": false,
+                "enchanted": false,
+                "cursed": false,
+                "truestrike": false,
+                "masterCrafted": false
+              },
+              "displayNameOverride": "Weedy Little Fists"
+            }
+          ],
+          "rangedWeapons": [
+            {
+              "id": "autoLasgun",
+              "name": "Auto/Lasgun",
+              "baseProfile": "ATK 4, Hit User, DMG 2/3",
+              "profile": "ATK 4, Hit User, DMG 2/3",
+              "basePoints": 3,
+              "points": 3,
+              "upgrades": {
+                "poison": false,
+                "enchanted": false,
+                "cursed": false,
+                "truestrike": false,
+                "masterCrafted": false
+              },
+              "displayNameOverride": "Grot Gun"
+            }
+          ],
+          "abilities": [],
+          "leaderAbilities": [],
+          "spells": [],
+          "equipment": [],
+          "points": {
+            "base": 16,
+            "stats": -4,
+            "warlock": 0,
+            "ccWeapons": 0,
+            "rangedWeapons": 3,
+            "abilities": 0,
+            "leaderAbilities": 0,
+            "spells": 0,
+            "equipment": 0
+          }
+        }
+      }
+    }
+  ]
+}
