@@ -1,7 +1,7 @@
 {
   "app": "Mortalis / Dark Realms Team Builder",
   "version": 1,
-  "savedAt": "2026-07-08T08:51:20.079Z",
+  "savedAt": "2026-07-09T21:25:49.533Z",
   "warbandName": "Da Ork Piratez!",
   "limit": 400,
   "fighters": [
@@ -313,7 +313,7 @@
       "fighterFile": {
         "app": "Mortalis Fighter Builder",
         "version": 1,
-        "savedAt": "2026-07-08T08:50:03.745Z",
+        "savedAt": "2026-07-09T21:24:57.153Z",
         "fighter": {
           "name": "Shokk Attack Gun",
           "isWarlock": false,
@@ -321,7 +321,7 @@
           "portraitDataUrl": "",
           "portraitKey": "",
           "stats": {
-            "move": 6,
+            "move": 5,
             "def": 7,
             "ap": 2,
             "hp": 11,
@@ -371,7 +371,7 @@
           "equipment": [],
           "points": {
             "base": 16,
-            "stats": 8,
+            "stats": 4,
             "warlock": 0,
             "ccWeapons": 2,
             "rangedWeapons": 11,
@@ -489,7 +489,7 @@
       "fighterFile": {
         "app": "Mortalis Fighter Builder",
         "version": 1,
-        "savedAt": "2026-07-08T08:49:29.320Z",
+        "savedAt": "2026-07-09T21:25:14.457Z",
         "fighter": {
           "name": "Killa Kan",
           "isWarlock": false,
@@ -500,9 +500,9 @@
             "move": 6,
             "def": 7,
             "ap": 2,
-            "hp": 18,
-            "atk": 4,
-            "fight": 7,
+            "hp": 19,
+            "atk": 5,
+            "fight": 6,
             "shoot": 6
           },
           "ccWeapons": [
@@ -545,7 +545,7 @@
           "equipment": [],
           "points": {
             "base": 16,
-            "stats": 17,
+            "stats": 22,
             "warlock": 0,
             "ccWeapons": 6,
             "rangedWeapons": 9,
