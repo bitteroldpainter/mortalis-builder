@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Road Rage — Chop Shop</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <div class="app-shell">
+    <header class="top-bar">
+      <div>
+        <p class="eyebrow">Road Rage Vehicle Builder</p>
+        <h1>Chop Shop</h1>
+      </div>
+      <div class="top-actions">
+        <button class="button button-secondary" id="new-vehicle" type="button">New</button>
+        <button class="button button-accent" id="save-vehicle" type="button">Save</button>
+        <label class="button button-secondary file-button">
+          Load
+          <input id="load-vehicle" type="file" accept="application/json" hidden>
+        </label>
+        <button class="button button-accent" id="generate-card" type="button" disabled>Generate Card</button>
+      </div>
+    </header>
+
+    <main>
+      <section class="panel vehicle-heading-panel">
+        <div class="field-group vehicle-name-field">
+          <label for="vehicle-name">Vehicle name</label>
+          <input id="vehicle-name" type="text" maxlength="60" placeholder="Unnamed Vehicle">
+        </div>
+        <div class="points-pill" aria-live="polite">
+          <span>Total</span>
+          <strong id="total-points">0 pts</strong>
+        </div>
+      </section>
+
+      <nav class="tabs" aria-label="Builder sections">
+        <button class="tab active" data-panel="vehicle-panel" type="button">Vehicle</button>
+        <button class="tab" data-panel="weapons-panel" type="button">Weapons</button>
+        <button class="tab" data-panel="hull-panel" type="button">Hull Upgrades</button>
+        <button class="tab" data-panel="engine-panel" type="button">Engine Upgrades</button>
+        <button class="tab" data-panel="crew-panel" type="button">Crew Upgrades</button>
+        <button class="tab" data-panel="summary-panel" type="button">Summary</button>
+      </nav>
+
+      <section class="panel tab-panel active" id="vehicle-panel">
+        <div class="section-heading">
+          <div>
+            <p class="eyebrow">Step 1</p>
+            <h2>Select Chassis</h2>
+          </div>
+          <p>Every vehicle begins with a chassis. It determines the core profile, transport capacity and starting cost.</p>
+        </div>
+        <div class="chassis-grid" id="chassis-grid"></div>
+      </section>
+
+      <section class="panel tab-panel" id="weapons-panel">
+        <div class="empty-state">
+          <span>02</span>
+          <h2>Weapons</h2>
+          <p>The weapon catalogue and mount selection will be added in the next milestone.</p>
+        </div>
+      </section>
+
+      <section class="panel tab-panel" id="hull-panel">
+        <div class="empty-state">
+          <span>03</span>
+          <h2>Hull Upgrades</h2>
+          <p>Armour, rams, reinforced frames and other hull modifications will live here.</p>
+        </div>
+      </section>
+
+      <section class="panel tab-panel" id="engine-panel">
+        <div class="empty-state">
+          <span>04</span>
+          <h2>Engine Upgrades</h2>
+          <p>Speed, handling and mobility upgrades will live here.</p>
+        </div>
+      </section>
+
+      <section class="panel tab-panel" id="crew-panel">
+        <div class="empty-state">
+          <span>05</span>
+          <h2>Crew Upgrades</h2>
+          <p>Driver, gunner and specialist crew upgrades will live here.</p>
+        </div>
+      </section>
+
+      <section class="panel tab-panel" id="summary-panel">
+        <div class="section-heading">
+          <div>
+            <p class="eyebrow">Current Build</p>
+            <h2>Summary</h2>
+          </div>
+        </div>
+        <div id="summary-content"></div>
+      </section>
+    </main>
+
+    <footer>
+      <span id="status-message" role="status">Choose a chassis to begin.</span>
+      <span>Chop Shop v0.3</span>
+    </footer>
+  </div>
+
+  <script src="roadrage-rules.js"></script>
+  <script src="storage.js"></script>
+  <script src="builder.js"></script>
+  <script src="card.js"></script>
+</body>
+</html>
