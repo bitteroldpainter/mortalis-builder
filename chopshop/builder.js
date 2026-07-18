@@ -3,6 +3,7 @@
 
   var rules = window.ROAD_RAGE_RULES;
   var state = createBlankVehicle();
+  var currentWeaponCategory = "light";
 
   var els = {
     chassisGrid: document.getElementById("chassis-grid"),
@@ -13,13 +14,17 @@
     save: document.getElementById("save-vehicle"),
     load: document.getElementById("load-vehicle"),
     fresh: document.getElementById("new-vehicle"),
-    generateCard: document.getElementById("generate-card")
+    generateCard: document.getElementById("generate-card"),
+    weaponTabs: document.getElementById("weapon-category-tabs"),
+    weaponCatalogue: document.getElementById("weapon-catalogue"),
+    selectedWeapons: document.getElementById("selected-weapons")
   };
 
   init();
 
   function init() {
     renderChassis();
+    renderWeaponTabs();
     render();
     bindTabs();
     bindActions();
@@ -38,17 +43,13 @@
 
   function renderChassis() {
     els.chassisGrid.innerHTML = "";
-    rules.chassis.forEach(function (chassis, index) {
+    rules.chassis.forEach(function (chassis) {
       var button = document.createElement("button");
       button.type = "button";
       button.className = "chassis-card";
       button.dataset.chassisId = chassis.id;
       button.setAttribute("aria-pressed", "false");
       button.innerHTML =
-        '<span class="chassis-number">0' + (index + 1) + '</span>' +
-        '<div class="chassis-silhouette chassis-silhouette-' + escapeHtml(chassis.id) + '" aria-hidden="true">' +
-          '<span class="vehicle-body"></span><span class="vehicle-wheel wheel-a"></span><span class="vehicle-wheel wheel-b"></span>' +
-        '</div>' +
         '<div class="chassis-title-row"><h3>' + escapeHtml(chassis.name) + '</h3><strong class="chassis-cost">' + formatPoints(chassis.cost) + '</strong></div>' +
         '<p>' + escapeHtml(chassis.description) + '</p>' +
         renderChassisStats(chassis.stats) +
@@ -114,8 +115,122 @@
     });
     els.totalPoints.textContent = calculatePoints() + " pts";
     els.generateCard.disabled = !state.chassisId;
+    renderWeapons();
     renderSummary();
   }
+
+  function renderWeaponTabs() {
+    if (!els.weaponTabs) return;
+    els.weaponTabs.innerHTML = rules.weaponCategories.map(function (category) {
+      return '<button type="button" class="weapon-category-tab' + (category.key === currentWeaponCategory ? ' active' : '') + '" data-category="' + category.key + '">' + escapeHtml(category.label) + '</button>';
+    }).join("");
+    els.weaponTabs.querySelectorAll("button").forEach(function (button) {
+      button.addEventListener("click", function () {
+        currentWeaponCategory = button.dataset.category;
+        renderWeaponTabs();
+        renderWeapons();
+      });
+    });
+  }
+
+  function renderWeapons() {
+    if (!els.weaponCatalogue || !els.selectedWeapons) return;
+    var category = rules.weaponCategories.find(function (item) { return item.key === currentWeaponCategory; }) || rules.weaponCategories[0];
+    var allowed = {};
+    category.ids.forEach(function (id) { allowed[id] = true; });
+    var available = rules.weapons.filter(function (weapon) { return allowed[weapon.id]; });
+    els.weaponCatalogue.innerHTML = available.map(function (weapon) {
+      return '<article class="weapon-card"><div class="weapon-card-head"><h3>' + escapeHtml(weapon.name) + '</h3><strong>' + formatPoints(weapon.points) + '</strong></div><p>' + escapeHtml(weapon.profile) + '</p><button type="button" class="button button-accent add-weapon" data-weapon-id="' + weapon.id + '">Add Weapon</button></article>';
+    }).join("");
+    els.weaponCatalogue.querySelectorAll(".add-weapon").forEach(function (button) {
+      button.addEventListener("click", function () {
+        state.weapons.push({ instanceId: makeId(), weaponId: button.dataset.weaponId, mountId: "hull", upgrades: blankWeaponUpgrades() });
+        setStatus("Weapon added.");
+        render();
+      });
+    });
+
+    if (!state.weapons.length) {
+      els.selectedWeapons.innerHTML = '<div class="summary-placeholder">No weapons mounted.</div>';
+      return;
+    }
+    els.selectedWeapons.innerHTML = state.weapons.map(function (selection) {
+      var weapon = getWeapon(selection.weaponId);
+      if (!weapon) return "";
+      var total = weapon.points + getMount(selection.mountId).points + getWeaponUpgradeCost(selection);
+      return '<article class="selected-weapon-card" data-instance-id="' + selection.instanceId + '">' +
+        '<div class="weapon-card-head"><div><h4>' + escapeHtml(weapon.name) + '</h4><p class="selected-weapon-profile">' + escapeHtml(buildWeaponProfile(weapon, selection)) + '</p></div><strong>' + formatPoints(total) + '</strong></div>' +
+        '<div class="mount-options">' + rules.weaponMounts.map(function (mount) {
+          return '<label><input type="radio" name="mount-' + selection.instanceId + '" value="' + mount.id + '"' + (selection.mountId === mount.id ? ' checked' : '') + '><span>' + escapeHtml(mount.shortName) + ' <small>+' + mount.points + '</small></span></label>';
+        }).join("") + '</div>' +
+        '<div class="weapon-upgrades">' + renderWeaponUpgradeOptions(selection) + '</div>' +
+        '<button type="button" class="remove-weapon" data-instance-id="' + selection.instanceId + '">Remove</button></article>';
+    }).join("");
+    els.selectedWeapons.querySelectorAll('.upgrade-toggle').forEach(function (input) {
+      input.addEventListener("change", function () {
+        var card = input.closest(".selected-weapon-card");
+        var selection = state.weapons.find(function (item) { return item.instanceId === card.dataset.instanceId; });
+        if (!selection) return;
+        if (!selection.upgrades) selection.upgrades = blankWeaponUpgrades();
+        selection.upgrades[input.dataset.upgrade] = input.checked;
+        render();
+      });
+    });
+
+    els.selectedWeapons.querySelectorAll('input[type="radio"]').forEach(function (input) {
+      input.addEventListener("change", function () {
+        var card = input.closest(".selected-weapon-card");
+        var selection = state.weapons.find(function (item) { return item.instanceId === card.dataset.instanceId; });
+        if (selection) selection.mountId = input.value;
+        render();
+      });
+    });
+    els.selectedWeapons.querySelectorAll(".remove-weapon").forEach(function (button) {
+      button.addEventListener("click", function () {
+        state.weapons = state.weapons.filter(function (item) { return item.instanceId !== button.dataset.instanceId; });
+        render();
+      });
+    });
+  }
+
+  function blankWeaponUpgrades() {
+    return { poison: false, enchanted: false, cursed: false, truestrike: false, masterCrafted: false };
+  }
+
+  function getWeaponUpgradeCost(selection) {
+    var upgrades = selection && selection.upgrades ? selection.upgrades : {};
+    var count = ["poison", "enchanted", "cursed", "truestrike", "masterCrafted"].filter(function (key) { return !!upgrades[key]; }).length;
+    return count ? 2 + ((count - 1) * 4) : 0;
+  }
+
+  function buildWeaponProfile(weapon, selection) {
+    var extras = [];
+    var upgrades = selection && selection.upgrades ? selection.upgrades : {};
+    if (upgrades.poison) extras.push("Poison/Fire");
+    if (upgrades.enchanted) extras.push("Crits on 9+");
+    if (upgrades.cursed) extras.push("MW (2)");
+    if (upgrades.truestrike) extras.push("Reroll (SR)");
+    if (upgrades.masterCrafted) extras.push("Piercing (-2)");
+    return weapon.profile + (extras.length ? ", " + extras.join(", ") : "");
+  }
+
+  function renderWeaponUpgradeOptions(selection) {
+    var upgrades = selection.upgrades || blankWeaponUpgrades();
+    var options = [
+      ["poison", "Poison/Fire"],
+      ["enchanted", "Crits on 9+"],
+      ["cursed", "MW (2)"],
+      ["truestrike", "Reroll (SR)"],
+      ["masterCrafted", "Piercing (-2)"]
+    ];
+    return options.map(function (option) {
+      return '<label><input type="checkbox" class="upgrade-toggle" data-upgrade="' + option[0] + '"' + (upgrades[option[0]] ? ' checked' : '') + '><span>' + escapeHtml(option[1]) + '</span></label>';
+    }).join("");
+  }
+
+  function getWeapon(id) { return rules.weapons.find(function (item) { return item.id === id; }) || null; }
+  function getMount(id) { return rules.weaponMounts.find(function (item) { return item.id === id; }) || rules.weaponMounts[0]; }
+  function makeId() { return "w-" + Date.now().toString(36) + "-" + Math.random().toString(36).slice(2, 8); }
 
   function renderSummary() {
     var chassis = getSelectedChassis();
@@ -139,7 +254,11 @@
         '</div>' +
         '<div class="summary-block">' +
           '<h3>Loadout</h3>' +
-          summaryRow("Weapons", state.weapons.length ? state.weapons.length : "None") +
+          (state.weapons.length ? state.weapons.map(function (selection) {
+            var weapon = getWeapon(selection.weaponId);
+            var mount = getMount(selection.mountId);
+            return weapon ? summaryRow(weapon.name, mount.name + " · " + buildWeaponProfile(weapon, selection) + " · " + formatPoints(weapon.points + mount.points + getWeaponUpgradeCost(selection))) : "";
+          }).join("") : summaryRow("Weapons", "None")) +
           summaryRow("Hull upgrades", state.upgrades.hull.length ? state.upgrades.hull.length : "None") +
           summaryRow("Engine upgrades", state.upgrades.engine.length ? state.upgrades.engine.length : "None") +
           summaryRow("Crew upgrades", state.upgrades.crew.length ? state.upgrades.crew.length : "None") +
@@ -195,7 +314,13 @@
 
   function calculatePoints() {
     var chassis = getSelectedChassis();
-    return chassis ? Number(chassis.cost || 0) : 0;
+    var total = chassis ? Number(chassis.cost || 0) : 0;
+    state.weapons.forEach(function (selection) {
+      var weapon = getWeapon(selection.weaponId);
+      var mount = getMount(selection.mountId);
+      if (weapon) total += Number(weapon.points || 0) + Number(mount.points || 0) + getWeaponUpgradeCost(selection);
+    });
+    return total;
   }
 
   function getSelectedChassis() {
@@ -209,7 +334,14 @@
       name: typeof vehicle.name === "string" ? vehicle.name : "",
       chassisId: rules.chassis.some(function (item) { return item.id === vehicle.chassisId; }) ? vehicle.chassisId : null,
       portrait: vehicle.portrait || null,
-      weapons: Array.isArray(vehicle.weapons) ? vehicle.weapons : [],
+      weapons: Array.isArray(vehicle.weapons) ? vehicle.weapons.map(function (item) {
+        return {
+          instanceId: typeof item.instanceId === "string" ? item.instanceId : makeId(),
+          weaponId: rules.weapons.some(function (weapon) { return weapon.id === item.weaponId; }) ? item.weaponId : null,
+          mountId: rules.weaponMounts.some(function (mount) { return mount.id === item.mountId; }) ? item.mountId : "hull",
+          upgrades: Object.assign(blankWeaponUpgrades(), item.upgrades || {})
+        };
+      }).filter(function (item) { return item.weaponId; }) : [],
       upgrades: {
         hull: vehicle.upgrades && Array.isArray(vehicle.upgrades.hull) ? vehicle.upgrades.hull : [],
         engine: vehicle.upgrades && Array.isArray(vehicle.upgrades.engine) ? vehicle.upgrades.engine : [],

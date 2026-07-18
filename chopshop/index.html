@@ -4,6 +4,9 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Road Rage — Chop Shop</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Kdam+Thmor+Pro&family=Slackey&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="styles.css">
 </head>
 <body>
@@ -57,10 +60,17 @@
       </section>
 
       <section class="panel tab-panel" id="weapons-panel">
-        <div class="empty-state">
-          <span>02</span>
-          <h2>Weapons</h2>
-          <p>The weapon catalogue and mount selection will be added in the next milestone.</p>
+        <div class="section-heading">
+          <div><p class="eyebrow">Step 2</p><h2>Choose Weapons</h2></div>
+          <p>Add ranged weapons, then choose how each one is mounted.</p>
+        </div>
+        <div class="weapon-category-tabs" id="weapon-category-tabs"></div>
+        <div class="weapons-layout">
+          <div class="weapon-catalogue" id="weapon-catalogue"></div>
+          <aside class="selected-weapons-panel">
+            <h3>Mounted Weapons</h3>
+            <div id="selected-weapons"></div>
+          </aside>
         </div>
       </section>
 

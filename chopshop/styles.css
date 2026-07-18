@@ -48,6 +48,12 @@ h1, h2, p { margin-top: 0; }
 h1 { margin-bottom: 0; font-size: clamp(1.8rem, 4vw, 2.8rem); line-height: 1; }
 h2 { margin-bottom: .25rem; }
 
+h1, h2, .chassis-card h3, .empty-state h2 {
+  font-family: "Slackey", system-ui, sans-serif;
+  font-weight: 400;
+}
+
+
 .eyebrow {
   margin-bottom: .35rem;
   color: var(--orange);
@@ -117,7 +123,28 @@ input[type="text"]:focus { border-color: var(--orange); box-shadow: 0 0 0 3px rg
 .points-pill span { display: block; color: var(--muted); font-size: .7rem; text-transform: uppercase; }
 .points-pill strong { font-size: 1.05rem; }
 
-.tabs { margin: .5rem 0 .8rem; }
+.tabs {
+  display: grid;
+  grid-template-columns: repeat(6, minmax(0, 1fr));
+  gap: .55rem;
+  width: 100%;
+  margin: .65rem 0 .9rem;
+}
+.tabs .tab {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 0;
+  min-height: 0;
+  padding: .45rem .85rem;
+  font-family: "Kdam Thmor Pro", system-ui, sans-serif;
+  font-size: 1rem;
+  font-weight: 400;
+  line-height: normal;
+  letter-spacing: .01em;
+  text-align: center;
+  white-space: normal;
+}
 .tab-panel { display: none; min-height: 360px; }
 .tab-panel.active { display: block; }
 .section-heading { align-items: flex-start; margin-bottom: 1rem; }
@@ -142,7 +169,6 @@ input[type="text"]:focus { border-color: var(--orange); box-shadow: 0 0 0 3px rg
 }
 .chassis-card:hover { border-color: var(--orange); }
 .chassis-card.selected { border-color: var(--orange); box-shadow: 0 0 0 2px rgba(255, 159, 28, .18); }
-.chassis-number { display: block; margin-bottom: 2.2rem; color: #5f666e; font-size: 2.7rem; font-weight: 900; }
 .chassis-card h3 { margin: 0 0 .25rem; font-size: 1.25rem; }
 .chassis-card p { min-height: 4.7rem; margin-bottom: .75rem; color: var(--muted); font-size: .86rem; }
 .chassis-stats {
@@ -202,6 +228,23 @@ footer {
   font-size: .75rem;
 }
 
+
+@media (max-width: 860px) {
+  .tabs { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+  .tabs .tab {
+    min-height: 0;
+    font-size: 1rem;
+  }
+}
+
+@media (max-width: 520px) {
+  .tabs { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .tabs .tab {
+    min-height: 0;
+    font-size: 1rem;
+  }
+}
+
 @media (max-width: 800px) {
   .top-bar, .vehicle-heading-panel, .section-heading { align-items: stretch; flex-direction: column; }
   .chassis-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
@@ -230,15 +273,6 @@ footer {
   border-width: 2px;
   background: linear-gradient(150deg, #2d3035, #111315 70%);
   box-shadow: 0 0 0 2px rgba(255, 159, 28, .18), 0 12px 28px rgba(0, 0, 0, .34), 0 0 18px rgba(255, 159, 28, .12);
-}
-.chassis-number {
-  position: absolute;
-  top: .65rem;
-  left: .75rem;
-  margin: 0;
-  color: #555c64;
-  font-size: 1.05rem;
-  letter-spacing: .08em;
 }
 .chassis-title-row {
   display: flex;
@@ -309,41 +343,101 @@ footer {
 }
 .chassis-card.selected .selected-marker { opacity: 1; transform: translateY(0); }
 
-.chassis-silhouette {
-  position: relative;
-  width: 100%;
-  height: 70px;
-  margin: .35rem 0 .5rem;
-  opacity: .72;
+
+/* Weapon builder */
+.weapon-category-tabs { display:flex; flex-wrap:wrap; gap:.45rem; margin-bottom:1rem; }
+.weapon-category-tab { border:1px solid #444a51; border-radius:999px; padding:.42rem .85rem; background:#111315; color:var(--text); font:inherit; cursor:pointer; }
+.weapon-category-tab.active { border-color:var(--orange); background:var(--orange); color:#111315; }
+.weapons-layout { display:grid; grid-template-columns:minmax(0,2fr) minmax(280px,1fr); gap:1rem; align-items:start; }
+.weapon-catalogue { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:.75rem; }
+.weapon-card,.selected-weapon-card { border:1px solid #343a40; border-radius:12px; background:linear-gradient(150deg,#25292e,#121416 75%); padding:.8rem; }
+.weapon-card-head { display:flex; justify-content:space-between; align-items:flex-start; gap:.65rem; }
+.weapon-card h3,.selected-weapon-card h4,.selected-weapons-panel h3 { margin:0; }
+.weapon-card-head strong { color:var(--orange); white-space:nowrap; }
+.weapon-card p { min-height:3.6em; color:var(--muted); font-size:.78rem; line-height:1.45; }
+.weapon-card .button { width:100%; }
+.selected-weapons-panel { position:sticky; top:1rem; border:1px solid #343a40; border-radius:12px; background:#17191c; padding:.85rem; }
+.selected-weapons-panel>h3 { margin-bottom:.75rem; font-family:"Slackey",system-ui,sans-serif; }
+#selected-weapons { display:grid; gap:.65rem; }
+.mount-options { display:grid; grid-template-columns:repeat(3,1fr); gap:.35rem; margin:.7rem 0; }
+.mount-options label { cursor:pointer; }
+.mount-options input { position:absolute; opacity:0; pointer-events:none; }
+.mount-options span { display:block; padding:.4rem .25rem; border:1px solid #444a51; border-radius:8px; text-align:center; font-size:.72rem; }
+.mount-options input:checked+span { border-color:var(--orange); background:rgba(255,159,28,.16); color:#fff; }
+.mount-options small { color:var(--orange); }
+.remove-weapon { border:0; background:none; color:#fca5a5; cursor:pointer; padding:0; font:inherit; font-size:.75rem; }
+@media (max-width:800px){ .weapons-layout{grid-template-columns:1fr}.weapon-catalogue{grid-template-columns:1fr}.selected-weapons-panel{position:static} }
+
+/* Compact Fighter Forge-style weapon rows */
+.weapon-catalogue { gap:.4rem; }
+.weapon-card,
+.selected-weapon-card {
+  border-color:#ff9f1c;
+  border-radius:.5rem;
+  background:linear-gradient(0deg, rgba(35,41,43,1), rgba(0,0,0,1));
+  padding:.38rem .5rem;
 }
-.vehicle-body {
-  position: absolute;
-  left: 19%;
-  right: 16%;
-  bottom: 17px;
-  height: 23px;
-  background: #6b7178;
-  clip-path: polygon(0 50%, 12% 8%, 68% 0, 100% 44%, 90% 100%, 8% 100%);
+.weapon-card-head { align-items:flex-start; gap:.45rem; }
+.weapon-card h3,
+.selected-weapon-card h4 { font-size:.9rem; line-height:1.2; }
+.weapon-card p,
+.selected-weapon-profile {
+  min-height:0;
+  margin:.15rem 0 .35rem;
+  color:#9ca3af;
+  font-size:.75rem;
+  line-height:1.3;
 }
-.vehicle-wheel {
-  position: absolute;
-  bottom: 7px;
-  width: 21px;
-  height: 21px;
-  background: #17191c;
-  border: 4px solid #777d84;
-  border-radius: 50%;
+.weapon-card .button {
+  width:auto;
+  padding:.24rem .55rem;
+  font-size:.75rem;
+  float:right;
 }
-.wheel-a { left: 24%; }
-.wheel-b { right: 21%; }
-.chassis-silhouette-bike .vehicle-body { left: 25%; right: 25%; height: 12px; clip-path: polygon(0 65%, 30% 0, 72% 10%, 100% 65%, 88% 100%, 10% 100%); }
-.chassis-silhouette-bike .wheel-a { left: 21%; }
-.chassis-silhouette-bike .wheel-b { right: 21%; }
-.chassis-silhouette-trakk .vehicle-body { left: 15%; right: 15%; height: 22px; clip-path: polygon(0 35%, 22% 0, 75% 0, 100% 35%, 92% 100%, 8% 100%); }
-.chassis-silhouette-buggy .vehicle-body { left: 16%; right: 14%; height: 26px; }
-.chassis-silhouette-trukk .vehicle-body { left: 10%; right: 10%; height: 31px; clip-path: polygon(0 30%, 52% 30%, 60% 0, 88% 0, 100% 45%, 95% 100%, 5% 100%); }
-.chassis-silhouette-trukk .wheel-a { left: 18%; }
-.chassis-silhouette-trukk .wheel-b { right: 15%; }
-.chassis-card:hover .chassis-silhouette,
-.chassis-card.selected .chassis-silhouette { opacity: .95; }
-.chassis-card.selected .vehicle-body { background: #858b91; }
+.weapon-card::after { content:""; display:block; clear:both; }
+.selected-weapons-panel { padding:.65rem; }
+#selected-weapons { gap:.4rem; }
+.mount-options { gap:.25rem; margin:.4rem 0; }
+.mount-options span { padding:.28rem .2rem; border-radius:6px; font-size:.68rem; }
+.weapon-upgrades {
+  display:flex;
+  flex-wrap:wrap;
+  gap:.25rem .45rem;
+  margin:.2rem 0 .35rem;
+  color:#9ca3af;
+  font-size:.68rem;
+}
+.weapon-upgrades label { display:flex; align-items:center; gap:.18rem; cursor:pointer; }
+.weapon-upgrades input { width:12px; height:12px; margin:0; accent-color:var(--orange); }
+.remove-weapon { font-size:.7rem; }
+
+
+/* Typography hierarchy */
+/* Major page and section headings */
+h1,
+h2,
+.section-heading h2,
+.selected-weapons-panel > h3,
+.summary-card > h3,
+.section-title,
+.panel-title,
+.card-title {
+  font-family: "Slackey", system-ui, sans-serif;
+  font-weight: 400;
+}
+
+/* Weapon names */
+.weapon-card h3,
+.selected-weapon-card h4,
+.weapon-name {
+  font-family: "Kdam Thmor Pro", system-ui, sans-serif;
+  font-weight: 400;
+}
+
+
+/* Chassis names retain the original display font. */
+.chassis-card h3,
+.chassis-name {
+  font-family: "Slackey", system-ui, sans-serif;
+  font-weight: 400;
+}
