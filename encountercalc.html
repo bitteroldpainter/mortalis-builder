@@ -287,15 +287,12 @@
           </div>
         </div>
 
-        <div class="checkrow">
+        <div class="row">
           <label>
-            Extremely Resilient
-            <span class="hint">After saves, reduce total damage taken by 33% (incl. MW). Implemented as ceil(dmg × 2/3).</span>
+            Resilience (-x)
+            <span class="hint">Reduces damage from each unsaved Standard hit and each unsaved Crit hit by x (min 0 per hit). Glancing Hits and Mortal Wounds are unaffected.</span>
           </label>
-          <div class="checkwrap">
-            <input type="checkbox" id="resilient">
-            <span style="color:var(--muted); font-size:13px;">Enabled</span>
-          </div>
+          <input type="number" id="resilience" min="0" max="99" step="1" value="0">
         </div>
 
         <div class="pillbar" id="pillbar">
@@ -338,8 +335,10 @@
 
         <div class="footer-note">
           Defender allocates defense dice freely (modelled as optimal allocation: crit saves cancel crits first,
-          then normal saves cancel standard hits, then glancing hits). Piercing applies to all defense dice;
-          Piercing Crits applies only if ≥1 crit was rolled.
+          then normal saves cancel standard hits, then glancing hits). Piercing worsens the Defense Stat needed for a
+          Normal/Glancing save only — Critical Defense Rolls always require a natural 11–12, unaffected by Piercing,
+          per the core rules. Piercing Crits applies only if ≥1 crit was rolled. Resilience reduces Standard/Crit
+          damage per hit (min 0); Glancing Hits and Mortal Wounds always go through in full.
         </div>
       </div>
     </section>
@@ -448,7 +447,7 @@
     const piercing   = Math.max(0, toInt(p.piercing, 0));
     const piercingCrits = Math.max(0, toInt(p.piercingCrits, 0));
 
-    const resilient  = !!p.resilient;
+    const resilience = Math.max(0, toInt(p.resilience, 0));
 
     let rolls = Array.from({length: attackDice}, d12);
     rolls = applyRerolls(rolls, hitTarget, critThreshold, glancingEnabled, p.rerollType, p.rerollX);
@@ -461,9 +460,11 @@
       else if (c === "glance") glance++;
     }
 
-    let def = [d12(), d12(), d12()];
+    // Piercing worsens the *Defense Stat* used for Normal/Glancing saves only.
+    // Critical Defense Rolls always require a natural 11-12, per the core rules -
+    // they are NOT affected by Piercing or Piercing Crits.
     const mod = piercing + (crits > 0 ? piercingCrits : 0);
-    if (mod !== 0) def = def.map(x => x - mod);
+    const def = [d12(), d12(), d12()];
 
     let sorted = def.slice().sort((a,b)=>b-a);
     let critLeft = crits, stdLeft = std, glanceLeft = glance;
@@ -471,7 +472,7 @@
 
     for (const die of sorted) {
       if (critLeft > 0 && die >= 11) { critLeft--; savedTotal++; continue; }
-      if (die >= saveTarget) {
+      if ((die - mod) >= saveTarget) {
         if (stdLeft > 0) { stdLeft--; savedTotal++; continue; }
         if (glanceLeft > 0) { glanceLeft--; savedTotal++; continue; }
       }
@@ -483,15 +484,16 @@
 
     const mw = crits * mwPerCrit;
 
+    // Resilience reduces damage per unsaved Standard/Crit hit (min 0 each).
+    // Glancing Hits and Mortal Wounds are never reduced by Resilience.
+    const critDmgEff = Math.max(0, critDmg - resilience);
+    const normalDmgEff = Math.max(0, normalDmg - resilience);
+
     let dmg =
-      (unsavedCrit * critDmg) +
-      (unsavedStd * normalDmg) +
+      (unsavedCrit * critDmgEff) +
+      (unsavedStd * normalDmgEff) +
       (unsavedGlance * 1) +
       mw;
-
-    if (resilient) {
-      dmg = Math.ceil(dmg * (2/3));
-    }
 
     return {
       dmg, mw, crits, std, glance,
@@ -543,7 +545,7 @@
     rerollXRow: document.getElementById("rerollXRow"),
 
     saveTarget: document.getElementById("saveTarget"),
-    resilient: document.getElementById("resilient"),
+    resilience: document.getElementById("resilience"),
 
     hitLabel: document.getElementById("hitLabel"),
     defLabel: document.getElementById("defLabel"),
@@ -578,7 +580,7 @@
       rerollType: els.rerollType.value,
       rerollX: els.rerollX.value,
       saveTarget: els.saveTarget.value,
-      resilient: els.resilient.checked
+      resilience: els.resilience.value
     };
   }
 
@@ -598,7 +600,8 @@
     const pier = Math.max(0, toInt(p.piercing, 0));
     const pierC = Math.max(0, toInt(p.piercingCrits, 0));
     const rr = p.rerollType;
-    const res = p.resilient ? " | Resilient" : "";
+    const resVal = Math.max(0, toInt(p.resilience, 0));
+    const res = resVal > 0 ? ` | Resilience -${resVal}` : "";
     const gl = p.glancing ? " | Glancing ON" : " | Glancing OFF";
 
     const critT = critThresholdFromParams(p);
