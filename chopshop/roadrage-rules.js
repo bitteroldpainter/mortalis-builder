@@ -26,14 +26,14 @@
   }
 
   window.ROAD_RAGE_RULES = {
-    version: 3,
+    version: 4,
     chassis: [
       {
         id: "bike",
         name: "Bike",
         description: "Blisteringly fast and lightly built, with barely enough room for a rider and passenger.",
         cost: 30,
-        stats: { drive: 18, shoot: 7, ap: 3, handling: 7, def: 5, hull: 10, ram: 1, transport: 1 },
+        stats: { speed: 14, shoot: 7, ap: 3, handling: 7, def: 9, hull: 10, ram: 1, dr: 1, transport: 1 },
         limits: { crew: 1, weaponSlots: 1, transport: 1, turret: false }
       },
       {
@@ -41,7 +41,7 @@
         name: "Trakk",
         description: "A compact tracked machine that combines speed, control and enough weight to hit back.",
         cost: 50,
-        stats: { drive: 14, shoot: 7, ap: 3, handling: 5, def: 4, hull: 14, ram: 2, transport: 2 },
+        stats: { speed: 12, shoot: 7, ap: 3, handling: 6, def: 8, hull: 14, ram: 2, dr: 2, transport: 2 },
         limits: { crew: null, weaponSlots: null, transport: 2, turret: true }
       },
       {
@@ -49,7 +49,7 @@
         name: "Buggy",
         description: "A versatile fighting vehicle with solid armour, useful carrying capacity and a dangerous ram.",
         cost: 75,
-        stats: { drive: 12, shoot: 7, ap: 3, handling: 5, def: 4, hull: 18, ram: 3, transport: 4 },
+        stats: { speed: 10, shoot: 7, ap: 3, handling: 5, def: 7, hull: 18, ram: 3, dr: 2, transport: 4 },
         limits: { crew: null, weaponSlots: null, transport: 4, turret: true }
       },
       {
@@ -57,7 +57,7 @@
         name: "Trukk",
         description: "A lumbering armoured brute built to carry a mob, absorb punishment and smash through obstacles.",
         cost: 100,
-        stats: { drive: 10, shoot: 7, ap: 3, handling: 9, def: 2, hull: 24, ram: 4, transport: 8 },
+        stats: { speed: 8, shoot: 7, ap: 3, handling: 9, def: 7, hull: 24, ram: 4, dr: 2, transport: 8 },
         limits: { crew: null, weaponSlots: null, transport: 8, turret: true }
       }
     ],
@@ -149,9 +149,41 @@
       { id: "turret", name: "Turret Mounted", shortName: "Turret", points: 10 }
     ],
     upgrades: {
-      hull: [],
-      engine: [],
-      crew: []
+      hull: [
+        { id: "spikedHull", name: "Spiked Hull", points: 4, description: "Enemy Fighters suffer D3 MW when they successfully board this Vehicle." },
+        { id: "reinforcedRam", name: "Reinforced Ram", points: 4, description: "+1 Ram stat and -1 Speed.", statMods: { ram: 1, speed: -1 } },
+        { id: "weldedArmourPlates", name: "Welded Armour Plates", points: 9, description: "The Vehicle gets +1 DR and -2 Speed.", statMods: { dr: 1, speed: -2 } },
+        { id: "rollCage", name: "Roll Cage", points: 6, description: "Can modify the Out of Control result by up to +/-2." },
+        { id: "bulldozerBlade", name: "Bulldozer Blade", points: 5, description: "+1 Ram Stat, automatically destroys Light Terrain if rammed.", statMods: { ram: 1 } },
+        { id: "improvedSuspension", name: "Improved Suspension", points: 4, description: "Ignores Difficult Terrain." },
+        { id: "redPaintJob", name: "Red Paint Job", points: 0, description: "+2\" Speed Stat. Vehicle MUST be painted Red.", statMods: { speed: 2 } },
+        { id: "wobblySuspension", name: "Wobbly Suspension", points: 5, description: "+1 Handling, though it has an additional -1 to hit when shooting after using Thrusters of either kind.", statMods: { handling: -1 } },
+        { id: "loudHorn", name: "Loud Horn", points: 4, description: "Can be used at any point during the Drive action - the Closest Enemy Fighter (not Vehicle) within 6\" gets -1 AP this turn." },
+        { id: "bluePaintJob", name: "Blue Paint Job", points: 0, description: "Once per game, ignore one Out of Control result. You know why. Vehicle MUST be painted blue." },
+        { id: "experimentalSteering", name: "Experimental Steering", points: 3, description: "An additional Free 90 degree turn each activation, however if you fail a Handling Check, roll TWICE on the Out of Control table." }
+      ],
+      engine: [
+        { id: "nitroBoost", name: "Nitro Boost", points: 6, description: "One Normal Thruster Action per Activation gives a 6 +D3\" move instead of 4+D3\"." },
+        { id: "superchargedEngine", name: "Supercharged Engine", points: 6, description: "+2\" Speed Stat.", statMods: { speed: 2 } },
+        { id: "twinTurbos", name: "Twin Turbos", points: 9, description: "One Normal Thrust Action per turn is 0 AP." },
+        { id: "highTorqueEngine", name: "High Torque Engine", points: 4, description: "+1 Ram if the Vehicle has performed any (Normal or Reckless) Thrust Actions." },
+        { id: "fuelInjection", name: "Fuel Injection", points: 4, description: "First Normal Thruster Action each activation gives no Shooting Modifiers." },
+        { id: "reverseTurbo", name: "Reverse Turbo", points: 3, description: "Thrust Actions can be used backwards, but always count as Reckless." },
+        { id: "experimentalNitro", name: "Experimental Nitro", points: 6, description: "Reckless Thrusters move 8+D3\". After using these, roll a D12; on 1-2, Engine on Fire (Cannot be rerolled)." },
+        { id: "shokkIgnition", name: "Shokk Ignition", points: 4, description: "When this Vehicle Activates, roll a D12: 1: Doesn't start, Activation is lost. 12: May make another Activation immediately after this." }
+      ],
+      crew: [
+        { id: "veteranDriver", name: "Veteran Driver", points: 6, description: "+1 Handling Stat.", statMods: { handling: -1 } },
+        { id: "madDriver", name: "Mad Driver", points: 6, description: "First Reckless Action each turn automatically succeeds. Additional Reckless Actions still use the cumulative D12's e.g. Second Reckless Action rolls 2D12, Third 3D12, etc." },
+        { id: "veteranGunner", name: "Veteran Gunner", points: 5, description: "Ignore the first Shooting Modifier (caused by driving) each turn." },
+        { id: "spotter", name: "Spotter", points: 5, description: "Once per turn, ignore Cover in a Shooting Action." },
+        { id: "angryGits", name: "Angry Gits/Squigs/Goons", points: 3, description: "Any Boarders get -1 to Hit in Close Combat." },
+        { id: "crazyGunner", name: "Crazy Gunner", points: 7, description: "After Destroying a Vehicle with a shooting action, immediately make another Free Shooting Action. Once per Turn only." },
+        { id: "triggerHappy", name: "Trigger Happy", points: 5, description: "Vehicle gets Reroll (SR) on Shooting Attacks." },
+        { id: "mekboyPassenger", name: "Mekboy Passenger", points: 7, description: "Repair D3 HP on a 5+ each Activation. Counts as a Passenger towards the Transport Limit." },
+        { id: "backseatDrive", name: "Backseat Drive", points: 4, description: "Any Passengers aboard the Vehicle may spend AP to reroll Failed Handling Checks. (Imagine Orks shouting directions!)" },
+        { id: "luckyGrot", name: "Lucky Grot", points: 5, description: "Once per Battle, ignore a single Out of Control table result. Nobody knows how." }
+      ]
     }
   };
 })();

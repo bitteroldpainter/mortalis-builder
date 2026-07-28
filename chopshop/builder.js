@@ -17,7 +17,10 @@
     generateCard: document.getElementById("generate-card"),
     weaponTabs: document.getElementById("weapon-category-tabs"),
     weaponCatalogue: document.getElementById("weapon-catalogue"),
-    selectedWeapons: document.getElementById("selected-weapons")
+    selectedWeapons: document.getElementById("selected-weapons"),
+    hullUpgrades: document.getElementById("hull-upgrades"),
+    engineUpgrades: document.getElementById("engine-upgrades"),
+    crewUpgrades: document.getElementById("crew-upgrades")
   };
 
   init();
@@ -25,6 +28,7 @@
   function init() {
     renderChassis();
     renderWeaponTabs();
+    renderUpgradePanels();
     render();
     bindTabs();
     bindActions();
@@ -116,6 +120,7 @@
     els.totalPoints.textContent = calculatePoints() + " pts";
     els.generateCard.disabled = !state.chassisId;
     renderWeapons();
+    renderUpgradePanels();
     renderSummary();
   }
 
@@ -193,6 +198,74 @@
     });
   }
 
+
+  function renderUpgradePanels() {
+    renderUpgradeGroup("hull", els.hullUpgrades);
+    renderUpgradeGroup("engine", els.engineUpgrades);
+    renderUpgradeGroup("crew", els.crewUpgrades);
+  }
+
+  function renderUpgradeGroup(groupKey, container) {
+    if (!container) return;
+    var list = rules.upgrades[groupKey] || [];
+    container.innerHTML = list.map(function (upgrade) {
+      var selected = state.upgrades[groupKey].indexOf(upgrade.id) !== -1;
+      return '<label class="upgrade-card' + (selected ? ' selected' : '') + '">' +
+        '<input type="checkbox" class="vehicle-upgrade-toggle" data-group="' + groupKey + '" data-upgrade-id="' + upgrade.id + '"' + (selected ? ' checked' : '') + '>' +
+        '<span class="upgrade-card-body">' +
+          '<span class="upgrade-card-head"><strong>' + escapeHtml(upgrade.name) + '</strong><b>' + formatPoints(upgrade.points) + '</b></span>' +
+          '<span class="upgrade-description">' + escapeHtml(upgrade.description) + '</span>' +
+        '</span>' +
+      '</label>';
+    }).join("");
+
+    container.querySelectorAll(".vehicle-upgrade-toggle").forEach(function (input) {
+      input.addEventListener("change", function () {
+        var group = input.dataset.group;
+        var id = input.dataset.upgradeId;
+        var selected = state.upgrades[group];
+        if (input.checked) {
+          if (selected.indexOf(id) === -1) selected.push(id);
+        } else {
+          state.upgrades[group] = selected.filter(function (item) { return item !== id; });
+        }
+        render();
+      });
+    });
+  }
+
+  function getUpgrade(groupKey, id) {
+    return (rules.upgrades[groupKey] || []).find(function (item) { return item.id === id; }) || null;
+  }
+
+  function getSelectedUpgrades(groupKey) {
+    return state.upgrades[groupKey].map(function (id) { return getUpgrade(groupKey, id); }).filter(Boolean);
+  }
+
+  function getEffectiveStats() {
+    var chassis = getSelectedChassis();
+    if (!chassis) return null;
+    var stats = Object.assign({}, chassis.stats);
+    ["hull", "engine", "crew"].forEach(function (groupKey) {
+      getSelectedUpgrades(groupKey).forEach(function (upgrade) {
+        if (!upgrade.statMods) return;
+        Object.keys(upgrade.statMods).forEach(function (key) {
+          if (stats[key] === null || stats[key] === undefined || stats[key] === "") return;
+          stats[key] = Number(stats[key]) + Number(upgrade.statMods[key] || 0);
+        });
+      });
+    });
+    return stats;
+  }
+
+  function renderUpgradeSummary(groupKey, label) {
+    var selected = getSelectedUpgrades(groupKey);
+    if (!selected.length) return summaryRow(label, "None");
+    return selected.map(function (upgrade) {
+      return summaryRow(upgrade.name, upgrade.description + " · " + formatPoints(upgrade.points));
+    }).join("");
+  }
+
   function blankWeaponUpgrades() {
     return { poison: false, enchanted: false, cursed: false, truestrike: false, masterCrafted: false };
   }
@@ -250,7 +323,7 @@
         '</div>' +
         '<div class="summary-block">' +
           '<h3>Chassis Profile</h3>' +
-          renderSummaryStats(chassis.stats) +
+          renderSummaryStats(getEffectiveStats()) +
         '</div>' +
         '<div class="summary-block">' +
           '<h3>Loadout</h3>' +
@@ -259,9 +332,9 @@
             var mount = getMount(selection.mountId);
             return weapon ? summaryRow(weapon.name, mount.name + " · " + buildWeaponProfile(weapon, selection) + " · " + formatPoints(weapon.points + mount.points + getWeaponUpgradeCost(selection))) : "";
           }).join("") : summaryRow("Weapons", "None")) +
-          summaryRow("Hull upgrades", state.upgrades.hull.length ? state.upgrades.hull.length : "None") +
-          summaryRow("Engine upgrades", state.upgrades.engine.length ? state.upgrades.engine.length : "None") +
-          summaryRow("Crew upgrades", state.upgrades.crew.length ? state.upgrades.crew.length : "None") +
+          renderUpgradeSummary("hull", "Hull upgrades") +
+          renderUpgradeSummary("engine", "Engine upgrades") +
+          renderUpgradeSummary("crew", "Crew upgrades") +
         '</div>' +
         '<div class="summary-block">' +
           '<h3>Total</h3>' +
@@ -272,13 +345,14 @@
 
   function renderChassisStats(stats) {
     var items = [
-      ["Drive", formatStat("drive", stats.drive)],
+      ["Speed", formatStat("speed", stats.speed)],
       ["Shoot", formatStat("shoot", stats.shoot)],
       ["AP", formatStat("ap", stats.ap)],
       ["Handling", formatStat("handling", stats.handling)],
       ["DEF", formatStat("def", stats.def)],
-      ["Hull", formatStat("hull", stats.hull)],
+      ["Hull Points", formatStat("hull", stats.hull)],
       ["Ram", formatStat("ram", stats.ram)],
+      ["DR", formatStat("dr", stats.dr)],
       ["Transport", formatStat("transport", stats.transport)]
     ];
 
@@ -289,20 +363,21 @@
 
   function renderSummaryStats(stats) {
     return [
-      summaryRow("Drive", formatStat("drive", stats.drive)),
+      summaryRow("Speed", formatStat("speed", stats.speed)),
       summaryRow("Shoot", formatStat("shoot", stats.shoot)),
       summaryRow("AP", formatStat("ap", stats.ap)),
       summaryRow("Handling", formatStat("handling", stats.handling)),
       summaryRow("DEF", formatStat("def", stats.def)),
-      summaryRow("Hull", formatStat("hull", stats.hull)),
+      summaryRow("Hull Points", formatStat("hull", stats.hull)),
       summaryRow("Ram", formatStat("ram", stats.ram)),
+      summaryRow("DR", formatStat("dr", stats.dr)),
       summaryRow("Transport", formatStat("transport", stats.transport))
     ].join("");
   }
 
   function formatStat(key, value) {
     if (value === null || value === undefined || value === "") return "—";
-    if (key === "drive") return value + '"';
+    if (key === "speed") return value + '"';
     if (key === "shoot" || key === "handling" || key === "def") return value + "+";
     return String(value);
   }
@@ -319,6 +394,11 @@
       var weapon = getWeapon(selection.weaponId);
       var mount = getMount(selection.mountId);
       if (weapon) total += Number(weapon.points || 0) + Number(mount.points || 0) + getWeaponUpgradeCost(selection);
+    });
+    ["hull", "engine", "crew"].forEach(function (groupKey) {
+      getSelectedUpgrades(groupKey).forEach(function (upgrade) {
+        total += Number(upgrade.points || 0);
+      });
     });
     return total;
   }
@@ -343,9 +423,9 @@
         };
       }).filter(function (item) { return item.weaponId; }) : [],
       upgrades: {
-        hull: vehicle.upgrades && Array.isArray(vehicle.upgrades.hull) ? vehicle.upgrades.hull : [],
-        engine: vehicle.upgrades && Array.isArray(vehicle.upgrades.engine) ? vehicle.upgrades.engine : [],
-        crew: vehicle.upgrades && Array.isArray(vehicle.upgrades.crew) ? vehicle.upgrades.crew : []
+        hull: vehicle.upgrades && Array.isArray(vehicle.upgrades.hull) ? vehicle.upgrades.hull.filter(function (id) { return !!getUpgrade("hull", id); }) : [],
+        engine: vehicle.upgrades && Array.isArray(vehicle.upgrades.engine) ? vehicle.upgrades.engine.filter(function (id) { return !!getUpgrade("engine", id); }) : [],
+        crew: vehicle.upgrades && Array.isArray(vehicle.upgrades.crew) ? vehicle.upgrades.crew.filter(function (id) { return !!getUpgrade("crew", id); }) : []
       }
     };
   }
@@ -369,7 +449,45 @@
   }
 
   window.ChopShopBuilder = {
-    getVehicle: function () { return JSON.parse(JSON.stringify(state)); },
-    getRules: function () { return rules; }
+    getVehicle: function () {
+      var vehicle = JSON.parse(JSON.stringify(state));
+      vehicle.effectiveStats = getEffectiveStats();
+      vehicle.points = calculatePoints();
+      return vehicle;
+    },
+    getEffectiveStats: function () { return getEffectiveStats(); },
+    getRules: function () { return rules; },
+    getCardData: function () {
+      var chassis = getSelectedChassis();
+      if (!chassis) return null;
+      return {
+        name: state.name.trim() || "Unnamed Vehicle",
+        chassis: JSON.parse(JSON.stringify(chassis)),
+        stats: getEffectiveStats(),
+        points: calculatePoints(),
+        weapons: state.weapons.map(function (selection) {
+          var weapon = getWeapon(selection.weaponId);
+          var mount = getMount(selection.mountId);
+          if (!weapon) return null;
+          var profileSource = Array.isArray(weapon.cardProfiles) && weapon.cardProfiles.length
+            ? weapon.cardProfiles.map(function (entry) {
+                var profileWeapon = { profile: entry.profile };
+                return { label: entry.label, profile: buildWeaponProfile(profileWeapon, selection) };
+              })
+            : [{ label: "", profile: buildWeaponProfile(weapon, selection) }];
+          return {
+            name: weapon.name,
+            mount: mount.name,
+            profiles: profileSource,
+            points: Number(weapon.points || 0) + Number(mount.points || 0) + getWeaponUpgradeCost(selection)
+          };
+        }).filter(Boolean),
+        upgrades: {
+          hull: getSelectedUpgrades("hull").map(function (u) { return { name:u.name, description:u.description, points:u.points }; }),
+          engine: getSelectedUpgrades("engine").map(function (u) { return { name:u.name, description:u.description, points:u.points }; }),
+          crew: getSelectedUpgrades("crew").map(function (u) { return { name:u.name, description:u.description, points:u.points }; })
+        }
+      };
+    }
   };
 })();
