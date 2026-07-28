@@ -11,19 +11,43 @@
   });
 
   function openCardPreview(data) {
-    var win = window.open("", "_blank");
-    if (!win) {
-      alert("The card preview was blocked by the browser. Please allow pop-ups for Chop Shop and try again.");
-      return;
-    }
+    closeCardPreview();
 
-    var html = buildPreviewDocument(data);
-    win.document.open();
-    win.document.write(html);
-    win.document.close();
+    var overlay = document.createElement("div");
+    overlay.id = "generated-card-overlay";
+    overlay.innerHTML =
+      '<div id="generated-card-toolbar">' +
+        '<button type="button" id="card-back">Back</button>' +
+        '<button type="button" id="card-print">Print</button>' +
+      '</div>' +
+      '<main class="card-wrap">' + buildCardMarkup(data) + '</main>';
+
+    document.body.appendChild(overlay);
+    document.body.classList.add("print-card-mode");
+    document.body.style.overflow = "hidden";
+
+    var style = document.getElementById("generated-card-style");
+    if (!style) {
+      style = document.createElement("style");
+      style.id = "generated-card-style";
+      document.head.appendChild(style);
+    }
+    style.textContent = cardCss();
+
+    document.getElementById("card-back").addEventListener("click", closeCardPreview);
+    document.getElementById("card-print").addEventListener("click", function () {
+      window.print();
+    });
   }
 
-  function buildPreviewDocument(data) {
+  function closeCardPreview() {
+    var overlay = document.getElementById("generated-card-overlay");
+    if (overlay) overlay.remove();
+    document.body.classList.remove("print-card-mode");
+    document.body.style.overflow = "";
+  }
+
+  function buildCardMarkup(data) {
     var stats = data.stats || {};
     var statItems = [
       ["Speed", formatStat("speed", stats.speed)],
@@ -42,24 +66,16 @@
 
     var upgrades = buildUpgrades(data.upgrades);
 
-    return '<!DOCTYPE html><html lang="en"><head><meta charset="UTF-8">' +
-      '<meta name="viewport" content="width=device-width,initial-scale=1">' +
-      '<title>' + esc(data.name) + ' — Vehicle Card</title>' +
-      '<link rel="preconnect" href="https://fonts.googleapis.com">' +
-      '<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>' +
-      '<link href="https://fonts.googleapis.com/css2?family=Kdam+Thmor+Pro&family=Slackey&display=swap" rel="stylesheet">' +
-      '<style>' + cardCss() + '</style></head><body>' +
-      '<div class="preview-toolbar"><button onclick="window.print()">Print Card</button><button onclick="window.close()">Close</button></div>' +
-      '<main class="card-wrap"><article class="vehicle-card">' +
-        '<header class="card-header"><div><div class="card-kicker">Road Rage Vehicle</div><h1>' + esc(data.name) + '</h1>' +
-        '<div class="chassis-name">' + esc(data.chassis.name) + '</div></div>' +
-        '<div class="points"><strong>' + esc(data.points) + '</strong><span>PTS</span></div></header>' +
-        buildHpPips(data.stats.hull) +
-        '<section class="stats-row">' + statItems.map(function (item) {
-          return '<div class="stat"><span>' + esc(item[0]) + '</span><strong>' + esc(item[1]) + '</strong></div>';
-        }).join("") + '</section>' +
-        '<div class="card-body">' + weapons + upgrades + '</div>' +
-      '</article></main></body></html>';
+    return '<article class="vehicle-card">' +
+      '<header class="card-header"><div><div class="card-kicker">Road Rage Vehicle</div><h1>' + esc(data.name) + '</h1>' +
+      '<div class="chassis-name">' + esc(data.chassis.name) + '</div></div>' +
+      '<div class="points"><strong>' + esc(data.points) + '</strong><span>PTS</span></div></header>' +
+      buildHpPips(data.stats.hull) +
+      '<section class="stats-row">' + statItems.map(function (item) {
+        return '<div class="stat"><span>' + esc(item[0]) + '</span><strong>' + esc(item[1]) + '</strong></div>';
+      }).join("") + '</section>' +
+      '<div class="card-body">' + weapons + upgrades + '</div>' +
+    '</article>';
   }
 
   function buildWeapons(data) {
@@ -151,10 +167,36 @@
     return `
       :root{--orange:#ff9f1c;--ink:#101214;--paper:#e9e5dc;--muted:#5b5f63}
       *{box-sizing:border-box}
-      html,body{margin:0;background:#202326;font-family:system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;color:var(--ink)}
-      .preview-toolbar{position:sticky;top:0;z-index:5;display:flex;justify-content:center;gap:10px;padding:12px;background:#151719;border-bottom:1px solid #444}
-      .preview-toolbar button{padding:8px 16px;border:1px solid #777;border-radius:6px;background:#26292c;color:#fff;font-weight:700;cursor:pointer}
-      .card-wrap{padding:24px;display:flex;justify-content:center}
+      #generated-card-overlay{
+        position:fixed;
+        inset:0;
+        z-index:9999;
+        display:block;
+        overflow:auto;
+        padding:24px;
+        box-sizing:border-box;
+        background:#fff;
+        font-family:system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+        color:var(--ink);
+      }
+      #generated-card-toolbar{
+        width:820px;
+        max-width:100%;
+        margin:0 auto 12px;
+        display:flex;
+        justify-content:flex-end;
+        gap:10px;
+      }
+      #generated-card-toolbar button{
+        padding:8px 14px;
+        border:1px solid #222;
+        border-radius:8px;
+        background:#fff;
+        color:#111;
+        font-weight:800;
+        cursor:pointer;
+      }
+      .card-wrap{padding:0;display:flex;justify-content:center}
 
       /* Exact Fighter Forge card canvas: 820 x 660 px, landscape. */
       .vehicle-card{
@@ -359,7 +401,7 @@
         min-height:0;
         column-count:2;
         column-gap:18px;
-        column-fill:auto;
+        column-fill:balance;
         background:#fff;
         border:2px solid var(--ink);
         padding:10px;
@@ -391,17 +433,45 @@
 
 
       @media print{
-        @page{size:820px 660px;margin:0}
-        html,body{width:820px;height:660px;background:#fff}
-        .preview-toolbar{display:none!important}
-        .card-wrap{padding:0}
-        .vehicle-card{
-          box-shadow:none;
-          border:0;
-          width:820px;
-          height:660px;
+        html,
+        body,
+        body.print-card-mode{
+          background:#fff!important;
+          background-color:#fff!important;
+          margin:0!important;
+          padding:0!important;
         }
-        *{-webkit-print-color-adjust:exact!important;print-color-adjust:exact!important}
+        body.print-card-mode > :not(#generated-card-overlay):not(style):not(script){
+          display:none!important;
+        }
+        body.print-card-mode #generated-card-overlay{
+          display:block!important;
+          position:static!important;
+          inset:auto!important;
+          overflow:visible!important;
+          padding:0!important;
+          background:#fff!important;
+          background-color:#fff!important;
+        }
+        body.print-card-mode #generated-card-toolbar{
+          display:none!important;
+        }
+        body.print-card-mode .card-wrap{
+          display:block!important;
+          padding:0!important;
+          margin:0!important;
+          background:#fff!important;
+        }
+        body.print-card-mode .vehicle-card{
+          width:820px!important;
+          height:660px!important;
+          margin:0 auto!important;
+          box-shadow:none!important;
+        }
+        *{
+          -webkit-print-color-adjust:exact!important;
+          print-color-adjust:exact!important;
+        }
       }
 
       @media(max-width:860px){
