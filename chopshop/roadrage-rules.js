@@ -150,6 +150,7 @@
     ],
     upgrades: {
       hull: [
+        { id: "boardingRamp", name: "Boarding Ramp", points: 9, description: "A Fighter on a Vehicle with a Boarding Ramp can disembark its own Vehicle and board an enemy Vehicle within 3\", without performing any checks. However, it still costs 1 AP to do so." },
         { id: "spikedHull", name: "Spiked Hull", points: 4, description: "Enemy Fighters suffer D3 MW when they successfully board this Vehicle." },
         { id: "reinforcedRam", name: "Reinforced Ram", points: 4, description: "+1 Ram stat and -1 Speed.", statMods: { ram: 1, speed: -1 } },
         { id: "weldedArmourPlates", name: "Welded Armour Plates", points: 9, description: "The Vehicle gets +1 DR and -2 Speed.", statMods: { dr: 1, speed: -2 } },

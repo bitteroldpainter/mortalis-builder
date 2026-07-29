@@ -61,7 +61,7 @@
     ];
 
     var weapons = data.weapons.length
-      ? '<section class="card-section weapons-section"><h2>Weapons</h2>' + buildWeapons(data) + '</section>'
+      ? '<section class="card-section weapons-section">' + buildWeapons(data) + '</section>'
       : "";
 
     var upgrades = buildUpgrades(data.upgrades);
@@ -131,7 +131,7 @@
 
     if (!sections.length) return "";
 
-    return '<section class="card-section upgrades-section"><h2>Upgrades</h2><div class="upgrade-columns">' +
+    return '<section class="card-section upgrades-section"><div class="upgrade-columns">' +
       sections.map(function (entry) {
         return '<div class="upgrade-group"><h3>' + esc(entry[0]) + '</h3>' +
           entry[1].map(function (upgrade) {
@@ -175,7 +175,7 @@
         overflow:auto;
         padding:24px;
         box-sizing:border-box;
-        background:#fff;
+        background:rgba(255,255,255,.95);
         font-family:system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
         color:var(--ink);
       }
@@ -191,7 +191,7 @@
         padding:8px 14px;
         border:1px solid #222;
         border-radius:8px;
-        background:#fff;
+        background:rgba(255,255,255,.95);
         color:#111;
         font-weight:800;
         cursor:pointer;
@@ -204,7 +204,7 @@
         height:660px;
         position:relative;
         overflow:hidden;
-        background:var(--paper);
+        background:#fff url("vehicle-card-bg.jpg") center center / 100% 100% no-repeat;
         border:2px solid #151719;
         box-shadow:0 18px 50px rgba(0,0,0,.45);
         padding:20px 22px 18px;
@@ -212,13 +212,7 @@
         flex-direction:column;
       }
       .vehicle-card:before{
-        content:"";
-        position:absolute;
-        inset:0;
-        pointer-events:none;
-        background:
-          linear-gradient(145deg,rgba(255,255,255,.45),transparent 35%),
-          linear-gradient(0deg,rgba(0,0,0,.035),transparent 35%);
+        content:none;
       }
       .card-header,.stats-row,.card-body{position:relative;z-index:1}
 
@@ -232,7 +226,7 @@
       }
       .card-kicker{
         font-family:"Slackey",system-ui,sans-serif;
-        color:var(--orange);
+        color:#fff;
         font-size:12px;
         letter-spacing:.03em;
         text-transform:uppercase;
@@ -240,6 +234,7 @@
       .card-header h1{
         margin:1px 0 0;
         font-family:"Slackey",system-ui,sans-serif;
+        color:#fff;
         font-size:27px;
         line-height:1.02;
         text-transform:uppercase;
@@ -249,11 +244,13 @@
         font-family:"Kdam Thmor Pro",system-ui,sans-serif;
         font-size:15px;
         text-transform:uppercase;
-        color:#4b4e51;
+        color:#fff;
       }
       .points{
         min-width:76px;
         border:3px solid var(--ink);
+        border-radius:8px;
+        background:rgba(255,255,255,.95);
         padding:5px 8px 4px;
         text-align:center;
         line-height:1;
@@ -281,7 +278,9 @@
         min-width:0;
         text-align:center;
         border:2px solid var(--ink);
-        background:#f8f5ef;
+        border-radius:8px;
+        background:rgba(255,255,255,.95);
+        overflow:hidden;
       }
       .stat span{
         display:block;
@@ -313,10 +312,12 @@
       }
       .hp-label{
         flex:0 0 auto;
-        font-family:"Kdam Thmor Pro",system-ui,sans-serif;
+        font-family:"Slackey",system-ui,sans-serif;
+        color:#fff;
         font-size:10px;
         line-height:1;
         text-transform:uppercase;
+        text-shadow:2px 2px 3px rgba(0,0,0,.7);
       }
       .hp-pips{
         display:flex;
@@ -329,7 +330,7 @@
         height:24px;
         border:2px solid var(--ink);
         border-radius:50%;
-        background:#fff;
+        background:rgba(255,255,255,.95);
         display:block;
       }
 
@@ -362,7 +363,9 @@
 
       .weapon-table{
         border:2px solid var(--ink);
-        background:#f8f5ef;
+        border-radius:8px;
+        background:rgba(255,255,255,.95);
+        overflow:hidden;
       }
       .weapon-head,.weapon-row{
         display:grid;
@@ -390,6 +393,31 @@
         overflow-wrap:anywhere;
       }
       .weapon-row>div:last-child{border-right:0}
+      .weapon-head>div:nth-child(2),
+      .weapon-head>div:nth-child(3),
+      .weapon-head>div:nth-child(4),
+      .weapon-row>div:nth-child(2),
+      .weapon-row>div:nth-child(3),
+      .weapon-row>div:nth-child(4){
+        text-align:center;
+      }
+      .weapon-row .weapon-name,
+      .weapon-row>div:nth-child(2),
+      .weapon-row>div:nth-child(3),
+      .weapon-row>div:nth-child(4){
+        display:flex;
+        align-items:center;
+      }
+      .weapon-row>div:nth-child(2),
+      .weapon-row>div:nth-child(3),
+      .weapon-row>div:nth-child(4){
+        justify-content:center;
+      }
+      .weapon-head>div:first-child,
+      .weapon-row>div:first-child{
+        padding-left:.6em;
+      }
+
       .weapon-name{
         font-family:"Kdam Thmor Pro",system-ui,sans-serif;
         font-size:12px;
@@ -402,8 +430,9 @@
         column-count:2;
         column-gap:18px;
         column-fill:balance;
-        background:#fff;
+        background:rgba(255,255,255,.95);
         border:2px solid var(--ink);
+        border-radius:8px;
         padding:10px;
       }
       .upgrade-group{
@@ -425,6 +454,9 @@
         line-height:1.22;
         break-inside:avoid;
       }
+      .upgrade-group p + p{
+        margin-top:8px;
+      }
       .upgrade-group p:last-child{border-bottom:0}
       .upgrade-group p strong{
         font-family:"Kdam Thmor Pro",system-ui,sans-serif;
@@ -432,7 +464,18 @@
       }
 
 
-      @media print{
+      
+      .card-kicker,
+      .card-header h1,
+      .chassis-name{
+        text-shadow:3px 3px 5px rgba(0,0,0,.7);
+      }
+
+      .hp-label{
+        text-shadow:2px 2px 3px rgba(0,0,0,.7);
+      }
+
+@media print{
         html,
         body,
         body.print-card-mode{
@@ -467,6 +510,7 @@
           height:660px!important;
           margin:0 auto!important;
           box-shadow:none!important;
+          background:#fff url("vehicle-card-bg.jpg") center center / 100% 100% no-repeat!important;
         }
         *{
           -webkit-print-color-adjust:exact!important;

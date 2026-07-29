@@ -2,7 +2,8 @@
   "use strict";
 
   var rules = window.ROAD_RAGE_RULES;
-  var state = createBlankVehicle();
+  var AUTOSAVE_KEY = "road_rage_chop_shop_autosave_v1";
+  var state = loadAutosavedVehicle() || createBlankVehicle();
   var currentWeaponCategory = "light";
 
   var els = {
@@ -82,9 +83,11 @@
     els.vehicleName.addEventListener("input", function () {
       state.name = els.vehicleName.value;
       renderSummary();
+      autosaveVehicle();
     });
 
     els.fresh.addEventListener("click", function () {
+      clearAutosave();
       state = createBlankVehicle();
       setStatus("New vehicle started.");
       render();
@@ -122,6 +125,7 @@
     renderWeapons();
     renderUpgradePanels();
     renderSummary();
+    autosaveVehicle();
   }
 
   function renderWeaponTabs() {
@@ -441,6 +445,33 @@
       .replace(/>/g, "&gt;")
       .replace(/"/g, "&quot;")
       .replace(/'/g, "&#039;");
+  }
+
+  function autosaveVehicle() {
+    try {
+      localStorage.setItem(AUTOSAVE_KEY, JSON.stringify(state));
+    } catch (error) {
+      // Ignore storage failures (private browsing, quota limits, etc.).
+    }
+  }
+
+  function loadAutosavedVehicle() {
+    try {
+      var raw = localStorage.getItem(AUTOSAVE_KEY);
+      if (!raw) return null;
+      return normaliseVehicle(JSON.parse(raw));
+    } catch (error) {
+      try { localStorage.removeItem(AUTOSAVE_KEY); } catch (_) {}
+      return null;
+    }
+  }
+
+  function clearAutosave() {
+    try {
+      localStorage.removeItem(AUTOSAVE_KEY);
+    } catch (error) {
+      // Ignore storage failures.
+    }
   }
 
   function setStatus(message, isError) {
