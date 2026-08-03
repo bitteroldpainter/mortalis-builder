@@ -33,7 +33,7 @@
         name: "Bike",
         description: "Blisteringly fast and lightly built, with barely enough room for a rider and passenger.",
         cost: 30,
-        stats: { speed: 14, shoot: 7, ap: 3, handling: 7, def: 9, hull: 10, ram: 1, dr: 1, transport: 1 },
+        stats: { speed: 15, shoot: 7, ap: 3, handling: 7, def: 9, hull: 10, ram: 1, dr: 1, transport: 1 },
         limits: { crew: 1, weaponSlots: 1, transport: 1, turret: false }
       },
       {
@@ -41,7 +41,7 @@
         name: "Trakk",
         description: "A compact tracked machine that combines speed, control and enough weight to hit back.",
         cost: 50,
-        stats: { speed: 12, shoot: 7, ap: 3, handling: 6, def: 8, hull: 14, ram: 2, dr: 2, transport: 2 },
+        stats: { speed: 13, shoot: 7, ap: 3, handling: 6, def: 8, hull: 14, ram: 2, dr: 2, transport: 2 },
         limits: { crew: null, weaponSlots: null, transport: 2, turret: true }
       },
       {
@@ -49,7 +49,7 @@
         name: "Buggy",
         description: "A versatile fighting vehicle with solid armour, useful carrying capacity and a dangerous ram.",
         cost: 75,
-        stats: { speed: 10, shoot: 7, ap: 3, handling: 5, def: 7, hull: 18, ram: 3, dr: 2, transport: 4 },
+        stats: { speed: 12, shoot: 7, ap: 3, handling: 5, def: 7, hull: 18, ram: 3, dr: 2, transport: 4 },
         limits: { crew: null, weaponSlots: null, transport: 4, turret: true }
       },
       {
@@ -57,7 +57,7 @@
         name: "Trukk",
         description: "A lumbering armoured brute built to carry a mob, absorb punishment and smash through obstacles.",
         cost: 100,
-        stats: { speed: 8, shoot: 7, ap: 3, handling: 9, def: 7, hull: 24, ram: 4, dr: 2, transport: 8 },
+        stats: { speed: 10, shoot: 7, ap: 3, handling: 9, def: 7, hull: 24, ram: 4, dr: 2, transport: 8 },
         limits: { crew: null, weaponSlots: null, transport: 8, turret: true }
       }
     ],
