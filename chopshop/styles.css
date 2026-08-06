@@ -1,0 +1,586 @@
+:root {
+  --bg: #0f1113;
+  --panel: #1e2024;
+  --panel-deep: #141619;
+  --line: #30343a;
+  --text: #e4e7eb;
+  --muted: #9ca3af;
+  --orange: #ff9f1c;
+  --orange-dark: #803300;
+  --danger: #b91c1c;
+}
+
+* { box-sizing: border-box; }
+
+body {
+  margin: 0;
+  min-width: 320px;
+  background:
+    radial-gradient(circle at 20% 0%, rgba(255, 159, 28, .08), transparent 34rem),
+    var(--bg);
+  color: var(--text);
+  font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+}
+
+button, input { font: inherit; }
+button { color: inherit; }
+
+.app-shell {
+  width: min(1080px, calc(100% - 2rem));
+  min-height: 100vh;
+  margin: 0 auto;
+  padding: 1.5rem 0 2rem;
+}
+
+.top-bar,
+.vehicle-heading-panel,
+.section-heading,
+footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+}
+
+.top-bar { margin-bottom: 1rem; }
+
+h1, h2, p { margin-top: 0; }
+h1 { margin-bottom: 0; font-size: clamp(1.8rem, 4vw, 2.8rem); line-height: 1; }
+h2 { margin-bottom: .25rem; }
+
+h1, h2, .chassis-card h3, .empty-state h2 {
+  font-family: "Slackey", system-ui, sans-serif;
+  font-weight: 400;
+}
+
+
+.eyebrow {
+  margin-bottom: .35rem;
+  color: var(--orange);
+  font-size: .72rem;
+  font-weight: 800;
+  letter-spacing: .12em;
+  text-transform: uppercase;
+}
+
+.top-actions, .tabs {
+  display: flex;
+  flex-wrap: wrap;
+  gap: .5rem;
+}
+
+.button, .tab {
+  border: 1px solid #3b4047;
+  border-radius: 999px;
+  padding: .45rem .85rem;
+  cursor: pointer;
+  transition: transform .12s ease, border-color .12s ease, background .12s ease;
+}
+
+.button:hover:not(:disabled), .tab:hover { transform: translateY(-1px); border-color: var(--orange); }
+.button:disabled { cursor: not-allowed; opacity: .4; }
+.button-accent, .tab.active {
+  background: linear-gradient(180deg, #ffaa54, var(--orange-dark));
+  border-color: #1b1d20;
+  color: white;
+}
+.button-secondary, .tab { background: linear-gradient(0deg, #23292b, #000); }
+.file-button { display: inline-flex; align-items: center; }
+
+.panel {
+  position: relative;
+  margin-bottom: .8rem;
+  padding: 1rem;
+  background: rgba(30, 32, 36, .96);
+  border: 1px solid var(--line);
+  border-radius: .8rem;
+  box-shadow: 0 12px 30px rgba(0, 0, 0, .16);
+}
+
+.vehicle-heading-panel { align-items: flex-end; }
+.field-group { display: grid; gap: .35rem; }
+.field-group label { color: var(--muted); font-size: .78rem; font-weight: 700; text-transform: uppercase; }
+.vehicle-name-field { flex: 1; }
+input[type="text"] {
+  width: 100%;
+  padding: .65rem .75rem;
+  color: var(--text);
+  background: var(--panel-deep);
+  border: 1px solid #444a52;
+  border-radius: .55rem;
+  outline: none;
+}
+input[type="text"]:focus { border-color: var(--orange); box-shadow: 0 0 0 3px rgba(255, 159, 28, .12); }
+
+.points-pill {
+  min-width: 112px;
+  padding: .45rem .7rem;
+  background: #2b1400;
+  border: 1px solid var(--orange);
+  border-radius: .6rem;
+  text-align: right;
+}
+.points-pill span { display: block; color: var(--muted); font-size: .7rem; text-transform: uppercase; }
+.points-pill strong { font-size: 1.05rem; }
+
+.tabs {
+  display: grid;
+  grid-template-columns: repeat(6, minmax(0, 1fr));
+  gap: .55rem;
+  width: 100%;
+  margin: .65rem 0 .9rem;
+}
+.tabs .tab {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 0;
+  min-height: 0;
+  padding: .45rem .85rem;
+  font-family: "Kdam Thmor Pro", system-ui, sans-serif;
+  font-size: 1rem;
+  font-weight: 400;
+  line-height: normal;
+  letter-spacing: .01em;
+  text-align: center;
+  white-space: normal;
+}
+.tab-panel { display: none; min-height: 360px; }
+.tab-panel.active { display: block; }
+.section-heading { align-items: flex-start; margin-bottom: 1rem; }
+.section-heading > p { max-width: 33rem; color: var(--muted); }
+
+.chassis-grid {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: .75rem;
+}
+
+.chassis-card {
+  min-height: 390px;
+  padding: 1rem;
+  color: var(--text);
+  text-align: left;
+  background: linear-gradient(150deg, #25292e, #111315 70%);
+  border: 1px solid #464b52;
+  border-radius: .75rem;
+  cursor: pointer;
+  overflow: hidden;
+}
+.chassis-card:hover { border-color: var(--orange); }
+.chassis-card.selected { border-color: var(--orange); box-shadow: 0 0 0 2px rgba(255, 159, 28, .18); }
+.chassis-card h3 { margin: 0 0 .25rem; font-size: 1.25rem; }
+.chassis-card p { min-height: 4.7rem; margin-bottom: .75rem; color: var(--muted); font-size: .86rem; }
+.chassis-stats {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: .38rem;
+  margin: 0 0 .75rem;
+}
+.chassis-stat {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: .4rem;
+  padding: .36rem .42rem;
+  background: rgba(0, 0, 0, .28);
+  border: 1px solid #373c42;
+  border-radius: .38rem;
+}
+.chassis-stat small { color: var(--muted); font-size: .63rem; font-weight: 700; letter-spacing: .035em; text-transform: uppercase; }
+.chassis-stat strong { font-size: .82rem; }
+.chassis-meta { display: flex; justify-content: space-between; padding-top: .65rem; border-top: 1px solid #353a40; font-size: .78rem; }
+.chassis-meta strong { color: var(--orange); }
+
+.empty-state {
+  display: grid;
+  place-items: center;
+  min-height: 320px;
+  text-align: center;
+}
+.empty-state span { color: #4b5158; font-size: 4rem; font-weight: 900; line-height: 1; }
+.empty-state h2 { margin: .6rem 0 .25rem; }
+.empty-state p { max-width: 32rem; color: var(--muted); }
+
+.summary-placeholder {
+  min-height: 250px;
+  display: grid;
+  place-items: center;
+  color: var(--muted);
+  border: 1px dashed #454a50;
+  border-radius: .65rem;
+}
+.summary-card { display: grid; gap: .8rem; }
+.summary-block {
+  padding: .8rem;
+  background: linear-gradient(0deg, #23292b, #090a0b);
+  border: 1px solid #555;
+  border-radius: .65rem;
+}
+.summary-block h3 { display: inline-block; margin: 0 0 .65rem; padding-bottom: .1rem; border-bottom: 1px solid var(--orange); }
+.summary-row { display: flex; justify-content: space-between; gap: 1rem; color: var(--muted); }
+.summary-row + .summary-row { margin-top: .45rem; }
+.summary-row strong { color: var(--text); text-align: right; }
+
+footer {
+  padding: .5rem .25rem 0;
+  color: #777f88;
+  font-size: .75rem;
+}
+
+
+@media (max-width: 860px) {
+  .tabs { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+  .tabs .tab {
+    min-height: 0;
+    font-size: 1rem;
+  }
+}
+
+@media (max-width: 520px) {
+  .tabs { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .tabs .tab {
+    min-height: 0;
+    font-size: 1rem;
+  }
+}
+
+@media (max-width: 800px) {
+  .top-bar, .vehicle-heading-panel, .section-heading { align-items: stretch; flex-direction: column; }
+  .chassis-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .points-pill { text-align: left; }
+}
+
+@media (max-width: 480px) {
+  .app-shell { width: min(100% - 1rem, 1080px); padding-top: .75rem; }
+  .chassis-grid { grid-template-columns: 1fr; }
+  .top-actions .button { flex: 1; justify-content: center; text-align: center; }
+}
+
+/* Chassis selector v0.3 */
+.chassis-card {
+  position: relative;
+  min-height: 0;
+  padding: .85rem;
+  transition: transform .14s ease, border-color .14s ease, box-shadow .14s ease, background .14s ease;
+}
+.chassis-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 10px 22px rgba(0, 0, 0, .24);
+}
+.chassis-card.selected {
+  transform: translateY(-3px);
+  border-width: 2px;
+  background: linear-gradient(150deg, #2d3035, #111315 70%);
+  box-shadow: 0 0 0 2px rgba(255, 159, 28, .18), 0 12px 28px rgba(0, 0, 0, .34), 0 0 18px rgba(255, 159, 28, .12);
+}
+.chassis-title-row {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: .5rem;
+  margin-bottom: .28rem;
+}
+.chassis-card h3 {
+  margin: 0;
+  color: var(--text);
+  font-size: 1.3rem;
+  letter-spacing: .025em;
+  text-transform: uppercase;
+}
+.chassis-cost {
+  color: var(--orange);
+  font-size: .9rem;
+  white-space: nowrap;
+}
+.chassis-card p {
+  min-height: 4.15rem;
+  margin: 0 0 .6rem;
+  font-size: .78rem;
+  line-height: 1.35;
+}
+.chassis-stats {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 0;
+  margin: 0;
+  border-top: 1px solid #3a3f45;
+}
+.chassis-stat {
+  min-height: 30px;
+  padding: .3rem .15rem;
+  background: none;
+  border: 0;
+  border-bottom: 1px solid #30353a;
+  border-radius: 0;
+}
+.chassis-stat small {
+  color: var(--orange);
+  font-size: .65rem;
+  font-weight: 800;
+  letter-spacing: .055em;
+}
+.chassis-stat strong {
+  color: white;
+  font-size: .88rem;
+  font-weight: 800;
+}
+.selected-marker {
+  display: block;
+  width: max-content;
+  margin: .65rem auto 0;
+  padding: .2rem .55rem;
+  color: #111315;
+  background: var(--orange);
+  border-radius: 999px;
+  font-size: .62rem;
+  font-weight: 900;
+  letter-spacing: .08em;
+  text-transform: uppercase;
+  opacity: 0;
+  transform: translateY(3px);
+  transition: opacity .14s ease, transform .14s ease;
+}
+.chassis-card.selected .selected-marker { opacity: 1; transform: translateY(0); }
+
+
+/* Weapon builder */
+.weapon-category-tabs { display:flex; flex-wrap:wrap; gap:.45rem; margin-bottom:1rem; }
+.weapon-category-tab { border:1px solid #444a51; border-radius:999px; padding:.42rem .85rem; background:#111315; color:var(--text); font:inherit; cursor:pointer; }
+.weapon-category-tab.active { border-color:var(--orange); background:var(--orange); color:#111315; }
+.weapons-layout { display:grid; grid-template-columns:minmax(0,2fr) minmax(280px,1fr); gap:1rem; align-items:start; }
+.weapon-catalogue { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:.75rem; }
+.weapon-card,.selected-weapon-card { border:1px solid #343a40; border-radius:12px; background:linear-gradient(150deg,#25292e,#121416 75%); padding:.8rem; }
+.weapon-card-head { display:flex; justify-content:space-between; align-items:flex-start; gap:.65rem; }
+.weapon-card h3,.selected-weapon-card h4,.selected-weapons-panel h3 { margin:0; }
+.weapon-card-head strong { color:var(--orange); white-space:nowrap; }
+.weapon-card p { min-height:3.6em; color:var(--muted); font-size:.78rem; line-height:1.45; }
+.weapon-card .button { width:100%; }
+.selected-weapons-panel { position:sticky; top:1rem; border:1px solid #343a40; border-radius:12px; background:#17191c; padding:.85rem; }
+.selected-weapons-panel>h3 { margin-bottom:.75rem; font-family:"Slackey",system-ui,sans-serif; }
+#selected-weapons { display:grid; gap:.65rem; }
+.mount-options { display:grid; grid-template-columns:repeat(3,1fr); gap:.35rem; margin:.7rem 0; }
+.mount-options label { cursor:pointer; }
+.mount-options input { position:absolute; opacity:0; pointer-events:none; }
+.mount-options span { display:block; padding:.4rem .25rem; border:1px solid #444a51; border-radius:8px; text-align:center; font-size:.72rem; }
+.mount-options input:checked+span { border-color:var(--orange); background:rgba(255,159,28,.16); color:#fff; }
+.mount-options small { color:var(--orange); }
+.remove-weapon { border:0; background:none; color:#fca5a5; cursor:pointer; padding:0; font:inherit; font-size:.75rem; }
+@media (max-width:800px){ .weapons-layout{grid-template-columns:1fr}.weapon-catalogue{grid-template-columns:1fr}.selected-weapons-panel{position:static} }
+
+/* Compact Fighter Forge-style weapon rows */
+.weapon-catalogue { gap:.4rem; }
+.weapon-card,
+.selected-weapon-card {
+  border-color:#ff9f1c;
+  border-radius:.5rem;
+  background:linear-gradient(0deg, rgba(35,41,43,1), rgba(0,0,0,1));
+  padding:.38rem .5rem;
+}
+.weapon-card-head { align-items:flex-start; gap:.45rem; }
+.weapon-card h3,
+.selected-weapon-card h4 { font-size:.9rem; line-height:1.2; }
+.weapon-card p,
+.selected-weapon-profile {
+  min-height:0;
+  margin:.15rem 0 .35rem;
+  color:#9ca3af;
+  font-size:.75rem;
+  line-height:1.3;
+}
+.weapon-card .button {
+  width:auto;
+  padding:.24rem .55rem;
+  font-size:.75rem;
+  float:right;
+}
+.weapon-card::after { content:""; display:block; clear:both; }
+.selected-weapons-panel { padding:.65rem; }
+#selected-weapons { gap:.4rem; }
+.mount-options { gap:.25rem; margin:.4rem 0; }
+.mount-options span { padding:.28rem .2rem; border-radius:6px; font-size:.68rem; }
+.weapon-upgrades {
+  display:flex;
+  flex-wrap:wrap;
+  gap:.25rem .45rem;
+  margin:.2rem 0 .35rem;
+  color:#9ca3af;
+  font-size:.68rem;
+}
+.weapon-upgrades label { display:flex; align-items:center; gap:.18rem; cursor:pointer; }
+.weapon-upgrades input { width:12px; height:12px; margin:0; accent-color:var(--orange); }
+.remove-weapon { font-size:.7rem; }
+
+
+/* Typography hierarchy */
+/* Major page and section headings */
+h1,
+h2,
+.section-heading h2,
+.selected-weapons-panel > h3,
+.summary-card > h3,
+.section-title,
+.panel-title,
+.card-title {
+  font-family: "Slackey", system-ui, sans-serif;
+  font-weight: 400;
+}
+
+/* Weapon names */
+.weapon-card h3,
+.selected-weapon-card h4,
+.weapon-name {
+  font-family: "Kdam Thmor Pro", system-ui, sans-serif;
+  font-weight: 400;
+}
+
+
+/* Chassis names retain the original display font. */
+.chassis-card h3,
+.chassis-name {
+  font-family: "Slackey", system-ui, sans-serif;
+  font-weight: 400;
+}
+
+/* Vehicle upgrades */
+.upgrade-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: .6rem;
+}
+
+.upgrade-card {
+  position: relative;
+  display: block;
+  min-width: 0;
+  cursor: pointer;
+}
+
+.upgrade-card > input {
+  position: absolute;
+  opacity: 0;
+  pointer-events: none;
+}
+
+.upgrade-card-body {
+  display: block;
+  height: 100%;
+  padding: .62rem .72rem;
+  background: linear-gradient(0deg, #23292b, #090a0b);
+  border: 1px solid #4b5056;
+  border-radius: .55rem;
+  transition: border-color .12s ease, box-shadow .12s ease, transform .12s ease;
+}
+
+.upgrade-card:hover .upgrade-card-body {
+  border-color: var(--orange);
+  transform: translateY(-1px);
+}
+
+.upgrade-card.selected .upgrade-card-body,
+.upgrade-card > input:checked + .upgrade-card-body {
+  border-color: var(--orange);
+  box-shadow: inset 0 0 0 1px rgba(255, 159, 28, .22);
+}
+
+.upgrade-card-head {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: .8rem;
+  margin-bottom: .28rem;
+}
+
+.upgrade-card-head strong {
+  color: var(--text);
+  font-family: "Kdam Thmor Pro", system-ui, sans-serif;
+  font-size: 1rem;
+  font-weight: 400;
+}
+
+.upgrade-card-head b {
+  flex: 0 0 auto;
+  color: var(--orange);
+  font-size: .78rem;
+  font-weight: 800;
+}
+
+.upgrade-description {
+  display: block;
+  color: var(--muted);
+  font-size: .8rem;
+  line-height: 1.35;
+}
+
+@media (max-width: 720px) {
+  .upgrade-grid { grid-template-columns: 1fr; }
+}
+
+
+/* Garage roster */
+.app-view { display:none; }
+.app-view.active { display:block; }
+.garage-heading-panel { display:flex; align-items:flex-end; justify-content:space-between; gap:1rem; }
+.garage-name-field { flex:1; }
+.garage-totals { display:flex; gap:.6rem; }
+.garage-list { display:grid; gap:.75rem; }
+.garage-vehicle-card { padding:.9rem; background:linear-gradient(0deg,#23292b,#090a0b); border:1px solid #555; border-radius:.75rem; }
+.garage-vehicle-main { display:flex; align-items:flex-start; justify-content:space-between; gap:1rem; }
+.garage-vehicle-main h3 { margin:0; font-family:"Slackey",system-ui,sans-serif; font-weight:400; font-size:1.22rem; }
+.garage-vehicle-cost { flex:0 0 auto; color:var(--orange); font-family:"Kdam Thmor Pro",system-ui,sans-serif; font-size:1.1rem; }
+.garage-quick-stats { display:grid; grid-template-columns:repeat(8,minmax(0,1fr)); gap:.4rem; margin:.75rem 0; }
+.garage-quick-stats > span { display:flex; align-items:center; justify-content:space-between; gap:.35rem; padding:.42rem .5rem; background:rgba(0,0,0,.28); border:1px solid #40454b; border-radius:.45rem; }
+.garage-quick-stats small { color:var(--muted); font-size:.65rem; font-weight:800; text-transform:uppercase; }
+.garage-quick-stats strong { font-size:.82rem; }
+.garage-actions { display:flex; flex-wrap:wrap; gap:.45rem; padding-top:.65rem; border-top:1px solid #3a3f45; }
+.danger-button { border-color:#7f1d1d; }
+.danger-button:hover { border-color:#ef4444!important; }
+.garage-empty { min-height:360px; }
+.garage-inline-summary {
+  margin-top: .8rem;
+  padding-top: .8rem;
+  border-top: 1px solid #3a3f45;
+  animation: garage-summary-open .16s ease-out;
+}
+.garage-vehicle-card.expanded { border-color: var(--orange); }
+.garage-summary {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: .8rem;
+  align-items: start;
+}
+@keyframes garage-summary-open {
+  from { opacity: 0; transform: translateY(-4px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@media (max-width:900px) {
+  .garage-quick-stats { grid-template-columns:repeat(4,minmax(0,1fr)); }
+}
+@media (max-width:760px) {
+  .garage-heading-panel { align-items:stretch; flex-direction:column; }
+  .garage-totals { width:100%; }
+  .garage-totals .points-pill { flex:1; }
+  .garage-summary { grid-template-columns:1fr; }
+}
+@media (max-width:520px) {
+  .garage-quick-stats { grid-template-columns:repeat(2,minmax(0,1fr)); }
+  .garage-vehicle-main { align-items:flex-start; }
+}
+
+/* Cosmetic rename controls */
+.selected-item-actions { display:flex; justify-content:flex-end; gap:.55rem; margin-top:.35rem; }
+.rename-weapon,
+.rename-upgrade {
+  border:0;
+  background:none;
+  color:var(--orange);
+  cursor:pointer;
+  padding:0;
+  font:inherit;
+  font-size:.72rem;
+  font-weight:700;
+}
+.rename-weapon:hover,
+.rename-upgrade:hover { text-decoration:underline; }
+.rename-upgrade { display:block; margin:.42rem 0 0 auto; position:relative; z-index:2; }
