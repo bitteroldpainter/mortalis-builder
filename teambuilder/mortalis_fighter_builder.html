@@ -2345,26 +2345,53 @@ window.copyFighterText = function () {
         }
       }
 
-      // Build profile string with upgrades included
+      // Build profile string with upgrades included.
+      // Dual-profile weapons are rendered from cardProfiles on the Fighter Card,
+      // so the same upgrades must also be applied to every individual profile.
       function buildWeaponProfile (weapon) {
-        var baseText = weapon.baseProfile || weapon.profile || "";
-        var text = baseText;
+        function addUniqueRules (baseText, rules) {
+          var text = baseText || "";
+          var lower = text.toLowerCase();
+          var missing = [];
+
+          for (var i = 0; i < rules.length; i++) {
+            if (lower.indexOf(rules[i].toLowerCase()) === -1) {
+              missing.push(rules[i]);
+              lower += ", " + rules[i].toLowerCase();
+            }
+          }
+
+          if (missing.length) {
+            text += (text ? ", " : "") + missing.join(", ");
+          }
+          return text;
+        }
+
         var extras = [];
         var up = weapon.upgrades || {};
         if (up.poison)        extras.push("Poison/Fire");
         if (up.enchanted)     extras.push("Crits on 9+");
         if (up.cursed)        extras.push("MW (2)");
-        if (up.truestrike)        extras.push("Reroll (SR)");
+        if (up.truestrike)    extras.push("Reroll (SR)");
         if (up.masterCrafted) extras.push("Piercing (-2)");
 
-        if (extras.length) {
-          if (text) {
-            text += ", " + extras.join(", ");
-          } else {
-            text = extras.join(", ");
-          }
-        }
+        var baseText = weapon.baseProfile || weapon.profile || "";
+        var text = addUniqueRules(baseText, extras);
         weapon.profile = text; // keep summary in sync
+
+        if (weapon.cardProfiles && weapon.cardProfiles.length) {
+          // Capture an immutable source the first time an older saved Fighter is edited.
+          if (!weapon.baseCardProfiles || !weapon.baseCardProfiles.length) {
+            weapon.baseCardProfiles = deepClone(weapon.cardProfiles);
+          }
+
+          weapon.cardProfiles = weapon.baseCardProfiles.map(function (cardProfile) {
+            var updated = deepClone(cardProfile);
+            updated.profile = addUniqueRules(cardProfile.profile || "", extras);
+            return updated;
+          });
+        }
+
         return text;
       }
 
@@ -3244,6 +3271,7 @@ var upgToggles = container.getElementsByClassName("upgrade-toggle");
                 baseProfile: found.profile,
                 profile: found.profile,
                 cardProfiles: found.cardProfiles ? deepClone(found.cardProfiles) : undefined,
+                baseCardProfiles: found.cardProfiles ? deepClone(found.cardProfiles) : undefined,
                 basePoints: found.points,
                 points: found.points,
                 upgrades: {
@@ -3412,6 +3440,7 @@ var upgToggles = container.getElementsByClassName("upgrade-toggle");
                 baseProfile: current.profile,
                 profile: current.profile,
                 cardProfiles: current.cardProfiles ? deepClone(current.cardProfiles) : (item.cardProfiles ? deepClone(item.cardProfiles) : undefined),
+                baseCardProfiles: current.baseCardProfiles ? deepClone(current.baseCardProfiles) : (item.baseCardProfiles ? deepClone(item.baseCardProfiles) : (current.cardProfiles ? deepClone(current.cardProfiles) : (item.cardProfiles ? deepClone(item.cardProfiles) : undefined))),
                 basePoints: current.points,
                 points: current.points,
                 upgrades: normalizeUpgrades(item.upgrades)
@@ -3427,6 +3456,7 @@ var upgToggles = container.getElementsByClassName("upgrade-toggle");
                 baseProfile: item.baseProfile || item.profile || "",
                 profile: item.baseProfile || item.profile || "",
                 cardProfiles: item.cardProfiles ? deepClone(item.cardProfiles) : undefined,
+                baseCardProfiles: item.baseCardProfiles ? deepClone(item.baseCardProfiles) : (item.cardProfiles ? deepClone(item.cardProfiles) : undefined),
                 basePoints: (item.basePoints != null ? item.basePoints : (item.points || 0)),
                 points: (item.basePoints != null ? item.basePoints : (item.points || 0)),
                 upgrades: normalizeUpgrades(item.upgrades)
@@ -4237,6 +4267,7 @@ var upgToggles = container.getElementsByClassName("upgrade-toggle");
                 baseProfile: found.profile,
                 profile: found.profile,
                 cardProfiles: found.cardProfiles ? deepClone(found.cardProfiles) : undefined,
+                baseCardProfiles: found.cardProfiles ? deepClone(found.cardProfiles) : undefined,
                 basePoints: found.points,
                 points: found.points,
                 upgrades: { poison:false, enchanted:false, cursed:false, truestrike:false, masterCrafted:false }
