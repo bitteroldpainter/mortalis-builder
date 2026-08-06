@@ -515,3 +515,72 @@ h2,
 @media (max-width: 720px) {
   .upgrade-grid { grid-template-columns: 1fr; }
 }
+
+
+/* Garage roster */
+.app-view { display:none; }
+.app-view.active { display:block; }
+.garage-heading-panel { display:flex; align-items:flex-end; justify-content:space-between; gap:1rem; }
+.garage-name-field { flex:1; }
+.garage-totals { display:flex; gap:.6rem; }
+.garage-list { display:grid; gap:.75rem; }
+.garage-vehicle-card { padding:.9rem; background:linear-gradient(0deg,#23292b,#090a0b); border:1px solid #555; border-radius:.75rem; }
+.garage-vehicle-main { display:flex; align-items:flex-start; justify-content:space-between; gap:1rem; }
+.garage-vehicle-main h3 { margin:0; font-family:"Slackey",system-ui,sans-serif; font-weight:400; font-size:1.22rem; }
+.garage-vehicle-cost { flex:0 0 auto; color:var(--orange); font-family:"Kdam Thmor Pro",system-ui,sans-serif; font-size:1.1rem; }
+.garage-quick-stats { display:grid; grid-template-columns:repeat(8,minmax(0,1fr)); gap:.4rem; margin:.75rem 0; }
+.garage-quick-stats > span { display:flex; align-items:center; justify-content:space-between; gap:.35rem; padding:.42rem .5rem; background:rgba(0,0,0,.28); border:1px solid #40454b; border-radius:.45rem; }
+.garage-quick-stats small { color:var(--muted); font-size:.65rem; font-weight:800; text-transform:uppercase; }
+.garage-quick-stats strong { font-size:.82rem; }
+.garage-actions { display:flex; flex-wrap:wrap; gap:.45rem; padding-top:.65rem; border-top:1px solid #3a3f45; }
+.danger-button { border-color:#7f1d1d; }
+.danger-button:hover { border-color:#ef4444!important; }
+.garage-empty { min-height:360px; }
+.garage-inline-summary {
+  margin-top: .8rem;
+  padding-top: .8rem;
+  border-top: 1px solid #3a3f45;
+  animation: garage-summary-open .16s ease-out;
+}
+.garage-vehicle-card.expanded { border-color: var(--orange); }
+.garage-summary {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: .8rem;
+  align-items: start;
+}
+@keyframes garage-summary-open {
+  from { opacity: 0; transform: translateY(-4px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@media (max-width:900px) {
+  .garage-quick-stats { grid-template-columns:repeat(4,minmax(0,1fr)); }
+}
+@media (max-width:760px) {
+  .garage-heading-panel { align-items:stretch; flex-direction:column; }
+  .garage-totals { width:100%; }
+  .garage-totals .points-pill { flex:1; }
+  .garage-summary { grid-template-columns:1fr; }
+}
+@media (max-width:520px) {
+  .garage-quick-stats { grid-template-columns:repeat(2,minmax(0,1fr)); }
+  .garage-vehicle-main { align-items:flex-start; }
+}
+
+/* Cosmetic rename controls */
+.selected-item-actions { display:flex; justify-content:flex-end; gap:.55rem; margin-top:.35rem; }
+.rename-weapon,
+.rename-upgrade {
+  border:0;
+  background:none;
+  color:var(--orange);
+  cursor:pointer;
+  padding:0;
+  font:inherit;
+  font-size:.72rem;
+  font-weight:700;
+}
+.rename-weapon:hover,
+.rename-upgrade:hover { text-decoration:underline; }
+.rename-upgrade { display:block; margin:.42rem 0 0 auto; position:relative; z-index:2; }

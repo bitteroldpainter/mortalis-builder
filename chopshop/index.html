@@ -3,24 +3,59 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Road Rage — Chop Shop</title>
+  <title>Road Rage — Chop Shop Garage</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Kdam+Thmor+Pro&family=Slackey&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="styles.css">
 </head>
 <body>
-  <div class="app-shell">
+  <div class="app-view active" id="garage-view">
+    <div class="app-shell">
+      <header class="top-bar">
+        <div><p class="eyebrow">Road Rage Vehicle Roster</p><h1>Garage</h1></div>
+        <div class="top-actions">
+          <button class="button button-accent" id="add-vehicle" type="button">Add Vehicle</button>
+          <button class="button button-secondary" id="export-garage" type="button">Export Garage</button>
+          <label class="button button-secondary file-button">Load Garage<input id="load-garage" type="file" accept="application/json" hidden></label>
+          <button class="button button-secondary danger-button" id="clear-garage" type="button">Clear Garage</button>
+        </div>
+      </header>
+
+      <section class="panel garage-heading-panel">
+        <div class="field-group garage-name-field">
+          <label for="garage-name">Garage name</label>
+          <input id="garage-name" type="text" maxlength="60" placeholder="Unnamed Garage">
+        </div>
+        <div class="garage-totals">
+          <div class="points-pill"><span>Vehicles</span><strong id="garage-count">0</strong></div>
+          <div class="points-pill"><span>Total Cost</span><strong id="garage-total">0 pts</strong></div>
+        </div>
+      </section>
+
+      <main>
+        <section class="panel garage-panel">
+          <div class="section-heading"><div><p class="eyebrow">Vehicle Roster</p><h2>Your Vehicles</h2></div><p>Build, inspect and manage every vehicle in your Garage.</p></div>
+          <div id="garage-list" class="garage-list"></div>
+        </section>
+      </main>
+      <footer><span id="garage-status" role="status">Your Garage is ready.</span><span>Chop Shop — Garage</span></footer>
+    </div>
+  </div>
+
+  <div class="app-view" id="builder-view">
+    <div class="app-shell">
     <header class="top-bar">
       <div>
         <p class="eyebrow">Road Rage Vehicle Builder</p>
         <h1>Chop Shop</h1>
       </div>
       <div class="top-actions">
-        <button class="button button-secondary" id="new-vehicle" type="button">New</button>
-        <button class="button button-accent" id="save-vehicle" type="button">Save</button>
+        <button class="button button-secondary" id="back-to-garage" type="button">Back to Garage</button>
+        <button class="button button-accent" id="save-to-garage" type="button">Save to Garage</button>
+        <button class="button button-secondary" id="save-vehicle" type="button">Export Vehicle</button>
         <label class="button button-secondary file-button">
-          Load
+          Import Vehicle
           <input id="load-vehicle" type="file" accept="application/json" hidden>
         </label>
         <button class="button button-accent" id="generate-card" type="button" disabled>Generate Card</button>
@@ -111,8 +146,9 @@
 
     <footer>
       <span id="status-message" role="status">Choose a chassis to begin.</span>
-      <span>Chop Shop v0.3</span>
+      <span>Chop Shop — Vehicle Builder</span>
     </footer>
+  </div>
   </div>
 
   <script src="roadrage-rules.js"></script>

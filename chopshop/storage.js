@@ -58,8 +58,33 @@
       .replace(/^-+|-+$/g, "") || "road-rage-vehicle";
   }
 
+
+  function exportGarage(garage) {
+    var payload = { app: "Road Rage Chop Shop Garage", version: 1, savedAt: new Date().toISOString(), garage: garage };
+    downloadJson(slugify((garage && garage.name) || "road-rage-garage") + ".json", payload);
+  }
+
+  function importGarage(file) {
+    return new Promise(function (resolve, reject) {
+      if (!file) return reject(new Error("No file selected."));
+      var reader = new FileReader();
+      reader.onload = function () {
+        try {
+          var payload = JSON.parse(String(reader.result || ""));
+          var garage = payload && payload.garage ? payload.garage : payload;
+          if (!garage || typeof garage !== "object" || !Array.isArray(garage.vehicles)) throw new Error("Invalid garage");
+          resolve(garage);
+        } catch (error) { reject(new Error("That file is not a valid Chop Shop Garage.")); }
+      };
+      reader.onerror = function () { reject(new Error("The file could not be read.")); };
+      reader.readAsText(file);
+    });
+  }
+
   window.ChopShopStorage = {
     exportVehicle: exportVehicle,
-    importVehicle: importVehicle
+    importVehicle: importVehicle,
+    exportGarage: exportGarage,
+    importGarage: importGarage
   };
 })();

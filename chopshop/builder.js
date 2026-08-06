@@ -3,7 +3,11 @@
 
   var rules = window.ROAD_RAGE_RULES;
   var AUTOSAVE_KEY = "road_rage_chop_shop_autosave_v1";
-  var state = loadAutosavedVehicle() || createBlankVehicle();
+  var GARAGE_KEY = "road_rage_chop_shop_garage_v1";
+  var state = createBlankVehicle();
+  var garage = loadGarage();
+  var editingVehicleId = null;
+  var expandedVehicleId = null;
   var currentWeaponCategory = "light";
 
   var els = {
@@ -16,6 +20,22 @@
     load: document.getElementById("load-vehicle"),
     fresh: document.getElementById("new-vehicle"),
     generateCard: document.getElementById("generate-card"),
+    garageView: document.getElementById("garage-view"),
+    builderView: document.getElementById("builder-view"),
+    garageList: document.getElementById("garage-list"),
+    garageName: document.getElementById("garage-name"),
+    garageCount: document.getElementById("garage-count"),
+    garageTotal: document.getElementById("garage-total"),
+    garageStatus: document.getElementById("garage-status"),
+    addVehicle: document.getElementById("add-vehicle"),
+    saveToGarage: document.getElementById("save-to-garage"),
+    backToGarage: document.getElementById("back-to-garage"),
+    exportGarage: document.getElementById("export-garage"),
+    loadGarage: document.getElementById("load-garage"),
+    clearGarage: document.getElementById("clear-garage"),
+    viewModal: document.getElementById("vehicle-view-modal"),
+    viewTitle: document.getElementById("vehicle-view-title"),
+    viewContent: document.getElementById("vehicle-view-content"),
     weaponTabs: document.getElementById("weapon-category-tabs"),
     weaponCatalogue: document.getElementById("weapon-catalogue"),
     selectedWeapons: document.getElementById("selected-weapons"),
@@ -33,6 +53,9 @@
     render();
     bindTabs();
     bindActions();
+    bindGarageActions();
+    renderGarage();
+    showGarage();
   }
 
   function createBlankVehicle() {
@@ -42,7 +65,8 @@
       chassisId: null,
       portrait: null,
       weapons: [],
-      upgrades: { hull: [], engine: [], crew: [] }
+      upgrades: { hull: [], engine: [], crew: [] },
+      upgradeNameOverrides: { hull: {}, engine: {}, crew: {} }
     };
   }
 
@@ -86,11 +110,8 @@
       autosaveVehicle();
     });
 
-    els.fresh.addEventListener("click", function () {
-      clearAutosave();
-      state = createBlankVehicle();
-      setStatus("New vehicle started.");
-      render();
+    if (els.fresh) els.fresh.addEventListener("click", function () {
+      startNewVehicle();
     });
 
     els.save.addEventListener("click", function () {
@@ -112,6 +133,240 @@
         .finally(function () { els.load.value = ""; });
     });
   }
+
+
+  function bindGarageActions() {
+    if (els.addVehicle) els.addVehicle.addEventListener("click", startNewVehicle);
+    if (els.saveToGarage) els.saveToGarage.addEventListener("click", saveCurrentVehicleToGarage);
+    if (els.backToGarage) els.backToGarage.addEventListener("click", function () { showGarage(); });
+    if (els.garageName) els.garageName.addEventListener("input", function () {
+      garage.name = els.garageName.value;
+      saveGarage();
+    });
+    if (els.exportGarage) els.exportGarage.addEventListener("click", function () {
+      window.ChopShopStorage.exportGarage(garage);
+      setGarageStatus("Garage exported.");
+    });
+    if (els.loadGarage) els.loadGarage.addEventListener("change", function () {
+      var file = els.loadGarage.files && els.loadGarage.files[0];
+      window.ChopShopStorage.importGarage(file).then(function (loaded) {
+        garage = normaliseGarage(loaded);
+        saveGarage();
+        renderGarage();
+        setGarageStatus("Garage loaded.");
+      }).catch(function (error) { setGarageStatus(error.message, true); })
+        .finally(function () { els.loadGarage.value = ""; });
+    });
+    if (els.clearGarage) els.clearGarage.addEventListener("click", function () {
+      if (garage.vehicles.length && !window.confirm("Clear every vehicle from this Garage?")) return;
+      garage.vehicles = [];
+      saveGarage();
+      renderGarage();
+      setGarageStatus("Garage cleared.");
+    });
+    if (els.garageList) els.garageList.addEventListener("click", function (event) {
+      var button = event.target.closest("button[data-garage-action]");
+      if (!button) return;
+      var id = button.dataset.vehicleId;
+      var action = button.dataset.garageAction;
+      if (action === "view") viewGarageVehicle(id);
+      if (action === "edit") editGarageVehicle(id);
+      if (action === "duplicate") duplicateGarageVehicle(id);
+      if (action === "remove") removeGarageVehicle(id);
+    });
+  }
+
+  function showGarage() {
+    if (els.garageView) els.garageView.classList.add("active");
+    if (els.builderView) els.builderView.classList.remove("active");
+    renderGarage();
+    window.scrollTo(0, 0);
+  }
+
+  function showBuilder() {
+    if (els.garageView) els.garageView.classList.remove("active");
+    if (els.builderView) els.builderView.classList.add("active");
+    render();
+    window.scrollTo(0, 0);
+  }
+
+  function startNewVehicle() {
+    editingVehicleId = null;
+    clearAutosave();
+    state = createBlankVehicle();
+    setStatus("New vehicle started.");
+    showBuilder();
+  }
+
+  function editGarageVehicle(id) {
+    var entry = garage.vehicles.find(function (item) { return item.id === id; });
+    if (!entry) return;
+    editingVehicleId = id;
+    state = normaliseVehicle(JSON.parse(JSON.stringify(entry.vehicle)));
+    setStatus("Editing " + (state.name || "Unnamed Vehicle") + ".");
+    showBuilder();
+  }
+
+  function saveCurrentVehicleToGarage() {
+    if (!state.chassisId) return setStatus("Choose a chassis before saving to the Garage.", true);
+    var vehicle = normaliseVehicle(JSON.parse(JSON.stringify(state)));
+    if (editingVehicleId) {
+      var existing = garage.vehicles.find(function (item) { return item.id === editingVehicleId; });
+      if (existing) existing.vehicle = vehicle;
+    } else {
+      editingVehicleId = makeGarageId();
+      garage.vehicles.push({ id: editingVehicleId, vehicle: vehicle });
+    }
+    saveGarage();
+    clearAutosave();
+    setGarageStatus((vehicle.name.trim() || "Unnamed Vehicle") + " saved.");
+    showGarage();
+  }
+
+  function duplicateGarageVehicle(id) {
+    var entry = garage.vehicles.find(function (item) { return item.id === id; });
+    if (!entry) return;
+    var copy = normaliseVehicle(JSON.parse(JSON.stringify(entry.vehicle)));
+    copy.name = (copy.name.trim() || "Unnamed Vehicle") + " (Copy)";
+    garage.vehicles.push({ id: makeGarageId(), vehicle: copy });
+    saveGarage(); renderGarage(); setGarageStatus("Vehicle duplicated.");
+  }
+
+  function removeGarageVehicle(id) {
+    if (expandedVehicleId === id) expandedVehicleId = null;
+    var entry = garage.vehicles.find(function (item) { return item.id === id; });
+    if (!entry) return;
+    if (!window.confirm("Remove " + (entry.vehicle.name || "this vehicle") + " from the Garage?")) return;
+    garage.vehicles = garage.vehicles.filter(function (item) { return item.id !== id; });
+    saveGarage(); renderGarage(); setGarageStatus("Vehicle removed.");
+  }
+
+  function renderGarage() {
+    if (!els.garageList) return;
+    els.garageName.value = garage.name || "";
+    var total = garage.vehicles.reduce(function (sum, entry) { return sum + calculateVehiclePoints(entry.vehicle); }, 0);
+    els.garageCount.textContent = String(garage.vehicles.length);
+    els.garageTotal.textContent = total + " pts";
+
+    if (!garage.vehicles.length) {
+      expandedVehicleId = null;
+      els.garageList.innerHTML = '<div class="empty-state garage-empty"><div><span>0</span><h2>Your Garage is empty</h2><p>Add a vehicle to begin building your Road Rage roster.</p><button class="button button-accent" type="button" id="empty-add-vehicle">Add Vehicle</button></div></div>';
+      var emptyAdd = document.getElementById("empty-add-vehicle");
+      if (emptyAdd) emptyAdd.addEventListener("click", startNewVehicle);
+      return;
+    }
+
+    els.garageList.innerHTML = garage.vehicles.map(function (entry) {
+      var vehicle = normaliseVehicle(entry.vehicle);
+      var chassis = getChassisFor(vehicle);
+      var points = calculateVehiclePoints(vehicle);
+      var stats = getEffectiveStatsFor(vehicle);
+      var isExpanded = expandedVehicleId === entry.id;
+
+      var inlineSummary = isExpanded
+        ? '<div class="garage-inline-summary" id="garage-summary-' + escapeHtml(entry.id) + '">' +
+            '<div class="summary-card garage-summary">' +
+              '<div class="summary-block"><h3>Vehicle</h3>' +
+                summaryRow("Chassis", chassis ? chassis.name : "None") +
+                summaryRow("Total Cost", points + " pts") +
+              '</div>' +
+              '<div class="summary-block"><h3>Weapons</h3>' +
+                renderVehicleWeaponsSummary(vehicle) +
+              '</div>' +
+              '<div class="summary-block"><h3>Upgrades</h3>' +
+                renderVehicleUpgradesSummary(vehicle) +
+              '</div>' +
+            '</div>' +
+          '</div>'
+        : "";
+
+      return '<article class="garage-vehicle-card' + (isExpanded ? ' expanded' : '') + '" data-garage-vehicle-id="' + escapeHtml(entry.id) + '">' +
+        '<div class="garage-vehicle-main"><div><p class="eyebrow">' + escapeHtml(chassis ? chassis.name : "No Chassis") + '</p><h3>' + escapeHtml(vehicle.name.trim() || "Unnamed Vehicle") + '</h3></div><strong class="garage-vehicle-cost">' + points + ' pts</strong></div>' +
+        '<div class="garage-quick-stats">' +
+          garageStat("Speed", stats ? formatStat("speed", stats.speed) : "—") +
+          garageStat("AP", stats ? formatStat("ap", stats.ap) : "—") +
+          garageStat("Handling", stats ? formatStat("handling", stats.handling) : "—") +
+          garageStat("DEF", stats ? formatStat("def", stats.def) : "—") +
+          garageStat("Hull Points", stats ? formatStat("hull", stats.hull) : "—") +
+          garageStat("Ram", stats ? formatStat("ram", stats.ram) : "—") +
+          garageStat("DR", stats ? formatStat("dr", stats.dr) : "—") +
+          garageStat("Transport", stats ? formatStat("transport", stats.transport) : "—") +
+        '</div>' +
+        '<div class="garage-actions">' +
+          garageButton("view", entry.id, isExpanded ? "Hide" : "View", "button-secondary") +
+          garageButton("edit", entry.id, "Edit", "button-accent") +
+          garageButton("duplicate", entry.id, "Duplicate", "button-secondary") +
+          garageButton("remove", entry.id, "Remove", "button-secondary danger-button") +
+        '</div>' +
+        inlineSummary +
+      '</article>';
+    }).join("");
+  }
+
+  function viewGarageVehicle(id) {
+    expandedVehicleId = expandedVehicleId === id ? null : id;
+    renderGarage();
+
+    if (expandedVehicleId) {
+      var expanded = document.querySelector('[data-garage-vehicle-id="' + cssEscape(expandedVehicleId) + '"]');
+      if (expanded && typeof expanded.scrollIntoView === "function") {
+        expanded.scrollIntoView({ behavior: "smooth", block: "nearest" });
+      }
+    }
+  }
+
+  function closeVehicleView() {
+    if (expandedVehicleId !== null) {
+      expandedVehicleId = null;
+      renderGarage();
+    }
+  }
+
+  function cssEscape(value) {
+    if (window.CSS && typeof window.CSS.escape === "function") return window.CSS.escape(String(value));
+    return String(value).replace(/["\\]/g, "\\$&");
+  }
+
+  function renderVehicleWeaponsSummary(vehicle) {
+    if (!vehicle.weapons.length) return summaryRow("Weapons", "None");
+    return vehicle.weapons.map(function (selection) {
+      var weapon = getWeapon(selection.weaponId), mount = getMount(selection.mountId);
+      return weapon ? summaryRow(getWeaponDisplayName(selection, weapon), mount.name + " · " + buildWeaponProfile(weapon, selection) + " · " + formatPoints(Number(weapon.points||0)+Number(mount.points||0)+getWeaponUpgradeCost(selection))) : "";
+    }).join("");
+  }
+
+  function renderVehicleUpgradesSummary(vehicle) {
+    var rows = [];
+    ["hull", "engine", "crew"].forEach(function (group) {
+      (vehicle.upgrades[group] || []).forEach(function (id) {
+        var upgrade = getUpgrade(group, id);
+        if (upgrade) rows.push(summaryRow(getUpgradeDisplayName(group, upgrade), upgrade.description + " · " + formatPoints(upgrade.points)));
+      });
+    });
+    return rows.length ? rows.join("") : summaryRow("Upgrades", "None");
+  }
+
+  function garageStat(label, value) { return '<span><small>' + escapeHtml(label) + '</small><strong>' + escapeHtml(value) + '</strong></span>'; }
+  function garageButton(action, id, label, cls) { return '<button type="button" class="button ' + cls + '" data-garage-action="' + action + '" data-vehicle-id="' + id + '">' + label + '</button>'; }
+  function makeGarageId() { return "v-" + Date.now().toString(36) + "-" + Math.random().toString(36).slice(2, 8); }
+
+  function createBlankGarage() { return { version: 1, name: "", vehicles: [] }; }
+  function normaliseGarage(value) {
+    var result = createBlankGarage();
+    if (!value || typeof value !== "object") return result;
+    result.name = typeof value.name === "string" ? value.name : "";
+    result.vehicles = Array.isArray(value.vehicles) ? value.vehicles.map(function (entry) {
+      var vehicle = entry && entry.vehicle ? entry.vehicle : entry;
+      return { id: entry && typeof entry.id === "string" ? entry.id : makeGarageId(), vehicle: normaliseVehicle(vehicle || {}) };
+    }) : [];
+    return result;
+  }
+  function loadGarage() {
+    try { var raw = localStorage.getItem(GARAGE_KEY); return raw ? normaliseGarage(JSON.parse(raw)) : createBlankGarage(); }
+    catch (error) { return createBlankGarage(); }
+  }
+  function saveGarage() { try { localStorage.setItem(GARAGE_KEY, JSON.stringify(garage)); } catch (error) {} }
+  function setGarageStatus(message, isError) { if (!els.garageStatus) return; els.garageStatus.textContent = message; els.garageStatus.style.color = isError ? "#fecaca" : ""; }
 
   function render() {
     els.vehicleName.value = state.name || "";
@@ -142,6 +397,24 @@
     });
   }
 
+  function getWeaponDisplayName(selection, weapon) {
+    var custom = selection && typeof selection.displayNameOverride === "string" ? selection.displayNameOverride.trim() : "";
+    return custom || (weapon ? weapon.name : "");
+  }
+
+  function getUpgradeDisplayName(groupKey, upgrade) {
+    var maps = state.upgradeNameOverrides || {};
+    var group = maps[groupKey] || {};
+    var custom = upgrade && typeof group[upgrade.id] === "string" ? group[upgrade.id].trim() : "";
+    return custom || (upgrade ? upgrade.name : "");
+  }
+
+  function promptCosmeticRename(currentName, baseName, kindLabel) {
+    var value = window.prompt("Rename " + kindLabel + " (cosmetic only). Leave blank to reset.", currentName || baseName || "");
+    if (value === null) return null;
+    return String(value).trim();
+  }
+
   function renderWeapons() {
     if (!els.weaponCatalogue || !els.selectedWeapons) return;
     var category = rules.weaponCategories.find(function (item) { return item.key === currentWeaponCategory; }) || rules.weaponCategories[0];
@@ -153,7 +426,7 @@
     }).join("");
     els.weaponCatalogue.querySelectorAll(".add-weapon").forEach(function (button) {
       button.addEventListener("click", function () {
-        state.weapons.push({ instanceId: makeId(), weaponId: button.dataset.weaponId, mountId: "hull", upgrades: blankWeaponUpgrades() });
+        state.weapons.push({ instanceId: makeId(), weaponId: button.dataset.weaponId, mountId: "hull", upgrades: blankWeaponUpgrades(), displayNameOverride: "" });
         setStatus("Weapon added.");
         render();
       });
@@ -168,12 +441,12 @@
       if (!weapon) return "";
       var total = weapon.points + getMount(selection.mountId).points + getWeaponUpgradeCost(selection);
       return '<article class="selected-weapon-card" data-instance-id="' + selection.instanceId + '">' +
-        '<div class="weapon-card-head"><div><h4>' + escapeHtml(weapon.name) + '</h4><p class="selected-weapon-profile">' + escapeHtml(buildWeaponProfile(weapon, selection)) + '</p></div><strong>' + formatPoints(total) + '</strong></div>' +
+        '<div class="weapon-card-head"><div><h4>' + escapeHtml(getWeaponDisplayName(selection, weapon)) + '</h4><p class="selected-weapon-profile">' + escapeHtml(buildWeaponProfile(weapon, selection)) + '</p></div><strong>' + formatPoints(total) + '</strong></div>' +
         '<div class="mount-options">' + rules.weaponMounts.map(function (mount) {
           return '<label><input type="radio" name="mount-' + selection.instanceId + '" value="' + mount.id + '"' + (selection.mountId === mount.id ? ' checked' : '') + '><span>' + escapeHtml(mount.shortName) + ' <small>+' + mount.points + '</small></span></label>';
         }).join("") + '</div>' +
         '<div class="weapon-upgrades">' + renderWeaponUpgradeOptions(selection) + '</div>' +
-        '<button type="button" class="remove-weapon" data-instance-id="' + selection.instanceId + '">Remove</button></article>';
+        '<div class="selected-item-actions"><button type="button" class="rename-weapon" data-instance-id="' + selection.instanceId + '">Rename</button><button type="button" class="remove-weapon" data-instance-id="' + selection.instanceId + '">Remove</button></div></article>';
     }).join("");
     els.selectedWeapons.querySelectorAll('.upgrade-toggle').forEach(function (input) {
       input.addEventListener("change", function () {
@@ -191,6 +464,17 @@
         var card = input.closest(".selected-weapon-card");
         var selection = state.weapons.find(function (item) { return item.instanceId === card.dataset.instanceId; });
         if (selection) selection.mountId = input.value;
+        render();
+      });
+    });
+    els.selectedWeapons.querySelectorAll(".rename-weapon").forEach(function (button) {
+      button.addEventListener("click", function () {
+        var selection = state.weapons.find(function (item) { return item.instanceId === button.dataset.instanceId; });
+        var weapon = selection ? getWeapon(selection.weaponId) : null;
+        if (!selection || !weapon) return;
+        var renamed = promptCosmeticRename(selection.displayNameOverride || "", weapon.name, "weapon");
+        if (renamed === null) return;
+        selection.displayNameOverride = renamed;
         render();
       });
     });
@@ -217,11 +501,30 @@
       return '<label class="upgrade-card' + (selected ? ' selected' : '') + '">' +
         '<input type="checkbox" class="vehicle-upgrade-toggle" data-group="' + groupKey + '" data-upgrade-id="' + upgrade.id + '"' + (selected ? ' checked' : '') + '>' +
         '<span class="upgrade-card-body">' +
-          '<span class="upgrade-card-head"><strong>' + escapeHtml(upgrade.name) + '</strong><b>' + formatPoints(upgrade.points) + '</b></span>' +
+          '<span class="upgrade-card-head"><strong>' + escapeHtml(getUpgradeDisplayName(groupKey, upgrade)) + '</strong><b>' + formatPoints(upgrade.points) + '</b></span>' +
           '<span class="upgrade-description">' + escapeHtml(upgrade.description) + '</span>' +
+          '<button type="button" class="rename-upgrade" data-group="' + groupKey + '" data-upgrade-id="' + upgrade.id + '">Rename</button>' +
         '</span>' +
       '</label>';
     }).join("");
+
+    container.querySelectorAll(".rename-upgrade").forEach(function (button) {
+      button.addEventListener("click", function (event) {
+        event.preventDefault();
+        event.stopPropagation();
+        var group = button.dataset.group;
+        var upgrade = getUpgrade(group, button.dataset.upgradeId);
+        if (!upgrade) return;
+        if (!state.upgradeNameOverrides) state.upgradeNameOverrides = { hull: {}, engine: {}, crew: {} };
+        if (!state.upgradeNameOverrides[group]) state.upgradeNameOverrides[group] = {};
+        var current = state.upgradeNameOverrides[group][upgrade.id] || "";
+        var renamed = promptCosmeticRename(current, upgrade.name, "upgrade");
+        if (renamed === null) return;
+        if (renamed) state.upgradeNameOverrides[group][upgrade.id] = renamed;
+        else delete state.upgradeNameOverrides[group][upgrade.id];
+        render();
+      });
+    });
 
     container.querySelectorAll(".vehicle-upgrade-toggle").forEach(function (input) {
       input.addEventListener("change", function () {
@@ -246,13 +549,19 @@
     return state.upgrades[groupKey].map(function (id) { return getUpgrade(groupKey, id); }).filter(Boolean);
   }
 
-  function getEffectiveStats() {
-    var chassis = getSelectedChassis();
+
+  function getChassisFor(vehicle) {
+    return rules.chassis.find(function (item) { return item.id === vehicle.chassisId; }) || null;
+  }
+
+  function getEffectiveStatsFor(vehicle) {
+    var chassis = getChassisFor(vehicle);
     if (!chassis) return null;
     var stats = Object.assign({}, chassis.stats);
     ["hull", "engine", "crew"].forEach(function (groupKey) {
-      getSelectedUpgrades(groupKey).forEach(function (upgrade) {
-        if (!upgrade.statMods) return;
+      ((vehicle.upgrades && vehicle.upgrades[groupKey]) || []).forEach(function (id) {
+        var upgrade = getUpgrade(groupKey, id);
+        if (!upgrade || !upgrade.statMods) return;
         Object.keys(upgrade.statMods).forEach(function (key) {
           if (stats[key] === null || stats[key] === undefined || stats[key] === "") return;
           stats[key] = Number(stats[key]) + Number(upgrade.statMods[key] || 0);
@@ -262,11 +571,29 @@
     return stats;
   }
 
+  function calculateVehiclePoints(vehicle) {
+    var chassis = getChassisFor(vehicle);
+    var total = chassis ? Number(chassis.cost || 0) : 0;
+    (vehicle.weapons || []).forEach(function (selection) {
+      var weapon = getWeapon(selection.weaponId), mount = getMount(selection.mountId);
+      if (weapon) total += Number(weapon.points || 0) + Number(mount.points || 0) + getWeaponUpgradeCost(selection);
+    });
+    ["hull", "engine", "crew"].forEach(function (groupKey) {
+      (((vehicle.upgrades || {})[groupKey]) || []).forEach(function (id) {
+        var upgrade = getUpgrade(groupKey, id);
+        if (upgrade) total += Number(upgrade.points || 0);
+      });
+    });
+    return total;
+  }
+
+  function getEffectiveStats() { return getEffectiveStatsFor(state); }
+
   function renderUpgradeSummary(groupKey, label) {
     var selected = getSelectedUpgrades(groupKey);
     if (!selected.length) return summaryRow(label, "None");
     return selected.map(function (upgrade) {
-      return summaryRow(upgrade.name, upgrade.description + " · " + formatPoints(upgrade.points));
+      return summaryRow(getUpgradeDisplayName(groupKey, upgrade), upgrade.description + " · " + formatPoints(upgrade.points));
     }).join("");
   }
 
@@ -334,7 +661,7 @@
           (state.weapons.length ? state.weapons.map(function (selection) {
             var weapon = getWeapon(selection.weaponId);
             var mount = getMount(selection.mountId);
-            return weapon ? summaryRow(weapon.name, mount.name + " · " + buildWeaponProfile(weapon, selection) + " · " + formatPoints(weapon.points + mount.points + getWeaponUpgradeCost(selection))) : "";
+            return weapon ? summaryRow(getWeaponDisplayName(selection, weapon), mount.name + " · " + buildWeaponProfile(weapon, selection) + " · " + formatPoints(weapon.points + mount.points + getWeaponUpgradeCost(selection))) : "";
           }).join("") : summaryRow("Weapons", "None")) +
           renderUpgradeSummary("hull", "Hull upgrades") +
           renderUpgradeSummary("engine", "Engine upgrades") +
@@ -391,21 +718,7 @@
     return value + " pts";
   }
 
-  function calculatePoints() {
-    var chassis = getSelectedChassis();
-    var total = chassis ? Number(chassis.cost || 0) : 0;
-    state.weapons.forEach(function (selection) {
-      var weapon = getWeapon(selection.weaponId);
-      var mount = getMount(selection.mountId);
-      if (weapon) total += Number(weapon.points || 0) + Number(mount.points || 0) + getWeaponUpgradeCost(selection);
-    });
-    ["hull", "engine", "crew"].forEach(function (groupKey) {
-      getSelectedUpgrades(groupKey).forEach(function (upgrade) {
-        total += Number(upgrade.points || 0);
-      });
-    });
-    return total;
-  }
+  function calculatePoints() { return calculateVehiclePoints(state); }
 
   function getSelectedChassis() {
     return rules.chassis.find(function (item) { return item.id === state.chassisId; }) || null;
@@ -423,13 +736,19 @@
           instanceId: typeof item.instanceId === "string" ? item.instanceId : makeId(),
           weaponId: rules.weapons.some(function (weapon) { return weapon.id === item.weaponId; }) ? item.weaponId : null,
           mountId: rules.weaponMounts.some(function (mount) { return mount.id === item.mountId; }) ? item.mountId : "hull",
-          upgrades: Object.assign(blankWeaponUpgrades(), item.upgrades || {})
+          upgrades: Object.assign(blankWeaponUpgrades(), item.upgrades || {}),
+          displayNameOverride: typeof item.displayNameOverride === "string" ? item.displayNameOverride : ""
         };
       }).filter(function (item) { return item.weaponId; }) : [],
       upgrades: {
         hull: vehicle.upgrades && Array.isArray(vehicle.upgrades.hull) ? vehicle.upgrades.hull.filter(function (id) { return !!getUpgrade("hull", id); }) : [],
         engine: vehicle.upgrades && Array.isArray(vehicle.upgrades.engine) ? vehicle.upgrades.engine.filter(function (id) { return !!getUpgrade("engine", id); }) : [],
         crew: vehicle.upgrades && Array.isArray(vehicle.upgrades.crew) ? vehicle.upgrades.crew.filter(function (id) { return !!getUpgrade("crew", id); }) : []
+      },
+      upgradeNameOverrides: {
+        hull: Object.assign({}, vehicle.upgradeNameOverrides && vehicle.upgradeNameOverrides.hull || {}),
+        engine: Object.assign({}, vehicle.upgradeNameOverrides && vehicle.upgradeNameOverrides.engine || {}),
+        crew: Object.assign({}, vehicle.upgradeNameOverrides && vehicle.upgradeNameOverrides.crew || {})
       }
     };
   }
@@ -448,6 +767,7 @@
   }
 
   function autosaveVehicle() {
+    if (els.builderView && !els.builderView.classList.contains("active")) return;
     try {
       localStorage.setItem(AUTOSAVE_KEY, JSON.stringify(state));
     } catch (error) {
@@ -507,16 +827,16 @@
               })
             : [{ label: "", profile: buildWeaponProfile(weapon, selection) }];
           return {
-            name: weapon.name,
+            name: getWeaponDisplayName(selection, weapon),
             mount: mount.name,
             profiles: profileSource,
             points: Number(weapon.points || 0) + Number(mount.points || 0) + getWeaponUpgradeCost(selection)
           };
         }).filter(Boolean),
         upgrades: {
-          hull: getSelectedUpgrades("hull").map(function (u) { return { name:u.name, description:u.description, points:u.points }; }),
-          engine: getSelectedUpgrades("engine").map(function (u) { return { name:u.name, description:u.description, points:u.points }; }),
-          crew: getSelectedUpgrades("crew").map(function (u) { return { name:u.name, description:u.description, points:u.points }; })
+          hull: getSelectedUpgrades("hull").map(function (u) { return { name:getUpgradeDisplayName("hull", u), description:u.description, points:u.points }; }),
+          engine: getSelectedUpgrades("engine").map(function (u) { return { name:getUpgradeDisplayName("engine", u), description:u.description, points:u.points }; }),
+          crew: getSelectedUpgrades("crew").map(function (u) { return { name:getUpgradeDisplayName("crew", u), description:u.description, points:u.points }; })
         }
       };
     }
