@@ -142,10 +142,10 @@
 
   function buildDamageConditions() {
     var conditions = [
-      ["RATTLING", "11+"],
-      ["FUNNY NOISE", "9+"],
+      ["RATTLING", "3+"],
+      ["FUNNY NOISE", "5+"],
       ["SUMFINK’S VERY WRONG", "7+"],
-      ["MEK SAYS IT\'S FINE", "5+"]
+      ["MEK SAYS IT\'S FINE", "9+"]
     ];
 
     return '<section class="damage-conditions">' +
