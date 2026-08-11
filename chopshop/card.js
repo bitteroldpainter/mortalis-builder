@@ -74,7 +74,7 @@
       '<section class="stats-row">' + statItems.map(function (item) {
         return '<div class="stat"><span>' + esc(item[0]) + '</span><strong>' + esc(item[1]) + '</strong></div>';
       }).join("") + '</section>' +
-      '<div class="card-body">' + weapons + upgrades + '</div>' +
+      '<div class="card-body">' + weapons + upgrades + buildDamageConditions() + '</div>' +
     '</article>';
   }
 
@@ -138,6 +138,21 @@
             return '<p><strong>' + esc(upgrade.name) + ':</strong> ' + esc(upgrade.description) + '</p>';
           }).join("") + '</div>';
       }).join("") + '</div></section>';
+  }
+
+  function buildDamageConditions() {
+    var conditions = [
+      ["RATTLING", "11+"],
+      ["FUNNY NOISE", "9+"],
+      ["SUMFINK’S VERY WRONG", "7+"],
+      ["MEK SAYS IT\'S FINE", "5+"]
+    ];
+
+    return '<section class="damage-conditions">' +
+      conditions.map(function (condition) {
+        return '<div class="damage-condition"><span class="damage-checkbox"></span>' +
+          '<strong>' + esc(condition[0]) + '</strong><b>' + esc(condition[1]) + '</b></div>';
+      }).join("") + '</section>';
   }
 
   function buildHpPips(hull) {
@@ -465,6 +480,49 @@
 
 
       
+      .damage-conditions{
+        flex:0 0 auto;
+        display:grid;
+        grid-template-columns:repeat(4,minmax(0,1fr));
+        gap:6px;
+        width:100%;
+      }
+      .damage-condition{
+        min-width:0;
+        display:grid;
+        grid-template-columns:15px minmax(0,1fr) auto;
+        align-items:center;
+        gap:5px;
+        padding:5px 6px;
+        border:2px solid var(--ink);
+        border-radius:7px;
+        background:rgba(255,255,255,.95);
+        white-space:nowrap;
+      }
+      .damage-checkbox{
+        width:13px;
+        height:13px;
+        border:1.8px solid var(--ink);
+        border-radius:2px;
+        background:#fff;
+        box-sizing:border-box;
+      }
+      .damage-condition strong{
+        min-width:0;
+        font-family:"Kdam Thmor Pro",system-ui,sans-serif;
+        font-size:9.2px;
+        font-weight:400;
+        line-height:1;
+        overflow:hidden;
+        text-overflow:clip;
+      }
+      .damage-condition b{
+        font-family:"Kdam Thmor Pro",system-ui,sans-serif;
+        font-size:11px;
+        font-weight:400;
+        line-height:1;
+      }
+
       .card-kicker,
       .card-header h1,
       .chassis-name{
