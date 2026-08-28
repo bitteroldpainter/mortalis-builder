@@ -452,7 +452,7 @@
   {
     id: "horrifyingDismemberment",
     name: "Horrifying Dismemberment",
-    category: "Offensive",
+    category: "Utility",
     points: 2,
     effect:
       "When this Fighter slays an enemy in Close Combat, enemy Fighters within 6\" of the slain Fighter get -1 AP for the rest of the turn."
@@ -508,7 +508,7 @@
   {
     id: "reanimation",
     name: "Reanimation",
-    category: "Offensive",
+    category: "Utility",
     points: 4,
     effect:
       "When a Fighter with Reanimation is slain, place a token within 1\". At the start of each turn, on 5+ it is reanimated within 1\" with D3+2 HP and may act as normal. A Fighter can only be reanimated once; fail = leave the token and try next turn."
@@ -516,7 +516,7 @@
   {
     id: "vengeance",
     name: "Vengeance",
-    category: "Mobility",
+    category: "Offensive",
     points: 2,
     effect:
       "When an enemy slays one of your Fighters, that enemy gains a Vengeance token. Fighters with Vengeance may turn one normal hit into a Crit when attacking an enemy with a Vengeance token. Remove the token when the enemy is slain; Vengeance tokens stack."
@@ -524,10 +524,10 @@
   {
     id: "powerFromPain",
     name: "Power from Pain",
-    category: "Defensive",
+    category: "Utility",
     points: 4,
     effect:
-      "This Fighter gains a PfP token each time it injures or slays an enemy. During its activation it may spend PfP to: gain 1 AP (this turn), regain D3+1 HP, or gain Reroll (SR) on all weapons (this turn)."
+      "This Fighter gains a PfP token each time it injures or slays an enemy in Close Combat. During its activation it may spend PfP to: gain 1 AP (this turn), regain D3+1 HP, or gain Reroll (SR) on all weapons (this turn)."
   },
   {
     id: "ruthless",
@@ -546,9 +546,19 @@
       "At the beginning of this Fighter’s activation, it regains D3+1 lost HP."
   },
   {
+    id: "resilient",
+    name: "Resilient",
+    category: "Defensive",
+    points: "+25% of HP Stat",
+    dynamicType: "percentHp",
+    dynamicFactor: 1/4,
+    effect:
+      "Whenever this Fighter takes damage from an attack, remove 1 point of damage from the Normal Damage characteristic of the weapon, to a minimum of 1. (Eg. Damage 3/4 becomes Damage 2/4, etc.)"
+  },
+  {
     id: "extremelyResilient",
     name: "Extremely Resilient",
-    category: "Mobility",
+    category: "Defensive",
     points: "+33% of HP Stat",
     dynamicType: "percentHp",
     dynamicFactor: 1/3,
@@ -566,7 +576,7 @@
   {
     id: "noxiousPresence",
     name: "Noxious Presence",
-    category: "Defensive",
+    category: "Utility",
     points: 4,
     effect:
       'Enemy Fighters within 3" reduce their DEF by 1. This stacks with other Noxious Presence auras.'
@@ -574,7 +584,7 @@
   {
     id: "scarred",
     name: "Scarred",
-    category: "Defensive",
+    category: "Offensive",
     points: 3,
     effect:
       "Once per turn in Close Combat, this Fighter may lose 1 HP to reroll one attack die. If the reroll hits, add +1 Damage; if it misses, the Fighter loses 1 additional HP."
@@ -582,7 +592,7 @@
   {
     id: "bornInDarkness",
     name: "Born in Darkness",
-    category: "Offensive",
+    category: "Utility",
     points: 5,
     effect:
       'This Fighter cannot be targeted by Shooting attacks from 12" or more away, and cannot make Shooting attacks at targets 12" or more away.'
@@ -601,7 +611,7 @@
     category: "Offensive",
     points: 4,
     effect:
-      "This Fighter can use the Shoot action even while Hidden."
+      "This Fighter can use the Shoot action (only Pistols/Grenades/Light/Medium Ranged Weapons) even while Hidden, and may Hide in an Activation it has performed a Shoot Action."
   },
   {
     id: "safeguard",
@@ -626,14 +636,6 @@
     points: 3,
     effect:
       "Whenever this Fighter kills an enemy in Melee, increase Crit Damage for all its Melee weapons by +2 for the rest of the battle."
-  },
-  {
-    id: "overwatch",
-    name: "Overwatch",
-    category: "Mobility",
-    points: 4,
-    effect:
-      'When an enemy ends a Move within 6" and visible (but not within 1"), this Fighter may immediately Shoot with -2 to hit. Counts as its Counteract action for the turn.'
   },
   {
     id: "endlessHorde",
@@ -664,7 +666,7 @@
   {
     id: "agent",
     name: "Agent",
-    category: "Defensive",
+    category: "Utility",
     points: 2,
     effect:
       "The AP cost of all Interact actions for this Fighter is reduced by 1 (to a minimum of 0)."
@@ -672,11 +674,36 @@
   {
     id: "sacrificialFollower",
     name: "Sacrificial Follower",
-    category: "Defensive",
+    category: "Utility",
     points: 4,
     effect:
-      'When within 6" of a Friendly Psyker, add 1 Warp Token to your Pool each turn. When within 6", may also suffer any MW suffered by use of Warp Tokens, instead of Psyker.'
+      'When within 6" of a Friendly Psyker, add 1 Warp Dice to your Warp Dice Pool each turn. If within 3", the Fighter may also suffer any effects of Perils of the Warp, instead of the Psyker. Choose who suffers before rolling.'
   },
+  {
+    id: "soulAnchor",
+    name: "Soul Anchor",
+    category: "Utility",
+    points: 4,
+    effect:
+      'Psyker Only. When this Psyker is Slain, before removing it from the Battlefield, it may immediately perform one last Manifestation, made exactly like a normal Manifestation, with the risk of Perils.'
+  },
+  {
+    id: "hexmarked",
+    name: "Hexmarked",
+    category: "Utility",
+    points: 3,
+    effect:
+      'Any Psykers within 12" of this Fighter treat both Natural 1\'s and Natural 2\'s as Triggers for Perils of the Warp.'
+  },
+  {
+    id: "recklessPsyker",
+    name: "Reckless Psyker",
+    category: "Utility",
+    points: 6,
+    effect:
+      'Psyker Only. This Psyker may choose to gain a +2 to its Manifest Roll at any time, but Natural 2\'s trigger Perils and Natural 1\'s trigger TWO rolls on the Perils table. Choose before rolling, and if both triggers appear, only 1\'s are applied.'
+  },
+
   {
     id: "patientandReactive",
     name: "Patient and Reactive",
@@ -688,7 +715,7 @@
   {
     id: "finalDefiance",
     name: "Final Defiance",
-    category: "Defensive",
+    category: "Utility",
     points: 4,
     effect:
       'When this Fighter is slain, it may immediately perform one last action before removing it from play. '
@@ -704,20 +731,28 @@
   {
     id: "coordinated",
     name: "Coordinated",
-    category: "Defensive",
+    category: "Utility",
     points: 3,
     effect:
       'When activating a Fighter with Coordinated, you may choose and activate 1 other Fighter with Coordinated immediately after. This ability can only be taken on Fighters with 2 AP or less, 10 HP or less and max. 3/4 damage Weapons.'
   },
   {
+    id: "strikefromtheShadows",
+    name: "Strike from the Shadows",
+    category: "Offensive",
+    points: 3,
+    effect:
+      'The Fighter may perform the Fight Action even while Hidden, and may Hide in an Activation it has performed the Fight Action.'
+  },
+  {
     id: "superhumanWarrior",
     name: "Superhuman Warrior",
-    category: "Offensive",
+    category: "Utility",
     points: 10,
     effect:
       "This Fighter may perform 2 Shooting actions or 2 Close Combat actions in its activation. If using a Special/Heavy weapon, the second Shoot costs 2 AP. When Counteracting, it may perform 2 different actions."
   }
-];
+      ];
 
   var LEADER_ABILITIES = [
         {
@@ -860,214 +895,148 @@
 
   var SPELLS = [
         {
-          id: "tempest",
-          name: "TEMPEST",
-    category: "Other",
-          cv: 7,
-          points: 0,
-          effect:
-            'Range: 16"<br><br>' +
-            'Target suffers D3 MW; roll a D12: on 11–12, push target D6" directly away and Knock Prone (loses 1 AP next activation).<br><br>' +
-            "Power Surge (MV 9): Deals +2 MW before the push."
-        },
-        {
-          id: "graviticMaelstrom",
-          name: "GRAVITIC MAELSTROM",
-    category: "Other",
-          cv: 9,
-          points: 0,
-          effect:
-            'Range: 12", 3" AoE<br><br>' +
-            'All models inside must roll 7+ or be dragged D3" toward the center and suffer D3 MW.<br><br>' +
-            "Power Surge (MV 11): Fighters dragged suffer D3+2 MW."
-        },
-               {
-          id: "spectralChains",
-          name: "SPECTRAL CHAINS",
-    category: "Other",
-          cv: 9,
-          points: 0,
-          effect:
-            'Range: 10"<br><br>' +
-            "Target Fighter may immediately be moved up to 6” by the Conjuring Warlock’s Player.<br><br>" +
-            "Power Surge (CV 11): Target also suffers D3 MW if it repositions in it's own activation this turn."
-        },
-        {
-          id: "stolenSight",
-          name: "STOLEN SIGHT",
-    category: "Other",
-          cv: 7,
-          points: 0,
-          effect:
-            'Range: 12"<br><br>' +
-            "In its next activation, Target suffers –3 to Shoot; if Engaged, suffers –2 to Fight instead.<br><br>" +
-            "Power Surge (MV 9): –4 to Shoot, –3 to Fight."
-        },
-        {
-          id: "twistOfWill",
-          name: "TWIST OF WILL",
-    category: "Other",
-          cv: 7,
-          points: 0,
-          effect:
-            'Range: 12"<br><br>' +
-            "Target must reroll all successful attack rolls on its next activation.<br><br>" +
-            "Power Surge (MV 9): Target also cannot Charge until next turn."
-        },
-        {
           id: "voidfireBlast",
           name: "VOIDFIRE BLAST",
-    category: "Destructive",
+          category: "Destructive",
           cv: 9,
           points: 0,
-          effect:
-            'Range: 12"<br><br>' +
-            "Pick any point. All models within 2\" suffer 2D3 MW. Psyker suffers 1 MW.<br><br>" +
-            "Power Surge (MV 11): Radius becomes 4\"."
+          effect: 'Range: 12"<br><br>Effect: Pick a point within 12". All models within 2" of impact suffer 3 Mortal Wounds each.<br><br>Critical Manifestation: Same as above, but radius increases to 4” and the Psyker suffers 1 Mortal Wound.'
         },
         {
           id: "blazingWind",
           name: "BLAZING WIND",
-    category: "Other",
+          category: "Destructive",
           cv: 7,
           points: 0,
-          effect:
-            'Range: 12"<br><br>' +
-            'Target suffers D3 Damage and is moved 2" directly away.<br><br>' +
-            "Power Surge (MV 9): D3+1 Damage and 4\" push."
+          effect: 'Range: 12"<br><br>Effect: Target suffers 3 MW and is moved 2" directly away from the Psyker.<br><br>Critical Manifestation: Target suffers 4 MW and is moved 4" directly away.'
         },
         {
           id: "fireblast",
           name: "FIREBLAST",
-    category: "Destructive",
+          category: "Destructive",
           cv: 7,
           points: 0,
-          effect:
-            'Range: 12"<br><br>' +
-            "Target suffers D3+1 Damage.<br><br>" +
-            "Power Surge (MV 9): Target also gains a Fire token."
+          effect: 'Range: 12"<br><br>Effect: Target suffers 3 MW and gains a Fire token.<br><br>Critical Manifestation: Target suffers 5 MW and gains a Fire token.'
         },
         {
           id: "lightningBolt",
           name: "LIGHTNING BOLT",
-    category: "Destructive",
+          category: "Destructive",
           cv: 8,
           points: 0,
-          effect:
-            "Range: —<br><br>" +
-            "Target suffers D3+2 MW.<br><br>" +
-            "Power Surge (MV 10): D3+3 MW."
+          effect: 'Range: -<br><br>Effect: Target suffers 4 Mortal Wounds.<br><br>Critical Manifestation: Target suffers 6 Mortal Wounds.'
         },
         {
-          id: "mendFlesh",
-          name: "MEND FLESH",
-    category: "Other",
-          cv: 6,
+          id: "tempest",
+          name: "TEMPEST",
+          category: "Control",
+          cv: 7,
           points: 0,
-          effect:
-            'Range: 12"<br><br>' +
-            "Restore D3+1 HP to a friendly Fighter.<br><br>" +
-            "Power Surge (MV 10): Restore D3+2 HP and remove 1 Poison/Burning token."
+          effect: 'Range: 16"<br><br>Effect: Target suffers D3 Mortal Wounds; roll a D12 - on 11 or 12, push the target D6" directly away from the Psyker and it is knocked Prone (loses 1 AP next Activation).<br><br>Critical Manifestation: Same as above, but Target suffers D3+2 Mortal Wounds before the push/Prone check.'
+        },
+        {
+          id: "graviticMaelstrom",
+          name: "GRAVITIC MAELSTROM",
+          category: "Control",
+          cv: 9,
+          points: 0,
+          effect: 'Range: 12", 3" Area of Effect<br><br>Effect: All models inside AoE must roll 7+ on a D12 or be dragged D3" toward the center and suffer D3 Mortal Wounds.<br><br>Critical Manifestation: Same as above, but Fighters dragged suffer D3+2 Mortal Wounds instead.'
+        },
+        {
+          id: "stolenSight",
+          name: "STOLEN SIGHT",
+          category: "Control",
+          cv: 7,
+          points: 0,
+          effect: 'Range: 12"<br><br>Effect: Target suffers -3 to Shoot until end of Turn; if already Engaged, instead suffers -2 to Fight.<br><br>Critical Manifestation: Target suffers -4 to Shoot, -3 to Fight (both apply) until end of Turn.'
+        },
+        {
+          id: "twistOfWill",
+          name: "TWIST OF WILL",
+          category: "Control",
+          cv: 7,
+          points: 0,
+          effect: 'Range: 12"<br><br>Effect: Target must reroll all successful attack rolls on its next Activation.<br><br>Critical Manifestation: In addition to the above, target also cannot Charge until the start of next Turn.'
         },
         {
           id: "circleOfWarding",
           name: "WARP FIELD",
-    category: "Buff",
+          category: "Buff",
           cv: 6,
           points: 0,
-          effect:
-            'Range: 3" aura<br><br>' +
-            "Friendly Fighters inside gain +2 DEF (max 5+) and cannot be Charged this turn.<br><br>" +
-            "Power Surge (MV 8): Circle lasts until next activation."
+          effect: 'Range: 3" radius circle centered on the Psyker<br><br>Effect: Until end of Turn, Friendly Fighters inside gain +2 DEF (max 5+) and cannot be Charged.<br><br>Critical Manifestation: In addition to the above, the Circle remains until the start of the Psyker\'s next Activation.'
+        },
+        {
+          id: "mendFlesh",
+          name: "MEND FLESH",
+          category: "Buff",
+          cv: 6,
+          points: 0,
+          effect: 'Range: 12"<br><br>Effect: Restore 3 HP to a Friendly Fighter.<br><br>Critical Manifestation: Restore 5 HP and remove one Poison/Burning token.'
         },
         {
           id: "arcaneAegis",
           name: "IMMATERIAL SHIELD",
-    category: "Other",
+          category: "Buff",
           cv: 7,
           points: 0,
-          effect:
-            'Range: 6"<br><br>' +
-            "Target gains +2 DEF (max 5+) until next turn.<br><br>" +
-            "Power Surge (MV 9): Target ignores first 2 Damage from next attack."
+          effect: 'Range: 6"<br><br>Effect: Target gains +2 DEF (max 5+) until the start of next Turn.<br><br>Critical Manifestation: In addition to the above, Target also ignores the first 2 Damage it suffers the next time an attack causes Damage to it.'
         },
         {
           id: "spectralDecoy",
           name: "SPECTRAL DECOY",
-    category: "Other",
+          category: "Buff",
           cv: 6,
           points: 0,
-          effect:
-            "Range: Self<br><br>" +
-            "First attack against the Psyker before next activation automatically misses.<br><br>" +
-            "Power Surge (MV 8): On 5+, reflect that missed ranged attack for D3 Damage."
+          effect: 'Range: Self<br><br>Effect: Until the Psykers next Activation, remove one successful Normal attack die each time the Psyker is attacked.<br><br>Critical Manifestation: In addition to the above, the Psyker may also ignore a second successful attack die once, until its next Activation.'
         },
         {
           id: "soulflameSurge",
           name: "SOULFLAME SURGE",
-    category: "Destructive",
+          category: "Other",
           cv: 8,
           points: 0,
-          effect:
-            'Range: 12"<br><br>' +
-            'A friendly Fighter gains +1 ATK and “Crits on 9+” on CC weapons until end of Turn.<br><br>' +
-            "Power Surge (MV 10): Affect two Fighters instead of one."
+          effect: 'Range: 12"<br><br>Effect: A Friendly Fighter gains +1 ATK and its Close Combat weapons gain Crits on 9+ until end of Turn.<br><br>Critical Manifestation: Same as above, but affects two Friendly Fighters within 12" instead of one.'
         },
         {
           id: "veilOfShadows",
           name: "VEIL OF SHADOWS",
-    category: "Other",
+          category: "Other",
           cv: 7,
           points: 0,
-          effect:
-            'Range: 6"<br><br>' +
-            "Target becomes Hidden, removed from engagement, placed up to 3\" away from enemies.<br><br>" +
-            "Power Surge (MV 9): Target may act normally; remove Hidden immediately."
+          effect: 'Range: Self or Friendly Fighter within 6"<br><br>Effect: Target becomes Hidden, unlocked from combat (if applicable), and the controlling player may place it up to 3" away from its current position, and not within 1" of an Enemy Fighter.<br><br>Critical Manifestation: Same as above, but the Target is placed up to 6" away instead of 3"'
         },
-   
         {
           id: "phantasmalHorror",
           name: "PHANTASMAL HORROR",
-    category: "Other",
+          category: "Other",
           cv: 8,
           points: 0,
-          effect:
-            'Range: 12"<br><br>' +
-            "Target must roll ≤ AP×2 on D12 or cannot Charge/move closer this turn.<br><br>" +
-            "Power Surge (MV 10): Must roll ≤ AP instead."
+          effect: 'Range: 12"<br><br>Effect: Target must roll equal to or below its AP × 2 on a D12, or it cannot Charge or Move closer to Fighters in the Psyker\'s Team this Turn.<br><br>Critical Manifestation: Same as above, but the target must instead roll equal to or below its AP on a D12.'
         },
         {
           id: "siphonLife",
           name: "SIPHON LIFE",
-    category: "Other",
+          category: "Other",
           cv: 7,
           points: 0,
-          effect:
-            'Range: 8"<br><br>' +
-            "Target suffers D3 MW; Psyker heals the same amount.<br><br>" +
-            "Power Surge (MV 9): D3+2 MW/heal."
+          effect: 'Range: 8"<br><br>Effect: Target suffers 3 Mortal Wounds; the Psyker regains the same (to a maximum of its starting HP).<br><br>Critical Manifestation: Target suffers 5 Mortal Wounds; the Psyker regains the same.'
         },
         {
           id: "veilOfSouls",
           name: "VEIL OF SOULS",
-    category: "Other",
+          category: "Other",
           cv: 8,
           points: 0,
-          effect:
-            "Range: Self<br><br>" +
-            "Until next activation, Psyker gains +1 DEF; enemies within 3\" suffer –1 to Hit.<br><br>" +
-            "Power Surge (MV 10): Psyker instead gains +2 DEF."
+          effect: 'Range: Self<br><br>Effect: Until the Psykers next Activation, the Psyker gains +1 DEF; enemies within 3" suffer -1 to Hit.<br><br>Critical Manifestation: Same as above, but the Psyker gains +2 DEF instead; enemies within 3" still suffer -1 to Hit.'
         },
         {
           id: "etherealBody",
           name: "ETHEREAL BODY",
-    category: "Other",
+          category: "Other",
           cv: 7,
           points: 0,
-          effect:
-            "Range: Self<br><br>" +
-            "Move through models and terrain (cannot end inside them or within 1\" of enemies unless Charging).<br><br>" +
-            "Power Surge (MV 9): Also gain +2 DEF until next turn."
+          effect: 'Range: Self<br><br>Effect: The Psyker may move through models and terrain as if they were not there, but cannot end movement within solid objects or within 1" of Enemy Fighters (unless using a Charge).<br><br>Critical Manifestation: The Psyker also gains +2 DEF until the start of next Turn.'
         }
       ];
 
@@ -1075,7 +1044,7 @@
         {
           id: "medipackKIT",
           name: "Medipack Kit (+)",
-    category: "Defensive",
+    category: "Utility",
           points: 4,
           effect: '1 AP: Friendly Fighter within 1" regains 2D3 lost HP.'
         },
@@ -1109,7 +1078,7 @@
         {
           id: "banner",
           name: "Banner (+)",
-    category: "Offensive",
+    category: "Utility",
           points: 2,
           effect: 'Friendly Fighters within 3" gain +1 to Hit with CC and Shooting attacks.'
         },
@@ -1153,7 +1122,7 @@
         {
           id: "combatDrugs",
           name: "Combat Drugs",
-    category: "Defensive",
+    category: "Utility",
           points: 6,
           effect:
             "At start of activation choose: (1) Heal 2D3 HP, (2) Reroll (SR) on CC attacks this turn, or (3) +2\" Move this turn. One use per Option only."
@@ -1175,7 +1144,7 @@
         {
           id: "reconDrone",
           name: "Recon Drone/Servo Skull",
-    category: "Defensive",
+    category: "Offensive",
           points: 4,
           effect:
             "1 AP: Mark an enemy in LoS. Shooting vs that Fighter ignores negative To Hit modifiers from Light Cover and Hidden until end of turn."
@@ -1233,7 +1202,7 @@
     category: "Mobility",
           points: 5,
           effect:
-            '1 AP Move action: Place this Fighter within 1" of a chosen visible point on terrain, not within 1" of enemies. This Fighter may not have any Ranged Weapons.'
+            '1 AP Move action: Place this Fighter within 1" of a chosen visible point on terrain, not within 1" of enemies. This Fighter may not have any Ranged Weapons, and no more than 2 AP and 10 HP.'
         },
         {
           id: "macabreMemento",
@@ -1261,7 +1230,7 @@
         {
           id: "targetingDesignator",
           name: "Targeting Designator (+)",
-    category: "Mobility",
+    category: "Offensive",
           points: 14,
           effect:
             'Gain an additional Ranged weapon: Cannon Strike – ATK 4, Hit 6+, DMG 3/5, Blast (2"), Heavy (Dash), may be used while Hidden.'
@@ -1277,14 +1246,14 @@
         {
           id: "gravShute",
           name: "Grav Shute/Sliders",
-    category: "Defensive",
+    category: "Mobility",
           points: 3,
           effect: "This Fighter ignores vertical height when dropping down."
         },
         {
           id: "gorgetProtection",
           name: "Gorget Protection",
-    category: "Offensive",
+    category: "Defensive",
           points: 4,
           effect:
             "Enemy Fighters can only score Critical Hits on 11+ in CC against this Fighter."
@@ -1300,7 +1269,7 @@
           {
           id: "markerLights",
           name: "Markerlights",
-    category: "Defensive",
+    category: "Offensive",
           points: 5,
           effect:
             "1 AP action: Place a Markerlight token on an enemy Fighter in this Fighters line of sight. When a Fighter with the Markerlights ability is shooting at a Fighter with Markerlights tokens, its weapons gain No Cover (if 1 token) and No Cover + Reroll(1) (if 2 tokens)"
@@ -1308,7 +1277,7 @@
           {
           id: "hyperstaticField",
           name: "Hyperstatic Field",
-    category: "Mobility",
+    category: "Defensive",
           points: 5,
           effect:
             'Whenever an enemy Fighter moves within 1", roll 3D12; for each 9+ that enemy suffers 1 MW.'
@@ -1322,9 +1291,17 @@
             'This Fighter has +2 to hit when using Grenades'
         },
         {
+          id: "mountBike",
+          name: "Mount/Bike",
+    category: "Mobility",
+          points: 12,
+          effect:
+            'Fighter gains 12" move. Cannot move through terrain or scale walls of any kind. Only exception is stairs. The Fighter gains no extra movement from Dash or Charge actions either. Fighter has +1 normal and crit damage when fighting in Close Combat in the same activation as the Fighter charges. The mounted Fighter gets a -2 to Hit modifier when shooting, if it moves more than 8" in its activation.'
+        },
+        {
           id: "suicideBomber",
           name: "Suicide Bomber",
-    category: "Mobility",
+    category: "Offensive",
           points: 4,
           effect:
             'The Fighter gains following:  0 AP Action: Roll a D12. On 5+, Every Fighter within 1” of this Fighter suffers D3+2 MW. No matter the result of the dice roll, Remove the Fighter from the Battlefield, although it does not count as Slain for VP purposes or triggering effects.'
@@ -1335,9 +1312,24 @@
     category: "Utility",
           points: 4,
           effect:
-            'Add one Warp Token to your Pool each turn.'
+            'Psyker Only. Increase the Psykers Warp Dice Pool by 1.'
+        },
+        {
+          id: "soulboundWeapon",
+          name: "Soulbound Weapon",
+    category: "Utility",
+          points: 3,
+          effect:
+            'Psyker Only. Choose one of this Fighters Close Combat Weapons. For each Close Combat action this Psyker makes, if it rolls one or more Crits, add +1 to the Psykers Manifest Rolls for the rest of the game.'
+        },
+        {
+          id: "arcaneScrolls",
+          name: "Arcane Scrolls",
+    category: "Utility",
+          points: 6,
+          effect:
+            'Psyker Only. 0 AP: Once per game, if the Psyker fails a Manifestation Action, you can choose to change it into a successful normal Manifestation, counting it as having just met the MV for Deny purposes.'
         }
-          
       ];
 
   function deepClone(obj) {
@@ -1487,11 +1479,8 @@
   }
 
   function recalcWarlockCostFor(f) {
-    let baseline = (f.points.base || 0) + (f.points.stats || 0);
-    if (baseline < 0) baseline = 0;
-
-    if (f.isMasterWarlock) f.points.warlock = Math.ceil(baseline * 0.66);
-    else if (f.isWarlock) f.points.warlock = Math.ceil(baseline * 0.5);
+    if (f.isMasterWarlock) f.points.warlock = 14;
+    else if (f.isWarlock) f.points.warlock = 8;
     else f.points.warlock = 0;
   }
 

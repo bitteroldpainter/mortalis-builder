@@ -1072,8 +1072,33 @@
     category: "Utility",
     points: 4,
     effect:
-      'When within 6" of a Friendly Psyker, add 1 Warp Token to your Pool each turn. When within 6", may also suffer any MW suffered by use of Warp Tokens, instead of Psyker.'
+      'When within 6" of a Friendly Psyker, add 1 Warp Dice to your Warp Dice Pool each turn. If within 3", the Fighter may also suffer any effects of Perils of the Warp, instead of the Psyker. Choose who suffers before rolling.'
   },
+  {
+    id: "soulAnchor",
+    name: "Soul Anchor",
+    category: "Utility",
+    points: 4,
+    effect:
+      'Psyker Only. When this Psyker is Slain, before removing it from the Battlefield, it may immediately perform one last Manifestation, made exactly like a normal Manifestation, with the risk of Perils.'
+  },
+  {
+    id: "hexmarked",
+    name: "Hexmarked",
+    category: "Utility",
+    points: 3,
+    effect:
+      'Any Psykers within 12" of this Fighter treat both Natural 1\'s and Natural 2\'s as Triggers for Perils of the Warp.'
+  },
+  {
+    id: "recklessPsyker",
+    name: "Reckless Psyker",
+    category: "Utility",
+    points: 6,
+    effect:
+      'Psyker Only. This Psyker may choose to gain a +2 to its Manifest Roll at any time, but Natural 2\'s trigger Perils and Natural 1\'s trigger TWO rolls on the Perils table. Choose before rolling, and if both triggers appear, only 1\'s are applied.'
+  },
+
   {
     id: "patientandReactive",
     name: "Patient and Reactive",
@@ -1268,203 +1293,148 @@
       // SPELLS – no points, MV + layout with breaks
       var SPELLS = [
         {
-          id: "tempest",
-          name: "TEMPEST",
-    category: "Control",
-          cv: 7,
-          points: 0,
-          effect:
-            'Range: 16"<br><br>' +
-            'Target suffers D3 MW; roll a D12: on 11–12, push target D6" directly away and Knock Prone (loses 1 AP next activation).<br><br>' +
-            "Power Surge (MV 9): Deals +2 MW before the push."
-        },
-        {
-          id: "graviticMaelstrom",
-          name: "GRAVITIC MAELSTROM",
-    category: "Control",
-          cv: 9,
-          points: 0,
-          effect:
-            'Range: 12", 3" AoE<br><br>' +
-            'All models inside must roll 7+ or be dragged D3" toward the center and suffer D3 MW.<br><br>' +
-            "Power Surge (MV 11): Fighters dragged suffer D3+2 MW."
-        },
-        {
-          id: "stolenSight",
-          name: "STOLEN SIGHT",
-    category: "Control",
-          cv: 7,
-          points: 0,
-          effect:
-            'Range: 12"<br><br>' +
-            "In its next activation, Target suffers –3 to Shoot; if Engaged, suffers –2 to Fight instead.<br><br>" +
-            "Power Surge (MV 9): –4 to Shoot, –3 to Fight."
-        },
-        {
-          id: "twistOfWill",
-          name: "TWIST OF WILL",
-    category: "Control",
-          cv: 7,
-          points: 0,
-          effect:
-            'Range: 12"<br><br>' +
-            "Target must reroll all successful attack rolls on its next activation.<br><br>" +
-            "Power Surge (MV 9): Target also cannot Charge until next turn."
-        },
-        {
           id: "voidfireBlast",
           name: "VOIDFIRE BLAST",
-    category: "Destructive",
+          category: "Destructive",
           cv: 9,
           points: 0,
-          effect:
-            'Range: 12"<br><br>' +
-            "Pick any point. All models within 2\" suffer 2D3 MW. Psyker suffers 1 MW.<br><br>" +
-            "Power Surge (MV 11): Radius becomes 4\"."
+          effect: 'Range: 12"<br><br>Effect: Pick a point within 12". All models within 2" of impact suffer 3 Mortal Wounds each.<br><br>Critical Manifestation: Same as above, but radius increases to 4” and the Psyker suffers 1 Mortal Wound.'
         },
         {
           id: "blazingWind",
           name: "BLAZING WIND",
-    category: "Destructive",
+          category: "Destructive",
           cv: 7,
           points: 0,
-          effect:
-            'Range: 12"<br><br>' +
-            'Target suffers D3 Damage and is moved 2" directly away.<br><br>' +
-            "Power Surge (MV 9): D3+1 Damage and 4\" push."
+          effect: 'Range: 12"<br><br>Effect: Target suffers 3 MW and is moved 2" directly away from the Psyker.<br><br>Critical Manifestation: Target suffers 4 MW and is moved 4" directly away.'
         },
         {
           id: "fireblast",
           name: "FIREBLAST",
-    category: "Destructive",
+          category: "Destructive",
           cv: 7,
           points: 0,
-          effect:
-            'Range: 12"<br><br>' +
-            "Target suffers D3+1 Damage.<br><br>" +
-            "Power Surge (MV 9): Target also gains a Fire token."
+          effect: 'Range: 12"<br><br>Effect: Target suffers 3 MW and gains a Fire token.<br><br>Critical Manifestation: Target suffers 5 MW and gains a Fire token.'
         },
         {
           id: "lightningBolt",
           name: "LIGHTNING BOLT",
-    category: "Destructive",
+          category: "Destructive",
           cv: 8,
           points: 0,
-          effect:
-            "Range: —<br><br>" +
-            "Target suffers D3+2 MW.<br><br>" +
-            "Power Surge (MV 10): D3+3 MW."
+          effect: 'Range: -<br><br>Effect: Target suffers 4 Mortal Wounds.<br><br>Critical Manifestation: Target suffers 6 Mortal Wounds.'
         },
         {
-          id: "mendFlesh",
-          name: "MEND FLESH",
-    category: "Buff",
-          cv: 6,
+          id: "tempest",
+          name: "TEMPEST",
+          category: "Control",
+          cv: 7,
           points: 0,
-          effect:
-            'Range: 12"<br><br>' +
-            "Restore D3+1 HP to a friendly Fighter.<br><br>" +
-            "Power Surge (MV 10): Restore D3+2 HP and remove 1 Poison/Burning token."
+          effect: 'Range: 16"<br><br>Effect: Target suffers D3 Mortal Wounds; roll a D12 - on 11 or 12, push the target D6" directly away from the Psyker and it is knocked Prone (loses 1 AP next Activation).<br><br>Critical Manifestation: Same as above, but Target suffers D3+2 Mortal Wounds before the push/Prone check.'
+        },
+        {
+          id: "graviticMaelstrom",
+          name: "GRAVITIC MAELSTROM",
+          category: "Control",
+          cv: 9,
+          points: 0,
+          effect: 'Range: 12", 3" Area of Effect<br><br>Effect: All models inside AoE must roll 7+ on a D12 or be dragged D3" toward the center and suffer D3 Mortal Wounds.<br><br>Critical Manifestation: Same as above, but Fighters dragged suffer D3+2 Mortal Wounds instead.'
+        },
+        {
+          id: "stolenSight",
+          name: "STOLEN SIGHT",
+          category: "Control",
+          cv: 7,
+          points: 0,
+          effect: 'Range: 12"<br><br>Effect: Target suffers -3 to Shoot until end of Turn; if already Engaged, instead suffers -2 to Fight.<br><br>Critical Manifestation: Target suffers -4 to Shoot, -3 to Fight (both apply) until end of Turn.'
+        },
+        {
+          id: "twistOfWill",
+          name: "TWIST OF WILL",
+          category: "Control",
+          cv: 7,
+          points: 0,
+          effect: 'Range: 12"<br><br>Effect: Target must reroll all successful attack rolls on its next Activation.<br><br>Critical Manifestation: In addition to the above, target also cannot Charge until the start of next Turn.'
         },
         {
           id: "circleOfWarding",
           name: "WARP FIELD",
-    category: "Buff",
+          category: "Buff",
           cv: 6,
           points: 0,
-          effect:
-            'Range: 3" aura<br><br>' +
-            "Friendly Fighters inside gain +2 DEF (max 5+) and cannot be Charged this turn.<br><br>" +
-            "Power Surge (MV 8): Circle lasts until next activation."
+          effect: 'Range: 3" radius circle centered on the Psyker<br><br>Effect: Until end of Turn, Friendly Fighters inside gain +2 DEF (max 5+) and cannot be Charged.<br><br>Critical Manifestation: In addition to the above, the Circle remains until the start of the Psyker\'s next Activation.'
+        },
+        {
+          id: "mendFlesh",
+          name: "MEND FLESH",
+          category: "Buff",
+          cv: 6,
+          points: 0,
+          effect: 'Range: 12"<br><br>Effect: Restore 3 HP to a Friendly Fighter.<br><br>Critical Manifestation: Restore 5 HP and remove one Poison/Burning token.'
         },
         {
           id: "arcaneAegis",
           name: "IMMATERIAL SHIELD",
-    category: "Buff",
+          category: "Buff",
           cv: 7,
           points: 0,
-          effect:
-            'Range: 6"<br><br>' +
-            "Target gains +2 DEF (max 5+) until next turn.<br><br>" +
-            "Power Surge (MV 9): Target ignores first 2 Damage from next attack."
+          effect: 'Range: 6"<br><br>Effect: Target gains +2 DEF (max 5+) until the start of next Turn.<br><br>Critical Manifestation: In addition to the above, Target also ignores the first 2 Damage it suffers the next time an attack causes Damage to it.'
         },
         {
           id: "spectralDecoy",
           name: "SPECTRAL DECOY",
-    category: "Buff",
+          category: "Buff",
           cv: 6,
           points: 0,
-          effect:
-            "Range: Self<br><br>" +
-            "First Ranged attack against the Psyker before next activation automatically misses.<br><br>" +
-            "Power Surge (MV 8): On 5+, reflect that missed ranged attack for D3 Damage."
+          effect: 'Range: Self<br><br>Effect: Until the Psykers next Activation, remove one successful Normal attack die each time the Psyker is attacked.<br><br>Critical Manifestation: In addition to the above, the Psyker may also ignore a second successful attack die once, until its next Activation.'
         },
         {
           id: "soulflameSurge",
           name: "SOULFLAME SURGE",
-    category: "Other",
+          category: "Other",
           cv: 8,
           points: 0,
-          effect:
-            'Range: 12"<br><br>' +
-            'A friendly Fighter gains +1 ATK and “Crits on 9+” on CC weapons until end of Turn.<br><br>' +
-            "Power Surge (MV 10): Affect two Fighters instead of one."
+          effect: 'Range: 12"<br><br>Effect: A Friendly Fighter gains +1 ATK and its Close Combat weapons gain Crits on 9+ until end of Turn.<br><br>Critical Manifestation: Same as above, but affects two Friendly Fighters within 12" instead of one.'
         },
         {
           id: "veilOfShadows",
           name: "VEIL OF SHADOWS",
-    category: "Other",
+          category: "Other",
           cv: 7,
           points: 0,
-          effect:
-            'Range: 6"<br><br>' +
-            "Target becomes Hidden, removed from engagement, and the controlling player may place it up to 3\" away from its current position, and not within 1\" of an Enemy Fighter.<br><br>" +
-            "Power Surge (MV 9): In addition to the above, the Target is placed up to 6\" away insted of 3\"."
+          effect: 'Range: Self or Friendly Fighter within 6"<br><br>Effect: Target becomes Hidden, unlocked from combat (if applicable), and the controlling player may place it up to 3" away from its current position, and not within 1" of an Enemy Fighter.<br><br>Critical Manifestation: Same as above, but the Target is placed up to 6" away instead of 3"'
         },
-   
         {
           id: "phantasmalHorror",
           name: "PHANTASMAL HORROR",
-    category: "Other",
+          category: "Other",
           cv: 8,
           points: 0,
-          effect:
-            'Range: 12"<br><br>' +
-            "Target must roll ≤ AP×2 on D12 or cannot Charge/move closer this turn.<br><br>" +
-            "Power Surge (MV 10): Must roll ≤ AP instead."
+          effect: 'Range: 12"<br><br>Effect: Target must roll equal to or below its AP × 2 on a D12, or it cannot Charge or Move closer to Fighters in the Psyker\'s Team this Turn.<br><br>Critical Manifestation: Same as above, but the target must instead roll equal to or below its AP on a D12.'
         },
         {
           id: "siphonLife",
           name: "SIPHON LIFE",
-    category: "Other",
+          category: "Other",
           cv: 7,
           points: 0,
-          effect:
-            'Range: 8"<br><br>' +
-            "Target suffers D3 MW; Psyker heals the same amount.<br><br>" +
-            "Power Surge (MV 9): D3+2 MW/heal."
+          effect: 'Range: 8"<br><br>Effect: Target suffers 3 Mortal Wounds; the Psyker regains the same (to a maximum of its starting HP).<br><br>Critical Manifestation: Target suffers 5 Mortal Wounds; the Psyker regains the same.'
         },
         {
           id: "veilOfSouls",
           name: "VEIL OF SOULS",
-    category: "Other",
+          category: "Other",
           cv: 8,
           points: 0,
-          effect:
-            "Range: Self<br><br>" +
-            "Until next activation, Psyker gains +1 DEF; enemies within 3\" suffer –1 to Hit.<br><br>" +
-            "Power Surge (MV 10): Psyker instead gains +2 DEF."
+          effect: 'Range: Self<br><br>Effect: Until the Psykers next Activation, the Psyker gains +1 DEF; enemies within 3" suffer -1 to Hit.<br><br>Critical Manifestation: Same as above, but the Psyker gains +2 DEF instead; enemies within 3" still suffer -1 to Hit.'
         },
         {
           id: "etherealBody",
           name: "ETHEREAL BODY",
-    category: "Other",
+          category: "Other",
           cv: 7,
           points: 0,
-          effect:
-            "Range: Self<br><br>" +
-            "Move through models and terrain (cannot end inside them or within 1\" of enemies unless Charging).<br><br>" +
-            "Power Surge (MV 9): Also gain +2 DEF until next turn."
+          effect: 'Range: Self<br><br>Effect: The Psyker may move through models and terrain as if they were not there, but cannot end movement within solid objects or within 1" of Enemy Fighters (unless using a Charge).<br><br>Critical Manifestation: The Psyker also gains +2 DEF until the start of next Turn.'
         }
       ];
 
@@ -1495,7 +1465,7 @@
       function spellMetaLabel (spellObj){
         var mv = getSpellMV(spellObj);
         if (mv == null || mv === "") return "MV —";
-        return "MV " + mv;
+        return "MV " + mv + "+";
       }
 
 // EQUIPMENT (unchanged from previous working version)
@@ -1771,7 +1741,23 @@
     category: "Utility",
           points: 4,
           effect:
-            'Add one Warp Token to your Pool each turn.'
+            'Psyker Only. Increase the Psykers Warp Dice Pool by 1.'
+        },
+        {
+          id: "soulboundWeapon",
+          name: "Soulbound Weapon",
+    category: "Utility",
+          points: 3,
+          effect:
+            'Psyker Only. Choose one of this Fighters Close Combat Weapons. For each Close Combat action this Psyker makes, if it rolls one or more Crits, add +1 to the Psykers Manifest Rolls for the rest of the game.'
+        },
+        {
+          id: "arcaneScrolls",
+          name: "Arcane Scrolls",
+    category: "Utility",
+          points: 6,
+          effect:
+            'Psyker Only. 0 AP: Once per game, if the Psyker fails a Manifestation Action, you can choose to change it into a successful normal Manifestation, counting it as having just met the MV for Deny purposes.'
         }
           
       ];
@@ -2356,17 +2342,12 @@ window.copyFighterText = function () {
         fighter.points.stats = total;
       }
 
-      // WARLOCK COST – 50% / 66% of (base + stat adjustments)
+      // PSYKER COST – flat cost
       function recalcWarlockCost () {
-        var baseline = (fighter.points.base || 0) + (fighter.points.stats || 0);
-        if (baseline < 0) {
-          baseline = 0;
-        }
-
         if (fighter.isMasterWarlock) {
-          fighter.points.warlock = Math.ceil(baseline * 0.66);
+          fighter.points.warlock = 14;
         } else if (fighter.isWarlock) {
-          fighter.points.warlock = Math.ceil(baseline * 0.5);
+          fighter.points.warlock = 8;
         } else {
           fighter.points.warlock = 0;
         }
@@ -2471,10 +2452,10 @@ window.copyFighterText = function () {
         html += ''
           + '<div class="warlock-box">'
           + '  <label class="warlock-option">'
-          + '    <input type="checkbox" class="warlock-toggle" data-type="warlock"> Psyker (+50% of Stat cost)'
+          + '    <input type="checkbox" class="warlock-toggle" data-type="warlock"> Psyker (+8 pts)'
           + '  </label>'
           + '  <label class="warlock-option">'
-          + '    <input type="checkbox" class="warlock-toggle" data-type="master"> Master Psyker (+66% of Stat cost)'
+          + '    <input type="checkbox" class="warlock-toggle" data-type="master"> Master Psyker (+14 pts)'
           + '  </label>'
           + '  <div class="warlock-note">'
           + '    Psykers gain access to Psychic Powers. Only one of these options may be active.'
@@ -2760,7 +2741,7 @@ var upBtn = pill.querySelector(".stat-up");
           it = displayArray[i];
           var rightLabel;
           if (isSpell) {
-            rightLabel = "MV " + it.cv;
+            rightLabel = "MV " + it.cv + "+";
           } else {
             rightLabel = (it.points || 0) + " pts";
           }
@@ -2770,7 +2751,7 @@ var upBtn = pill.querySelector(".stat-up");
             + '  <div class="item-row-header">'
             + '    <div class="item-main">'
             + '      <div class="item-name">' + it.name + '</div>'
-            + '      <div class="item-detail">' + (it.profile || it.effect || "") + '</div>'
+            + '      <div class="item-detail">' + (isSpell ? String(it.profile || it.effect || "").replace(/(^|<br\s*\/?>\s*)(Range:|Effect:|Critical Manifestation:)/gim, "$1<strong>$2</strong>") : (it.profile || it.effect || "")) + '</div>'
             + '    </div>'
             + '    <div class="item-points">' + rightLabel + '</div>'
             + '  </div>'
@@ -2810,7 +2791,7 @@ var upBtn = pill.querySelector(".stat-up");
             var a = arr[i];
             var rightLabel;
             if (isSpell) {
-              rightLabel = "MV " + (a.cv != null ? a.cv : "?");
+              rightLabel = "MV " + (a.cv != null ? (a.cv + "+") : "?");
             } else {
               rightLabel = (a.points || 0) + " pts";
             }
@@ -2820,7 +2801,7 @@ var upBtn = pill.querySelector(".stat-up");
               + '  <div class="item-row-header">'
               + '    <div class="item-main">'
               + '      <div class="item-name">' + getDisplayName(a) + '</div>'
-              + '      <div class="item-detail">' + (a.profile || a.effect || "") + '</div>'
+              + '      <div class="item-detail">' + (isSpell ? String(a.profile || a.effect || "").replace(/(^|<br\s*\/?>\s*)(Range:|Effect:|Critical Manifestation:)/gim, "$1<strong>$2</strong>") : (a.profile || a.effect || "")) + '</div>'
               + '    </div>'
               + '    <div class="item-points">' + rightLabel + '</div>'
               + '  </div>'
@@ -4844,6 +4825,9 @@ document.addEventListener("DOMContentLoaded", function () {
   }
   .cc-sec{break-inside:auto; page-break-inside:auto; margin: 0 0 18px 0;}
   .cc-sec-title{font-weight:900; margin: 0 0 6px 0; color:#111; font-size:1.15em;}
+  .cc-psyker-keyword{font-weight:900; margin:0 0 5px 0; color:#111;}
+.cc-power-name{font-weight:900; font-size:1.08em; text-transform:uppercase; margin-bottom:2px; color:#111;}
+.cc-power-label{font-weight:900; color:#111;}
 
   .cc-sec + .cc-sec{
     border-top: 1px solid rgba(0,0,0,0.15);
@@ -4983,7 +4967,7 @@ document.addEventListener("DOMContentLoaded", function () {
       if (spellObj.mv != null && spellObj.mv !== "") mv = spellObj.mv;
       else if (spellObj.cv != null && spellObj.cv !== "") mv = spellObj.cv; // data field remains 'cv'
     }
-    return (mv == null || mv === "") ? "MV —" : ("MV " + mv);
+    return (mv == null || mv === "") ? "MV —" : ("MV " + mv + "+");
   }
 
   function esc(s){
@@ -5378,33 +5362,58 @@ if (weaponRows.length){
 
       
       if (pendingWeaponsWrap) { optInner.appendChild(pendingWeaponsWrap); }
-function addSection(title, arr, mainKey){
-        if (!arr || !arr.length) return;
+function addSection(title, arr, mainKey, keyword){
+        if ((!arr || !arr.length) && !keyword) return;
         var sec = document.createElement("div");
         sec.className = "cc-sec";
+        if (keyword) {
+          var kw = document.createElement("div");
+          kw.className = "cc-psyker-keyword";
+          kw.textContent = "+++ " + keyword + " +++";
+          sec.appendChild(kw);
+        }
+
         var t = document.createElement("div");
         t.className = "cc-sec-title";
         t.textContent = title;
         sec.appendChild(t);
 
-        var ul = document.createElement("ul");
-        ul.className = "cc-list";
-        arr.forEach(function(x){
-          var li = document.createElement("li");
-          li.className = "cc-item";
-          var meta = (title === "Psychic Powers") ? spellMetaLabel(x) : ((x.points || 0) + " pts");
-          var main = x.profile || x.effect || "";
-          var rulesHtml = renderRulesHtml(main);
-          li.innerHTML = "<b>" + esc(getDisplayName(x)) + "</b> <span class='cc-muted'>(" + esc(meta) + ")</span>" +
-                         (rulesHtml ? "<br><span class='cc-muted'>" + rulesHtml + "</span>" : "");
-          ul.appendChild(li);
-        });
-        sec.appendChild(ul);
+        if (arr && arr.length) {
+          var ul = document.createElement("ul");
+          ul.className = "cc-list";
+          arr.forEach(function(x){
+            var li = document.createElement("li");
+            li.className = "cc-item";
+            var main = x.profile || x.effect || "";
+            if (title === "Psychic Powers") {
+              var mv = (x && x.mv != null && x.mv !== "") ? x.mv : ((x && x.cv != null && x.cv !== "") ? x.cv : null);
+              var psychicHtml = String(main || "").replace(/<br\s*\/?>/gi, "\n");
+              var psychicLines = psychicHtml.split(/\n+/).map(function(line){
+                line = line.trim();
+                if (!line) return "";
+                var m = line.match(/^(Range:|Effect:|Critical Manifestation:)\s*(.*)$/);
+                if (m) return "<div><span class='cc-power-label'>" + esc(m[1]) + "</span> " + esc(m[2]) + "</div>";
+                return "<div>" + esc(line) + "</div>";
+              }).join("");
+              li.innerHTML = "<div class='cc-power-name'>" + esc(getDisplayName(x)) + "</div>" +
+                             "<div class='cc-muted'><span class='cc-power-label'>MV:</span> " + esc(mv == null ? "—" : (mv + "+")) + "</div>" +
+                             "<div class='cc-muted'>" + psychicLines + "</div>";
+            } else {
+              var meta = (x.points || 0) + " pts";
+              var rulesHtml = renderRulesHtml(main);
+              li.innerHTML = "<b>" + esc(getDisplayName(x)) + "</b> <span class='cc-muted'>(" + esc(meta) + ")</span>" +
+                             (rulesHtml ? "<br><span class='cc-muted'>" + rulesHtml + "</span>" : "");
+            }
+            ul.appendChild(li);
+          });
+          sec.appendChild(ul);
+        }
         optInner.appendChild(sec);
       }
 addSection("Abilities", fighter.abilities);
       addSection("Leader Abilities", fighter.leaderAbilities);
-      addSection("Psychic Powers", fighter.spells);
+      var psykerKeyword = fighter.isMasterWarlock ? "Master Psyker" : (fighter.isWarlock ? "Psyker" : "");
+      addSection("Psychic Powers", fighter.spells, null, psykerKeyword);
       addSection("Equipment", fighter.equipment);
 
       // mount
