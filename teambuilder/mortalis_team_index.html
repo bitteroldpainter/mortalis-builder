@@ -710,7 +710,7 @@
     category: "Utility",
     points: 10,
     effect:
-      'This Fighter may make two activations per turn, and split his AP between 2 those activations. For all intents and purposes, this counts as two separate activations. '
+      'This Fighter may make two activations per turn, and split his AP between 2 those activations. For all intents and purposes, this counts as two separate activations. May not Reposition more than the Fighters Move Stat + 4" per Turn.'
   },
   {
     id: "finalDefiance",
@@ -1059,9 +1059,9 @@
           id: "blinkPack",
           name: "Blink Pack/Personal Teleporter (+)",
     category: "Mobility",
-          points: "+50% Stat cost",
+          points: "+33% Stat cost",
           dynamicType: "percentStats",
-          dynamicFactor: 0.5,
+          dynamicFactor: 1/3,
           effect:
             '1 AP: Reposition up to 12", ignoring terrain/height. Then roll D12; on 1–2 suffer D3 MW and may take no further actions this activation.'
         },
