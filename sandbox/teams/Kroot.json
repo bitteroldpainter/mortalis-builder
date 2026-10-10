@@ -1,0 +1,785 @@
+{
+  "app": "Mortalis / Dark Realms Team Builder",
+  "version": 1,
+  "savedAt": "2026-04-16T22:06:42.883Z",
+  "warbandName": "Kroot",
+  "limit": 400,
+  "fighters": [
+    {
+      "sourceFileName": "mortalis_Kroot_Leader.json",
+      "fighterFile": {
+        "app": "Mortalis Fighter Builder",
+        "version": 1,
+        "savedAt": "2026-04-12T21:55:11.361Z",
+        "fighter": {
+          "name": "Kroot Leader",
+          "isWarlock": false,
+          "isMasterWarlock": false,
+          "portraitDataUrl": "",
+          "portraitKey": "",
+          "stats": {
+            "move": 6,
+            "def": 9,
+            "ap": 3,
+            "hp": 9,
+            "atk": 4,
+            "fight": 5,
+            "shoot": 5
+          },
+          "ccWeapons": [
+            {
+              "id": "poisonedWeapon",
+              "name": "Poisoned Weapon",
+              "baseProfile": "ATK User, Hit User, DMG 4/5, Poison, Reroll (SR)",
+              "profile": "ATK User, Hit User, DMG 4/5, Poison, Reroll (SR)",
+              "basePoints": 6,
+              "points": 6,
+              "upgrades": {
+                "poison": false,
+                "enchanted": false,
+                "cursed": false,
+                "truestrike": false,
+                "masterCrafted": false
+              }
+            }
+          ],
+          "rangedWeapons": [
+            {
+              "id": "pulseCarbine",
+              "name": "Pulse Carbine",
+              "baseProfile": "ATK 4, Hit User, DMG 4/5, Reroll (1)",
+              "profile": "ATK 4, Hit User, DMG 4/5, Reroll (1)",
+              "basePoints": 5,
+              "points": 5,
+              "upgrades": {
+                "poison": false,
+                "enchanted": false,
+                "cursed": false,
+                "truestrike": false,
+                "masterCrafted": false
+              }
+            }
+          ],
+          "abilities": [
+            {
+              "id": "counterstrike",
+              "name": "Counterstrike",
+              "points": 4,
+              "effect": "Each time an enemy Fighter deals this Fighter damage from an attack dice in Close Combat, this Fighter deals that Fighter 1 MW."
+            },
+            {
+              "id": "vengeance",
+              "name": "Vengeance",
+              "points": 2,
+              "effect": "When an enemy slays one of your Fighters, that enemy gains a Vengeance token. Fighters with Vengeance may turn one normal hit into a Crit when attacking an enemy with a Vengeance token. Remove the token when the enemy is slain; Vengeance tokens stack."
+            }
+          ],
+          "leaderAbilities": [
+            {
+              "id": "guidance",
+              "name": "Guidance",
+              "points": 0,
+              "effect": "1 AP: Choose a friendly Fighter within Line of Sight. That Fighter gains 1 AP until end of turn."
+            },
+            {
+              "id": "getHimMark",
+              "name": "Get Him!",
+              "points": 0,
+              "effect": "1 AP: Select an enemy Fighter within Line of Sight. All shooting attacks against that Fighter gain Reroll (SR) until end of turn."
+            }
+          ],
+          "spells": [],
+          "equipment": [],
+          "points": {
+            "base": 16,
+            "stats": 16,
+            "warlock": 0,
+            "ccWeapons": 6,
+            "rangedWeapons": 5,
+            "abilities": 6,
+            "leaderAbilities": 0,
+            "spells": 0,
+            "equipment": 0
+          }
+        }
+      }
+    },
+    {
+      "sourceFileName": "mortalis_Krootox_Rampager.json",
+      "fighterFile": {
+        "app": "Mortalis Fighter Builder",
+        "version": 1,
+        "savedAt": "2026-04-12T21:57:25.011Z",
+        "fighter": {
+          "name": "Krootox Rampager",
+          "isWarlock": false,
+          "isMasterWarlock": false,
+          "portraitDataUrl": "",
+          "portraitKey": "",
+          "stats": {
+            "move": 7,
+            "def": 8,
+            "ap": 2,
+            "hp": 15,
+            "atk": 3,
+            "fight": 6,
+            "shoot": 6
+          },
+          "ccWeapons": [
+            {
+              "id": "monstrousClaws",
+              "name": "Monstrous Claws",
+              "baseProfile": "ATK User, Hit User, DMG 5/6, MW (1)",
+              "profile": "ATK User, Hit User, DMG 5/6, MW (1)",
+              "basePoints": 6,
+              "points": 6,
+              "upgrades": {
+                "poison": false,
+                "enchanted": false,
+                "cursed": false,
+                "truestrike": false,
+                "masterCrafted": false
+              }
+            }
+          ],
+          "rangedWeapons": [
+            {
+              "id": "boltPistol",
+              "name": "Bolt Pistol",
+              "baseProfile": "ATK 4, Hit User, DMG 3/4, Rng 8\", Piercing Crits (-2), Quick",
+              "profile": "ATK 4, Hit User, DMG 3/4, Rng 8\", Piercing Crits (-2), Quick",
+              "basePoints": 3,
+              "points": 3,
+              "upgrades": {
+                "poison": false,
+                "enchanted": false,
+                "cursed": false,
+                "truestrike": false,
+                "masterCrafted": false
+              }
+            }
+          ],
+          "abilities": [
+            {
+              "id": "extremelyResilient",
+              "name": "Extremely Resilient",
+              "points": 5,
+              "effect": "Whenever this Fighter takes damage from an attack, remove 1 point of damage from the Normal/Crit Damage characteristic of the weapon, to a minimum of 1. (Eg. Damage 3/4 becomes Damage 2/3, etc.)",
+              "dynamicType": "percentHp",
+              "dynamicFactor": 0.3333333333333333
+            },
+            {
+              "id": "vengeance",
+              "name": "Vengeance",
+              "points": 2,
+              "effect": "When an enemy slays one of your Fighters, that enemy gains a Vengeance token. Fighters with Vengeance may turn one normal hit into a Crit when attacking an enemy with a Vengeance token. Remove the token when the enemy is slain; Vengeance tokens stack."
+            }
+          ],
+          "leaderAbilities": [],
+          "spells": [],
+          "equipment": [],
+          "points": {
+            "base": 16,
+            "stats": 17,
+            "warlock": 0,
+            "ccWeapons": 6,
+            "rangedWeapons": 3,
+            "abilities": 7,
+            "leaderAbilities": 0,
+            "spells": 0,
+            "equipment": 0
+          }
+        }
+      }
+    },
+    {
+      "sourceFileName": "mortalis_Krootox_Rampager.json",
+      "fighterFile": {
+        "app": "Mortalis Fighter Builder",
+        "version": 1,
+        "savedAt": "2026-04-12T21:59:20.390Z",
+        "fighter": {
+          "name": "Krootox Rider",
+          "isWarlock": false,
+          "isMasterWarlock": false,
+          "portraitDataUrl": "",
+          "portraitKey": "",
+          "stats": {
+            "move": 7,
+            "def": 8,
+            "ap": 2,
+            "hp": 15,
+            "atk": 3,
+            "fight": 6,
+            "shoot": 6
+          },
+          "ccWeapons": [
+            {
+              "id": "monstrousClaws",
+              "name": "Monstrous Claws",
+              "baseProfile": "ATK User, Hit User, DMG 5/6, MW (1)",
+              "profile": "ATK User, Hit User, DMG 5/6, MW (1)",
+              "basePoints": 6,
+              "points": 6,
+              "upgrades": {
+                "poison": false,
+                "enchanted": false,
+                "cursed": false,
+                "truestrike": false,
+                "masterCrafted": false
+              }
+            }
+          ],
+          "rangedWeapons": [
+            {
+              "id": "chaincannon",
+              "name": "Chaincannon",
+              "baseProfile": "ATK 6, Hit User, DMG 4/4, Reroll (1), Heavy (Dash)",
+              "profile": "ATK 6, Hit User, DMG 4/4, Reroll (1), Heavy (Dash)",
+              "basePoints": 10,
+              "points": 10,
+              "upgrades": {
+                "poison": false,
+                "enchanted": false,
+                "cursed": false,
+                "truestrike": false,
+                "masterCrafted": false
+              }
+            }
+          ],
+          "abilities": [
+            {
+              "id": "extremelyResilient",
+              "name": "Extremely Resilient",
+              "points": 5,
+              "effect": "Whenever this Fighter takes damage from an attack, remove 1 point of damage from the Normal/Crit Damage characteristic of the weapon, to a minimum of 1. (Eg. Damage 3/4 becomes Damage 2/3, etc.)",
+              "dynamicType": "percentHp",
+              "dynamicFactor": 0.3333333333333333
+            },
+            {
+              "id": "vengeance",
+              "name": "Vengeance",
+              "points": 2,
+              "effect": "When an enemy slays one of your Fighters, that enemy gains a Vengeance token. Fighters with Vengeance may turn one normal hit into a Crit when attacking an enemy with a Vengeance token. Remove the token when the enemy is slain; Vengeance tokens stack."
+            }
+          ],
+          "leaderAbilities": [],
+          "spells": [],
+          "equipment": [
+            {
+              "id": "suspensorSystem",
+              "name": "Suspensor System",
+              "points": 3,
+              "effect": "User’s Heavy Weapons gain the “Heavy (Move)” Special Rule."
+            }
+          ],
+          "points": {
+            "base": 16,
+            "stats": 17,
+            "warlock": 0,
+            "ccWeapons": 6,
+            "rangedWeapons": 10,
+            "abilities": 7,
+            "leaderAbilities": 0,
+            "spells": 0,
+            "equipment": 3
+          }
+        }
+      }
+    },
+    {
+      "sourceFileName": "mortalis_Kroot_Sniper.json",
+      "fighterFile": {
+        "app": "Mortalis Fighter Builder",
+        "version": 1,
+        "savedAt": "2026-04-15T22:01:29.185Z",
+        "fighter": {
+          "name": "Kroot Sniper ",
+          "isWarlock": false,
+          "isMasterWarlock": false,
+          "portraitDataUrl": "",
+          "portraitKey": "",
+          "stats": {
+            "move": 6,
+            "def": 9,
+            "ap": 2,
+            "hp": 8,
+            "atk": 3,
+            "fight": 6,
+            "shoot": 5
+          },
+          "ccWeapons": [
+            {
+              "id": "beastClawsBite",
+              "name": "Beast Claws/Bite",
+              "baseProfile": "ATK User, Hit User, DMG 3/4",
+              "profile": "ATK User, Hit User, DMG 3/4",
+              "basePoints": 2,
+              "points": 2,
+              "upgrades": {
+                "poison": false,
+                "enchanted": false,
+                "cursed": false,
+                "truestrike": false,
+                "masterCrafted": false
+              }
+            }
+          ],
+          "rangedWeapons": [
+            {
+              "id": "sniperRifle",
+              "name": "Sniper Rifle",
+              "baseProfile": "ATK 4, Hit User+1, DMG 3/3, Piercing (-2), Ignores Cover, MW (3)",
+              "profile": "ATK 4, Hit User+1, DMG 3/3, Piercing (-2), Ignores Cover, MW (3)",
+              "basePoints": 12,
+              "points": 12,
+              "upgrades": {
+                "poison": false,
+                "enchanted": false,
+                "cursed": false,
+                "truestrike": false,
+                "masterCrafted": false
+              }
+            }
+          ],
+          "abilities": [
+            {
+              "id": "ruthless",
+              "name": "Ruthless",
+              "points": 2,
+              "effect": "This Fighter may shoot at enemies locked in Combat. Any failed To Hit rolls of 1–2 hit the friendly model as normal damage."
+            },
+            {
+              "id": "vengeance",
+              "name": "Vengeance",
+              "points": 2,
+              "effect": "When an enemy slays one of your Fighters, that enemy gains a Vengeance token. Fighters with Vengeance may turn one normal hit into a Crit when attacking an enemy with a Vengeance token. Remove the token when the enemy is slain; Vengeance tokens stack."
+            }
+          ],
+          "leaderAbilities": [],
+          "spells": [],
+          "equipment": [
+            {
+              "id": "camoCloak",
+              "name": "Camo Cloak",
+              "points": 4,
+              "effect": "User gains -1 to be hit when in Cover or Hidden (stacks with Cover/Hidden)."
+            }
+          ],
+          "points": {
+            "base": 16,
+            "stats": 7,
+            "warlock": 0,
+            "ccWeapons": 2,
+            "rangedWeapons": 12,
+            "abilities": 4,
+            "leaderAbilities": 0,
+            "spells": 0,
+            "equipment": 4
+          }
+        }
+      }
+    },
+    {
+      "sourceFileName": "mortalis_Bow_Kroot.json",
+      "fighterFile": {
+        "app": "Mortalis Fighter Builder",
+        "version": 1,
+        "savedAt": "2026-04-16T20:20:50.573Z",
+        "fighter": {
+          "name": "Bow Kroot",
+          "isWarlock": false,
+          "isMasterWarlock": false,
+          "portraitDataUrl": "",
+          "portraitKey": "",
+          "stats": {
+            "move": 6,
+            "def": 9,
+            "ap": 2,
+            "hp": 8,
+            "atk": 3,
+            "fight": 5,
+            "shoot": 5
+          },
+          "ccWeapons": [
+            {
+              "id": "poisonedKnife",
+              "name": "Poisoned Knife",
+              "baseProfile": "ATK User, Hit User, DMG 3/4, Poison",
+              "profile": "ATK User, Hit User, DMG 3/4, Poison",
+              "basePoints": 3,
+              "points": 3,
+              "upgrades": {
+                "poison": false,
+                "enchanted": false,
+                "cursed": false,
+                "truestrike": false,
+                "masterCrafted": false
+              }
+            }
+          ],
+          "rangedWeapons": [
+            {
+              "id": "neutronRailRifle",
+              "name": "Neutron Rail Rifle",
+              "baseProfile": "ATK 4, Hit User, DMG 4/4, MW (2)",
+              "profile": "ATK 4, Hit User, DMG 4/4, MW (2)",
+              "basePoints": 6,
+              "points": 6,
+              "upgrades": {
+                "poison": false,
+                "enchanted": false,
+                "cursed": false,
+                "truestrike": false,
+                "masterCrafted": false
+              },
+              "displayNameOverride": "Bow"
+            }
+          ],
+          "abilities": [
+            {
+              "id": "vengeance",
+              "name": "Vengeance",
+              "points": 2,
+              "effect": "When an enemy slays one of your Fighters, that enemy gains a Vengeance token. Fighters with Vengeance may turn one normal hit into a Crit when attacking an enemy with a Vengeance token. Remove the token when the enemy is slain; Vengeance tokens stack."
+            }
+          ],
+          "leaderAbilities": [],
+          "spells": [],
+          "equipment": [],
+          "points": {
+            "base": 16,
+            "stats": 9,
+            "warlock": 0,
+            "ccWeapons": 3,
+            "rangedWeapons": 6,
+            "abilities": 2,
+            "leaderAbilities": 0,
+            "spells": 0,
+            "equipment": 0
+          }
+        }
+      }
+    },
+    {
+      "sourceFileName": "mortalis_Bow_Kroot.json",
+      "fighterFile": {
+        "app": "Mortalis Fighter Builder",
+        "version": 1,
+        "savedAt": "2026-04-16T20:22:03.007Z",
+        "fighter": {
+          "name": "Bird Kroot ",
+          "isWarlock": false,
+          "isMasterWarlock": false,
+          "portraitDataUrl": "",
+          "portraitKey": "",
+          "stats": {
+            "move": 6,
+            "def": 9,
+            "ap": 2,
+            "hp": 8,
+            "atk": 3,
+            "fight": 5,
+            "shoot": 5
+          },
+          "ccWeapons": [
+            {
+              "id": "poisonedKnife",
+              "name": "Poisoned Knife",
+              "baseProfile": "ATK User, Hit User, DMG 3/4, Poison",
+              "profile": "ATK User, Hit User, DMG 3/4, Poison",
+              "basePoints": 3,
+              "points": 3,
+              "upgrades": {
+                "poison": false,
+                "enchanted": false,
+                "cursed": false,
+                "truestrike": false,
+                "masterCrafted": false
+              }
+            }
+          ],
+          "rangedWeapons": [
+            {
+              "id": "boltGun",
+              "name": "Bolt Gun",
+              "baseProfile": "ATK 4, Hit User, DMG 3/4, Piercing Crits (-2)",
+              "profile": "ATK 4, Hit User, DMG 3/4, Piercing Crits (-2)",
+              "basePoints": 4,
+              "points": 4,
+              "upgrades": {
+                "poison": false,
+                "enchanted": false,
+                "cursed": false,
+                "truestrike": false,
+                "masterCrafted": false
+              },
+              "displayNameOverride": "Kroot Rifle"
+            }
+          ],
+          "abilities": [
+            {
+              "id": "vengeance",
+              "name": "Vengeance",
+              "points": 2,
+              "effect": "When an enemy slays one of your Fighters, that enemy gains a Vengeance token. Fighters with Vengeance may turn one normal hit into a Crit when attacking an enemy with a Vengeance token. Remove the token when the enemy is slain; Vengeance tokens stack."
+            }
+          ],
+          "leaderAbilities": [],
+          "spells": [],
+          "equipment": [
+            {
+              "id": "scannerAuspex",
+              "name": "Scanner/Auspex",
+              "points": 4,
+              "effect": "1 AP: Mark an enemy in LoS. Shooting vs that Fighter gains Reroll (SR) until next turn."
+            }
+          ],
+          "points": {
+            "base": 16,
+            "stats": 9,
+            "warlock": 0,
+            "ccWeapons": 3,
+            "rangedWeapons": 4,
+            "abilities": 2,
+            "leaderAbilities": 0,
+            "spells": 0,
+            "equipment": 4
+          }
+        }
+      }
+    },
+    {
+      "sourceFileName": "mortalis_Bow_Kroot.json",
+      "fighterFile": {
+        "app": "Mortalis Fighter Builder",
+        "version": 1,
+        "savedAt": "2026-04-16T20:24:39.697Z",
+        "fighter": {
+          "name": "Kroot Knife Fighter",
+          "isWarlock": false,
+          "isMasterWarlock": false,
+          "portraitDataUrl": "",
+          "portraitKey": "",
+          "stats": {
+            "move": 6,
+            "def": 9,
+            "ap": 2,
+            "hp": 8,
+            "atk": 5,
+            "fight": 5,
+            "shoot": 11
+          },
+          "ccWeapons": [
+            {
+              "id": "powerKnife",
+              "name": "Power Knife",
+              "baseProfile": "ATK User, Hit User, DMG 3/5, Crits on 9+",
+              "profile": "ATK User, Hit User, DMG 3/5, Crits on 9+",
+              "basePoints": 4,
+              "points": 6,
+              "upgrades": {
+                "poison": false,
+                "enchanted": false,
+                "cursed": false,
+                "truestrike": false,
+                "masterCrafted": true
+              }
+            }
+          ],
+          "rangedWeapons": [],
+          "abilities": [
+            {
+              "id": "vengeance",
+              "name": "Vengeance",
+              "points": 2,
+              "effect": "When an enemy slays one of your Fighters, that enemy gains a Vengeance token. Fighters with Vengeance may turn one normal hit into a Crit when attacking an enemy with a Vengeance token. Remove the token when the enemy is slain; Vengeance tokens stack."
+            },
+            {
+              "id": "bornInDarkness",
+              "name": "Born in Darkness",
+              "points": 5,
+              "effect": "This Fighter cannot be targeted by Shooting attacks from 12\" or more away, and cannot make Shooting attacks at targets 12\" or more away."
+            }
+          ],
+          "leaderAbilities": [],
+          "spells": [],
+          "equipment": [],
+          "points": {
+            "base": 16,
+            "stats": 5,
+            "warlock": 0,
+            "ccWeapons": 6,
+            "rangedWeapons": 0,
+            "abilities": 7,
+            "leaderAbilities": 0,
+            "spells": 0,
+            "equipment": 0
+          }
+        }
+      }
+    },
+    {
+      "sourceFileName": "mortalis_Bow_Kroot.json",
+      "fighterFile": {
+        "app": "Mortalis Fighter Builder",
+        "version": 1,
+        "savedAt": "2026-04-16T20:27:20.537Z",
+        "fighter": {
+          "name": "Kroot Heavy Gunner",
+          "isWarlock": false,
+          "isMasterWarlock": false,
+          "portraitDataUrl": "",
+          "portraitKey": "",
+          "stats": {
+            "move": 6,
+            "def": 9,
+            "ap": 2,
+            "hp": 8,
+            "atk": 3,
+            "fight": 6,
+            "shoot": 5
+          },
+          "ccWeapons": [
+            {
+              "id": "beastClawsBite",
+              "name": "Beast Claws/Bite",
+              "baseProfile": "ATK User, Hit User, DMG 3/4",
+              "profile": "ATK User, Hit User, DMG 3/4",
+              "basePoints": 2,
+              "points": 2,
+              "upgrades": {
+                "poison": false,
+                "enchanted": false,
+                "cursed": false,
+                "truestrike": false,
+                "masterCrafted": false
+              },
+              "displayNameOverride": "Blade"
+            }
+          ],
+          "rangedWeapons": [
+            {
+              "id": "missileLauncher",
+              "name": "Missile Launcher",
+              "baseProfile": "Mode (Krak): ATK 4, Hit User, DMG 6/7, Piercing (-4), Heavy (Dash); (Frag): DMG 3/5, Blast (2\"), Piercing Crits (-2), Heavy (Dash)",
+              "profile": "Mode (Krak): ATK 4, Hit User, DMG 6/7, Piercing (-4), Heavy (Dash); (Frag): DMG 3/5, Blast (2\"), Piercing Crits (-2), Heavy (Dash)",
+              "basePoints": 10,
+              "points": 10,
+              "upgrades": {
+                "poison": false,
+                "enchanted": false,
+                "cursed": false,
+                "truestrike": false,
+                "masterCrafted": false
+              },
+              "displayNameOverride": "Londaxi Tribalest"
+            }
+          ],
+          "abilities": [
+            {
+              "id": "vengeance",
+              "name": "Vengeance",
+              "points": 2,
+              "effect": "When an enemy slays one of your Fighters, that enemy gains a Vengeance token. Fighters with Vengeance may turn one normal hit into a Crit when attacking an enemy with a Vengeance token. Remove the token when the enemy is slain; Vengeance tokens stack."
+            },
+            {
+              "id": "bornInDarkness",
+              "name": "Born in Darkness",
+              "points": 5,
+              "effect": "This Fighter cannot be targeted by Shooting attacks from 12\" or more away, and cannot make Shooting attacks at targets 12\" or more away."
+            }
+          ],
+          "leaderAbilities": [],
+          "spells": [],
+          "equipment": [
+            {
+              "id": "suspensorSystem",
+              "name": "Suspensor System",
+              "points": 3,
+              "effect": "User’s Heavy Weapons gain the “Heavy (Move)” Special Rule."
+            }
+          ],
+          "points": {
+            "base": 16,
+            "stats": 7,
+            "warlock": 0,
+            "ccWeapons": 2,
+            "rangedWeapons": 10,
+            "abilities": 7,
+            "leaderAbilities": 0,
+            "spells": 0,
+            "equipment": 3
+          }
+        }
+      }
+    },
+    {
+      "sourceFileName": "mortalis_fighter.json",
+      "fighterFile": {
+        "app": "Mortalis Fighter Builder",
+        "version": 1,
+        "savedAt": "2026-04-16T20:28:55.112Z",
+        "fighter": {
+          "name": "Kroot Hound 1",
+          "isWarlock": false,
+          "isMasterWarlock": false,
+          "portraitDataUrl": "",
+          "portraitKey": "",
+          "stats": {
+            "move": 8,
+            "def": 9,
+            "ap": 2,
+            "hp": 7,
+            "atk": 4,
+            "fight": 5,
+            "shoot": 11
+          },
+          "ccWeapons": [
+            {
+              "id": "bigBladeAxe",
+              "name": "Big Blade/Axe",
+              "baseProfile": "ATK User, Hit User, DMG 3/5",
+              "profile": "ATK User, Hit User, DMG 3/5",
+              "basePoints": 3,
+              "points": 3,
+              "upgrades": {
+                "poison": false,
+                "enchanted": false,
+                "cursed": false,
+                "truestrike": false,
+                "masterCrafted": false
+              },
+              "displayNameOverride": "Vicious Beak"
+            }
+          ],
+          "rangedWeapons": [],
+          "abilities": [
+            {
+              "id": "endlessHorde",
+              "name": "Endless Horde",
+              "points": 7,
+              "effect": "Cost equals this Fighter’s current HP stat. When this Fighter dies, at the start of the next turn it returns at your Rearguard Deployment Zone edge. Only for Fighters with 2 AP or less and 10 HP or less.",
+              "dynamicType": "hpStat",
+              "dynamicFactor": 1
+            }
+          ],
+          "leaderAbilities": [],
+          "spells": [],
+          "equipment": [],
+          "points": {
+            "base": 16,
+            "stats": 10,
+            "warlock": 0,
+            "ccWeapons": 3,
+            "rangedWeapons": 0,
+            "abilities": 7,
+            "leaderAbilities": 0,
+            "spells": 0,
+            "equipment": 0
+          }
+        }
+      }
+    }
+  ]
+}
