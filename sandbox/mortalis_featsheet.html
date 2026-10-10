@@ -1,0 +1,1069 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Mortalis – Feat Sheet Builder</title>
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Kdam+Thmor+Pro&display=swap" rel="stylesheet">
+
+  <style>
+
+:root{
+  --bg:#1D2024;
+  --panel:#111823cc;
+  --panel-dark:#1E2024;
+  --text:#e9f0ff;
+  --muted:#a7b2c6;
+  --line:#FC970D;
+  --orange:#FC970D;
+  --orange-bright:#FF8800;
+  --danger:#ff5c6a;
+  --cardFeatTitleSize:13px;
+  --cardFeatDescSize:12.5px;
+  --font-main:system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Arial,sans-serif;
+  --font-title:"Kdam Thmor Pro",sans-serif;
+}
+
+*{
+  box-sizing:border-box;
+}
+
+body{
+  margin:0;
+  font-family:var(--font-main);
+  background:var(--bg);
+  color:var(--text);
+}
+
+.wrap{
+  max-width:960px;
+  margin:18px auto 60px;
+  padding:0 14px;
+}
+
+/* Header / controls */
+header{
+  display:flex;
+  align-items:flex-start;
+  justify-content:space-between;
+  gap:12px;
+  padding:14px;
+  border:1px solid var(--line);
+  border-radius:16px;
+  background:var(--panel);
+  position:static;
+  top:auto;
+}
+
+header h1{
+  margin:0;
+  font-size:18px;
+  letter-spacing:.35px;
+  color:var(--text);
+  text-shadow:#000 2px 2px 4px;
+}
+
+header .sub{
+  margin-top:6px;
+  color:var(--muted);
+  font-size:13px;
+  line-height:1.35;
+}
+
+.featReminder{
+  color:var(--orange-bright);
+}
+
+.controls{
+  display:flex;
+  gap:8px;
+  align-items:center;
+  flex-wrap:wrap;
+  justify-content:flex-end;
+  min-width:340px;
+}
+
+.pill,
+button,
+select,
+input[type="text"]{
+  border:1px solid var(--line);
+  border-radius:999px;
+  color:var(--text);
+  font-weight:700;
+  text-shadow:#000 2px 2px 4px;
+}
+
+.pill,
+select,
+input[type="text"]{
+  background:linear-gradient(180deg, rgb(98,98,98), rgb(24,24,24));
+}
+
+.pill{
+  display:flex;
+  align-items:center;
+  gap:8px;
+  padding:7px 10px;
+  font-size:13px;
+  white-space:nowrap;
+}
+
+select,
+input[type="text"]{
+  padding:8px 10px;
+  outline:none;
+  font-size:13px;
+}
+
+input[type="text"]{
+  width:220px;
+}
+
+input[type="text"]::placeholder{
+  color:#c3cad6;
+}
+
+#maxFeats,
+#maxFeats option{
+  background:#000;
+  color:#fff;
+  text-shadow:none;
+}
+
+button{
+  cursor:pointer;
+  background:linear-gradient(180deg, rgba(255,170,84,1), rgba(128,51,0,1));
+  color:#fff;
+  padding:10px 12px;
+  font-size:12px;
+  transition:transform .04s ease, border-color .15s ease, background .15s ease;
+  user-select:none;
+}
+
+button:hover,
+.pill:hover{
+  background:#ffa200;
+  color:#fff;
+}
+
+button:active{
+  transform:translateY(1px);
+}
+
+.btn-accent{
+  background:linear-gradient(180deg, rgba(255,170,84,1), rgba(128,51,0,1));
+  border-color:#000;
+  color:#fff;
+}
+
+.btn-danger,
+button.btn-danger{
+  background:linear-gradient(180deg, rgba(140,48,62,1), rgb(56,0,0));
+  color:#fff;
+  border-color:var(--line);
+}
+
+.btn-danger:hover,
+button.btn-danger:hover{
+  background:#d30000;
+  color:#fff;
+}
+
+.btn-disabled{
+  opacity:.45;
+  cursor:not-allowed;
+}
+
+/* Category layout */
+.cats{
+  margin-top:14px;
+  display:flex;
+  gap:12px;
+  align-items:flex-start;
+}
+
+.col{
+  flex:1;
+  display:flex;
+  flex-direction:column;
+  gap:12px;
+}
+
+.cat{
+  border:1px solid var(--line);
+  border-radius:16px;
+  overflow:hidden;
+  background:var(--panel);
+}
+
+.catHead{
+  padding:10px 12px;
+  border-bottom:1px solid var(--line);
+  background:linear-gradient(180deg, rgba(255,170,84,1), rgba(128,51,0,1));
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:10px;
+  color:#fff;
+}
+
+.catHead h2{
+  margin:0;
+  font-size:13.5px;
+  letter-spacing:.25px;
+  text-transform:uppercase;
+  color:#fff;
+  font-weight:900;
+  text-shadow:#000 2px 2px 4px;
+}
+
+.catHead .count{
+  color:#fff;
+  font-size:12px;
+  font-weight:900;
+  text-shadow:#000 2px 2px 4px;
+}
+
+/* Feat list */
+.featList{
+  padding:6px;
+  display:grid;
+  gap:12px;
+}
+
+.feat{
+  border:1px solid var(--line);
+  border-radius:15px;
+  padding:18px 22px;
+  background:linear-gradient(180deg, rgba(224,221,213,1), rgba(158,156,152,1));
+  display:grid;
+  grid-template-columns:1fr auto;
+  gap:8px;
+  align-items:start;
+}
+
+.feat .nameRow{
+  display:flex;
+  gap:6px;
+  align-items:center;
+  flex-wrap:wrap;
+  margin-bottom:4px;
+}
+
+.feat .name{
+  font-family:var(--font-title);
+  font-size:17px;
+  font-weight:900;
+  letter-spacing:.4px;
+  color:#000;
+  text-shadow:none;
+}
+
+.desc{
+  margin-top:6px;
+  color:#111;
+  font-size:12.25px;
+  font-weight:500;
+  line-height:1.3;
+  white-space:pre-wrap;
+  text-shadow:none;
+}
+
+.orange{
+  color:#B33D02 !important;
+  font-weight:700;
+}
+
+.chooseBtn{
+  min-width:84px;
+  padding:8px 10px;
+  border-radius:999px;
+  justify-self:end;
+  margin-top:1px;
+}
+
+.selectedGlow{
+  border-color:var(--line);
+  box-shadow:0 0 0 2px rgba(252,151,13,.25), 0 0 14px rgba(0,0,0,.20);
+}
+
+/* Misc UI */
+.note{
+  margin-top:12px;
+  color:var(--muted);
+  font-size:12px;
+  line-height:1.4;
+  padding:10px 12px;
+  border:1px dashed var(--line);
+  border-radius:16px;
+  background:var(--panel);
+}
+
+.toast{
+  margin-top:12px;
+  display:none;
+  padding:10px 12px;
+  border-radius:12px;
+  border:1px solid rgba(255,92,106,.45);
+  background:rgba(255,92,106,.10);
+  color:var(--text);
+  font-size:13px;
+  white-space:pre-wrap;
+}
+
+/* Card view */
+.cardPage{
+  display:none;
+  max-width:1000px;
+  margin:18px auto 60px;
+  padding:0 14px;
+}
+
+.cardTopbar{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  gap:10px;
+  padding:12px 14px;
+  border:1px solid var(--line);
+  border-radius:14px;
+  background:var(--panel);
+  margin-bottom:12px;
+}
+
+.cardTopbar .hint{
+  color:var(--muted);
+  font-size:13px;
+  line-height:1.35;
+}
+
+.cardWrap{
+  width:820px;
+  height:660px;
+  margin:0 auto;
+  position:relative;
+  overflow:hidden;
+  border-radius:0;
+  background:#fff;
+  -webkit-print-color-adjust:exact;
+  print-color-adjust:exact;
+}
+
+.cardBgImg{
+  position:absolute;
+  inset:0;
+  width:100%;
+  height:100%;
+  object-fit:cover;
+  z-index:0;
+  border-radius:0;
+}
+
+.cardContent{
+  position:relative;
+  z-index:2;
+  height:100%;
+  padding:70px;
+  color:#000;
+  display:flex;
+  flex-direction:column;
+}
+
+.cardTitleSpacer{
+  height:110px;
+  flex:0 0 auto;
+}
+
+.cardWarbandTitle{
+  text-align:center;
+  font-size:17px;
+  font-weight:900;
+  color:#000;
+  margin:0 0 20px 0;
+}
+
+.cardBody{
+  display:flex;
+  flex-direction:column;
+  gap:26px;
+  margin-top:0;
+  overflow:hidden;
+}
+
+.cardFeatBlock{
+  background:transparent;
+  border:none;
+  padding:0;
+}
+
+.cardFeatTitle{
+  font-family:var(--font-title);
+  font-weight:900;
+  font-size:var(--cardFeatTitleSize);
+  letter-spacing:.4px;
+  margin:0 0 6px 0;
+  color:#000;
+}
+
+.cardFeatDesc{
+  font-size:var(--cardFeatDescSize);
+  font-weight:500;
+  line-height:1.15;
+  white-space:pre-wrap;
+  color:#000;
+}
+
+.cardFeatDesc br{
+  display:block;
+  margin-top:.5em;
+}
+
+.cardWrap,
+.cardWrap *{
+  text-shadow:none;
+}
+
+.cardWrap .orange{
+  color:#B33D02 !important;
+  font-weight:900;
+}
+
+/* Responsive */
+@media (max-width:980px){
+  header{
+    position:static;
+    flex-direction:column;
+  }
+
+  .controls{
+    min-width:0;
+    justify-content:flex-start;
+  }
+
+  input[type="text"]{
+    width:100%;
+  }
+
+  .cats{
+    flex-direction:column;
+  }
+}
+
+/* Print: only the generated card */
+@media print{
+  body{
+    background:#fff;
+  }
+
+  .wrap,
+  header,
+  .cats,
+  .note,
+  #toast{
+    display:none !important;
+  }
+
+  .cardPage{
+    display:block !important;
+  }
+
+  .cardTopbar{
+    display:none !important;
+  }
+
+  .cardWrap{
+    border:0 !important;
+  }
+}
+
+
+/* ===== Auto-fit generated card text ===== */
+.cardBody{
+  gap:var(--cardBodyGap, 26px);
+}
+
+.cardFeatTitle{
+  font-size:var(--cardFitTitleSize, var(--cardFeatTitleSize));
+}
+
+.cardFeatDesc{
+  font-size:var(--cardFitDescSize, var(--cardFeatDescSize));
+  line-height:var(--cardFitLineHeight, 1.15);
+}
+
+</style>
+</head>
+
+<body>
+  <div class="wrap" id="pickerPage">
+    <header>
+      <div>
+        <h1>Mortalis – Feat Picker</h1>
+        <div class="sub">
+          Pick up to <b>2–4 Feats</b>. Generate opens a new tab with a printable Feat card. </br><b class="featReminder">All Feats last until the end of Turn, except those marked with * - they last for this Activation.</b>
+        </div>
+      </div>
+
+      <div class="controls">
+<button id="saveFeatSheetBtn">Save Feat Sheet</button>
+<button id="loadFeatSheetBtn">Load Feat Sheet</button>
+<button class="btn-danger" id="clearFeatSheetBtn">Clear Feat Sheet</button>
+        <div class="pill">
+          <span>Max feats:</span>
+          <select id="maxFeats">
+            <option value="2">2</option>
+            <option value="3">3</option>
+            <option value="4" selected>4</option>
+          </select>
+        </div>
+
+        <input id="teamName" type="text" placeholder="Optional: Team name" />
+        <div class="pill" id="pickedInfo">Picked: 0 / 4</div>
+
+        <button class="btn-accent" id="btnGenerate">Generate Feat Sheet</button>
+        <button class="btn-danger" id="btnClear">Clear</button>
+      </div>
+    </header>
+
+    <div id="toast" class="toast"></div>
+    <div class="cats"><div class="col" id="colLeft"></div><div class="col" id="colRight"></div></div>
+
+    <div class="note">
+      Tip: In Chrome Print → More settings → enable <b>Background graphics</b> (usually needed for best results).
+    </div>
+  </div>
+
+
+  <!-- Card page (single-page toggle) -->
+  <div class="cardPage" id="cardPage" aria-hidden="true">
+    <div class="cardTopbar">
+      <div class="hint">
+        Tip: If your background image doesn’t print, in Chrome Print → More settings → enable <b>Background graphics</b>.
+      </div>
+      <div style="display:flex; gap:8px; flex-wrap:wrap; justify-content:flex-end;">
+        <button class="btn-accent" id="btnCardPrint">Print</button>
+        <button id="btnCardBack">Back</button>
+      </div>
+    </div>
+
+    <div class="cardWrap" role="document" aria-label="Feat sheet card">
+      <img class="cardBgImg" src="feat-card-bg.jpg" alt="">
+      <div class="cardContent">
+        <div class="cardTitleSpacer" aria-hidden="true"></div>
+        <div class="cardWarbandTitle" id="cardWarbandTitle"></div>
+        <div class="cardBody" id="cardBody"></div>
+      </div>
+    </div>
+  </div>
+
+<script>
+document.addEventListener("DOMContentLoaded", () => {
+  // Error surfacing (helps if something breaks)
+  function showToast(msg){
+    const t = document.getElementById("toast");
+    if(!t) return;
+    t.textContent = msg;
+    t.style.display = "block";
+    clearTimeout(showToast._t);
+    showToast._t = setTimeout(() => { t.style.display = "none"; }, 2600);
+  }
+  window.addEventListener("error", (e) => showToast("JS error: " + (e.message || "Unknown")));
+  window.addEventListener("unhandledrejection", (e) => showToast("JS error: " + ((e.reason && e.reason.message) ? e.reason.message : "Unhandled rejection")));
+
+  // Feat data (pages 24–30)
+  const FEATS = [
+      { category: "Movement", feats: [
+        { name:"Move like the Wind *", plus:true, fp:1, text:`<span class="orange">Up to D3 friendly Fighters</span> with the “Fast” ability can immediately <span class="orange">perform a free Dash</span> action in an order of your choice. This Dash, unlike a normal Dash, does not prevent the Fighter from Charging later this Turn. 
+  
+You cannot use this Feat during the first turn.`},
+        { name:"Adrenaline Rush *", plus:true, fp:1, text:`Use this Feat when a <span class="orange">friendly Fighter is Counteracting.</span>
+  
+  <span class="orange">It can perform an additional 1AP action</span> for free during that counteraction, but both actions must be different.
+  
+Cannot be used with “Superhuman Warrior”.`},
+        { name:"Like a Blur", plus:false, fp:1, text:`Whenever an <span class="orange">Enemy Fighter is shooting a friendly Fighter that performed a Reposition action</span> during this turn, you can <span class="orange">re-roll one of your Defence dice.</span>`},
+        { name:"Move! *", plus:true, fp:1, text:`Use this Feat when a <span class="orange">friendly Fighter is activated.</span>
+  
+Until the end of that Fighter’s activation, <span class="orange">add 1&quot; to its Move stat.</span>`},
+        { name:"Retrieve the Objectives!", plus:false, fp:1, text:`<span class="orange">Select one Objective Marker.</span>
+Whenever a <span class="orange">friendly Fighter performs a Move or Charge</span> action during its activation, you can use this rule;
+  
+If you do, <span class="orange">add 1&quot; to its Move stat</span> until the end of that activation, but it must end that Reposition within 2&quot; of the selected Objective Marker.`},
+      ]},
+      { category: "Shooting and Combat", feats: [
+        { name:"Extreme Aggression", plus:false, fp:1, text:`Whenever a <span class="orange">Friendly Fighter</span> is fighting in Close Combat, <span class="orange">add 1 to the ATK stat</span> of its Close Combat weapons.`},
+        { name:"Rampage *", plus:true, fp:1, text:`Use this Feat after a <span class="orange">friendly Fighter performs the Close Combat action, if it’s no longer within 1&quot; of enemy Fighters.</span>
+  
+That friendly Fighter can immediately <span class="orange">perform a free Charge</span> action (even if it’s already performed the Charge action during that activation), but <span class="orange">cannot move more than 3&quot;</span> during that action.`},
+        { name:"Come at Me...", plus:false, fp:1, text:`Friendly Fighters in Close Combat gain <span class="orange">Reroll (2)</span> to their <span class="orange">Close Combat weapons.</span>`},
+        { name:"Sadistic", plus:false, fp:1, text:`Whenever a Friendly Fighter is shooting against or fighting against a <span class="orange">Wounded Enemy Fighter</span> (eg. A Fighter that has taken 1 or more damage), that friendly Fighter’s weapons have the <span class="orange">Reroll (1)</span> weapon rule.`},
+        { name:"Surgical Precision", plus:false, fp:1, text:`<span class="orange">Friendly Fighters’ Close Combat weapons</span> have the <span class="orange">Reroll (1)</span> weapon rule.`},
+        { name:"Steady Shot", plus:false, fp:1, text:`Whenever a Friendly Fighter is shooting during an Activation in which it <span class="orange">hasn’t performed a Reposition</span>, its <span class="orange">Ranged Weapons have the Reroll (1)</span> weapon rule.
+  
+Note that the Fighter is NOT restricted from performing an action that involves a Reposition after performing a Shooting Action.`},
+        { name:"Just... Die already! *", plus:true, fp:1, text:`Use this Feat <span class="orange">after rolling your Attack Dice</span> for a friendly Fighter, if it’s shooting against or fighting in Close Combat against a <span class="orange">Wounded Enemy Fighter.</span>
+(eg. A Fighter that has taken 1 or more damage).
+  
+  <span class="orange">You may reroll ANY of your attack dice</span> for that attack.`},
+        { name:"Crossfire *", plus:true, fp:1, text:`Use this Feat <span class="orange">after rolling your Attack Dice</span> for a friendly Fighter, if it’s shooting an Enemy Fighter that has been the <span class="orange">Target of another Fighters Shooting Action this turn.</span>
+  
+You may <span class="orange">reroll ANY of your attack dice</span> for that attack.`},
+        { name:"Don’t let them have it! *", plus:true, fp:1, text:`Use this Feat <span class="orange">after rolling your Attack Dice</span> for a Friendly Fighter, if it’s shooting against or fighting in Close Combat against an <span class="orange">Enemy Fighter that controls an objective marker</span> or one of your mission markers.
+  
+You may <span class="orange">reroll ANY of your Attack Dice</span> for that attack.`},
+        { name:"Brute Force *", plus:true, fp:1, text:`Use this Feat when a <span class="orange">Friendly Fighter attacks in Close Combat, before rolling your Attack Dice.</span>
+  
+<span class="orange">Add 1 to both Dmg stats</span> of that friendly Fighters’ Close Combat weapons and the <span class="orange">MW(2)</span> Special Rule.`},
+        { name:"Reactive Shots", plus:false, fp:1, text:`Whenever a Friendly Fighter is <span class="orange">shooting at a Spent Enemy Fighter</span>, that friendly Fighter’s ranged weapons have the <span class="orange">Reroll (1)</span> weapon rule.`},
+        { name:"Brutal Charge", plus:false, fp:1, text:`Whenever a Friendly Fighter is activated, <span class="orange">if the first action it performs during that activation is the Charge action</span>, when it ends its Reposition during that action, you may <span class="orange">inflict D3 MW on one enemy Fighter within 1”.</span>`},
+        { name:"No hiding from me...", plus:false, fp:1, text:`<span class="orange">Enemy Fighters within 8”</span> of your Fighters <span class="orange">does not get -2 to Hit</span> for being in <span class="orange">Cover of Light Terrain.</span>`},
+        { name:"Incredible Aim *", plus:true, fp:1, text:`Use this Feat when a <span class="orange">Friendly Fighter is performing the Shoot action with a Light/Medium/Special ranged</span> weapon, and you are selecting a valid target;
+<span class="orange">Enemy Fighters Locked in Combat are now Valid Targets and are +1 To Hit.</span>`},
+        { name:"Chemical Warfare *", plus:true, fp:1, text:`Use this Feat during a <span class="orange">Friendly Fighter’s Activation or Counteraction</span>, before or after it performs an action;
+  
+One <span class="orange">Enemy Fighter within 3&quot;</span> of that Fighter gains a <span class="orange">Poison token.</span>`},
+        { name:"Zealous Charge", plus:false, fp:1, text:`Whenever a <span class="orange">Friendly Fighter</span> is fighting in Close Combat during an activation in which it <span class="orange">performed the Charge action</span>, its <span class="orange">Close Combat weapons</span> gains the <span class="orange">Crits on 9+</span> weapon rule.`},
+        { name:"Target Acquired", plus:false, fp:1, text:`<span class="orange">Choose an enemy Fighter.</span>
+  
+For the rest of the turn, <span class="orange">any to hit rolls against it</span>, Close Combat or Shooting attacks, gain <span class="orange">Reroll (1).</span>`},
+        { name:"Loud Interference Scrambler", plus:false, fp:1, text:`Whenever an <span class="orange">Enemy Fighter within 6&quot; of a Friendly Fighter</span> is shooting or fighting in Close Combat, your <span class="orange">opponent cannot re-roll their Attack Dice.</span>`},
+        { name:"Strike down the coward!", plus:false, fp:1, text:`Whenever an Enemy Fighter within 1&quot; of a Friendly Fighter makes a <span class="orange">Fall Back action</span>, but before that fighter moves away;
+  
+Roll a d12: <span class="orange">On a 7+, allocate 3+D3 MW</span> to that enemy fighter.`},
+      ]},
+      { category: "Defense", feats: [
+        { name:"Dodge and Weave", plus:false, fp:1, text:`Whenever a <span class="orange">Friendly Fighter is the Target</span> of a Shooting Action, and <span class="orange">it does not have any benefits from Cover</span>;
+  
+You may <span class="orange">retain one Defence dice as a normal success</span> without rolling it.`},
+        { name:"Protected by Fate *", plus:true, fp:1, text:`Use this Feat when a <span class="orange">Friendly Fighter is the Target</span> of a Shooting or Close Combat action, before the Attack Dice are rolled:
+  
+<span class="orange">Change the Attacker’s Critical Hits to Normal Hits.</span>`},
+        { name:"Protect the Objective!", plus:false, fp:1, text:`Whenever a <span class="orange">Friendly Fighter within 3&quot; of an objective</span> marker is the Target of a Shooting Action, you can <span class="orange">reroll one of your Defence dice.</span>`},
+        { name:"Take Cover!", plus:false, fp:1, text:`Whenever a Friendly Fighter that has <span class="orange">Heavy Cover is the Target</span> of a Shooting Action, you can <span class="orange">reroll one of your Defence dice.</span>`},
+        { name:"Combat Medic Stimms*", plus:true, fp:1, text:`Use this Feat when a <span class="orange">Friendly Fighter is activated and not within 1” of enemy Fighters.</span>
+  
+That friendly Fighter <span class="orange">regains up to D3+2 lost wounds.</span> You cannot use this Feat for each friendly Fighter more than once pr. battle.`},
+        { name:"Steadfast", plus:false, fp:1, text:`Whenever a <span class="orange">Friendly Fighter that has not performed a Reposition Action this Turn</span> is the Target of a Shooting or Close Combat Action;
+  
+<span class="orange">Normal and Critical Dmg of 4 or more inflicts 1 less damage</span> on that friendly Fighter.`},
+        { name:"Divine Protection *", plus:true, fp:1, text:`Use this Feat when a <span class="orange">Friendly Fighter is the Target of a Shooting Action</span>, AFTER rolling the Defence Dice;
+  
+You can <span class="orange">retain one of your Normal successes as a Critical success instead.</span>`},
+        { name:"Tough as Nails *", plus:true, fp:1, text:`Use this Feat when an <span class="orange">Attack inflicts damage</span> on a Friendly Fighter.
+  
+<span class="orange">Halve the inflicted damage of one Attack dice</span> of your choosing (either Normal or Crit) rounding up, to a minimum of 2.`},
+      ]},
+      { category: "Tactical", feats: [
+        { name:"Neuro Scrambler *", plus:true, fp:1, text:`Use this Feat during a <span class="orange">Friendly Fighter’s activation</span>, before or after it performs an action.
+  
+Select one Enemy Fighter visible to and <span class="orange">within 6&quot;</span> of that friendly Fighter.
+Until the end of turn, <span class="orange">subtract 1 from that Enemy Fighters’ AP stat.</span>`},
+        { name:"Massive Vox Interference * (2 FP)", plus:true, fp:2, text:`Use this Feat when <span class="orange">your opponent declares which Fighter they Activate.</span>
+  
+<span class="orange">Your opponent cannot activate that Fighter this activation</span>, and must pick another. If there are no other enemy Fighters eligible to be activated, this Feat has no effect.
+  
+This Feat can only be used <span class="orange">once pr. Game.</span>`},
+        { name:"Tactical Genius *", plus:true, fp:1, text:`Use this Feat at the start of the Turn, when <span class="orange">rolling off to decide initiative</span> or drawing a token. You can do one of the following:
+  
+  <span class="orange">• Re-roll your dice/Put the token back and redraw.</span>
+  <span class="orange">• Force your opponent to re-roll their dice.</span>`},
+      ]},
+      { category: "Other", feats: [
+        { name:"Maximum Effort! *", plus:true, fp:1, text:`Use this Feat when a <span class="orange">Friendly Fighter is activated.</span>
+Until the end of that Fighter’s activation, <span class="orange">add 1 to its AP stat.</span>`},
+        { name:"Final Spite *", plus:true, fp:1, text:`Use this Feat when a <span class="orange">Ready Friendly Fighter is Slain.</span>
+  
+Before it is removed from the Battlefield, it can immediately <span class="orange">perform one Free Action.</span>`},
+        { name:"Terrifying", plus:false, fp:1, text:`Whenever an Enemy Fighter is <span class="orange">within 1” of Friendly Fighters with HP of 14 or more</span>, any To Hit Rolls of that Enemy Fighter has a -1 modifier.`},
+        { name:"Scrapcode Injection *", plus:true, fp:1, text:`Use this Feat when a Friendly Fighter is the <span class="orange">Target of a Shooting Action</span>, before rolling To Hit.
+  
+The Shooters <span class="orange">ranged weapons gain the Risky weapon</span> rule until the end of that attack.`},
+        { name:"Expert Teamwork *", plus:true, fp:1, text:`Use this Feat when a <span class="orange">Friendly Fighter is activated.</span>
+Select <span class="orange">one other Ready Friendly Fighter visible to and within 3&quot;</span> of that Fighter. When that first friendly Fighter is Spent, you can <span class="orange">activate that other Friendly Fighter</span> before your Opponent Activates/a new initiative token is drawn.
+  
+When that other Friendly Fighter is expended, your opponent then activates as normal.`},
+        { name:"Seize the Objectives!", plus:false, fp:1, text:`If there are <span class="orange">more Friendly Fighters than Enemy Fighters in Proximity to an Objective</span>, the Friendly Fighters count as <span class="orange">Controlling it.</span>
+  
+Also: Whenever a friendly Fighter is <span class="orange">within 3&quot;</span> of an Objective, <span class="orange">add 1 to the ATK</span> stat of its Close Combat weapons.`},
+        { name:"Revenge!", plus:false, fp:1, text:`Use this Feat when a <span class="orange">Friendly Fighter is Slain</span> by an Enemy Fighter. Until the end of the battle, whenever <span class="orange">that Enemy Fighter is the Target of a Shooting or Close Combat Action</span>, Friendly Fighter's weapons gain the <span class="orange">Reroll (1)</span> weapon rule.
+  
+You <span class="orange">cannot use this Feat again</span> during the battle until <span class="orange">that Enemy Fighter is Slain.</span>`},
+      ]},
+    ];
+
+  // State
+  let selected = [];
+  let max = 4;
+
+  const FEAT_SHEET_STORAGE_KEY = "mortalis_feat_sheet_state_v2";
+
+  function collectFeatSheetState(){
+    return {
+      selected: selected.slice(),
+      max: max,
+      maxFeats: elMax ? elMax.value : String(max),
+      teamName: teamName ? teamName.value : ""
+    };
+  }
+
+  function saveFeatSheetState(){
+    try{
+      localStorage.setItem(FEAT_SHEET_STORAGE_KEY, JSON.stringify(collectFeatSheetState()));
+    }catch(e){}
+  }
+
+  function applyFeatSheetState(state){
+    if(!state || typeof state !== "object") return;
+
+    if(elMax && state.maxFeats != null){
+      elMax.value = String(state.maxFeats);
+      max = parseInt(elMax.value, 10) || 4;
+    } else if(state.max != null){
+      max = parseInt(state.max, 10) || 4;
+      if(elMax) elMax.value = String(max);
+    }
+
+    if(teamName && state.teamName != null){
+      teamName.value = String(state.teamName);
+    }
+
+    selected = Array.isArray(state.selected) ? state.selected.slice(0, max) : [];
+    render();
+    saveFeatSheetState();
+  }
+
+  function loadFeatSheetState(){
+    try{
+      const raw = localStorage.getItem(FEAT_SHEET_STORAGE_KEY);
+      if(!raw) return;
+      applyFeatSheetState(JSON.parse(raw));
+    }catch(e){}
+  }
+
+  function downloadFeatSheetState(){
+    const blob = new Blob(
+      [JSON.stringify(collectFeatSheetState(), null, 2)],
+      { type: "application/json" }
+    );
+    const a = document.createElement("a");
+    a.href = URL.createObjectURL(blob);
+    a.download = "Mortalis_Feat_Sheet.json";
+    document.body.appendChild(a);
+    a.click();
+    a.remove();
+    setTimeout(() => URL.revokeObjectURL(a.href), 1000);
+  }
+
+  function readFeatSheetFile(file){
+    if(!file) return;
+    const reader = new FileReader();
+    reader.onload = () => {
+      try{
+        applyFeatSheetState(JSON.parse(reader.result));
+      }catch(e){
+        showToast("Invalid Feat Sheet file.");
+      }
+    };
+    reader.readAsText(file);
+  }
+
+  function featId(cat, featName){ return cat + "::" + featName; }
+  function getFeatById(id){
+    const parts = id.split("::");
+    const cat = parts[0];
+    const name = parts.slice(1).join("::");
+    const c = FEATS.find(x => x.category === cat);
+    if(!c) return null;
+    const f = c.feats.find(y => y.name === name);
+    if(!f) return null;
+    return { category: cat, ...f };
+  }
+
+  const elLeft = document.getElementById("colLeft");
+  const elRight = document.getElementById("colRight");
+  const elMax = document.getElementById("maxFeats");
+  const elPickedInfo = document.getElementById("pickedInfo");
+  const teamName = document.getElementById("teamName");
+  const btnGenerate = document.getElementById("btnGenerate");
+  const btnClear = document.getElementById("btnClear");
+
+  function updateTop(){
+    elPickedInfo.textContent = "Picked: " + selected.length + " / " + max;
+    btnGenerate.classList.toggle("btn-disabled", selected.length === 0);
+  }
+
+  function toggleSelect(id){
+    const idx = selected.indexOf(id);
+    if(idx >= 0){
+      selected.splice(idx, 1);
+      render();
+      saveFeatSheetState();
+      return;
+    }
+    if(selected.length >= max){
+      showToast("Max feats is " + max + ". Remove one first.");
+      return;
+    }
+    selected.push(id);
+    render();
+    saveFeatSheetState();
+  }
+
+  function render(){
+    elLeft.innerHTML = "";
+    elRight.innerHTML = "";
+    FEATS.forEach(cat => {
+      const box = document.createElement("section");
+      box.className = "cat";
+
+      const head = document.createElement("div");
+      head.className = "catHead";
+
+      const h = document.createElement("h2");
+      h.textContent = cat.category;
+
+      const count = document.createElement("div");
+      count.className = "count";
+      count.textContent = String(cat.feats.length);
+
+      head.appendChild(h);
+      head.appendChild(count);
+
+      const list = document.createElement("div");
+      list.className = "featList";
+
+      cat.feats.forEach(f => {
+        const id = featId(cat.category, f.name);
+        const isSel = selected.includes(id);
+
+        const item = document.createElement("div");
+        item.className = "feat" + (isSel ? " selectedGlow" : "");
+
+        const left = document.createElement("div");
+
+        const nameRow = document.createElement("div");
+        nameRow.className = "nameRow";
+
+        const n = document.createElement("div");
+        n.className = "name";
+        n.textContent = f.name;
+
+nameRow.appendChild(n);
+
+        const d = document.createElement("div");
+        d.className = "desc";
+        d.innerHTML = f.text;
+
+        left.appendChild(nameRow);
+        left.appendChild(d);
+
+        const btn = document.createElement("button");
+        btn.className = "chooseBtn " + (isSel ? "btn-danger" : "btn-accent");
+        btn.textContent = isSel ? "Remove" : "Choose";
+        btn.addEventListener("click", () => toggleSelect(id));
+
+        item.appendChild(left);
+        item.appendChild(btn);
+        list.appendChild(item);
+      });
+
+      box.appendChild(head);
+      box.appendChild(list);
+      if(["Movement","Other","Defense"].includes(cat.category)){
+        elLeft.appendChild(box);
+      } else {
+        elRight.appendChild(box);
+      }
+    });
+
+    updateTop();
+  }
+
+  elMax.addEventListener("change", () => {
+    max = parseInt(elMax.value, 10);
+    if(selected.length > max){
+      selected = selected.slice(0, max);
+      showToast("Max set to " + max + ". Trimmed selection to fit.");
+    }
+    render();
+    saveFeatSheetState();
+  });
+
+  btnClear.addEventListener("click", () => {
+    selected = [];
+    render();
+    saveFeatSheetState();
+  });
+
+  function escapeHtml(str){
+    return String(str || "")
+      .split("&").join("&amp;")
+      .split("<").join("&lt;")
+      .split(">").join("&gt;")
+      .split('"').join("&quot;")
+      .split("'").join("&#039;");
+  }
+
+
+  function fitGeneratedCardText(){
+    const cardBody = document.getElementById("cardBody");
+    if(!cardBody) return;
+
+    let titleSize = 13;
+    let descSize = 12.5;
+    let gap = 26;
+    let lineHeight = 1.15;
+
+    const minTitleSize = 8.5;
+    const minDescSize = 8.2;
+    const minGap = 6;
+    const minLineHeight = 1.02;
+
+    function apply(){
+      cardBody.style.setProperty("--cardFitTitleSize", titleSize + "px");
+      cardBody.style.setProperty("--cardFitDescSize", descSize + "px");
+      cardBody.style.setProperty("--cardBodyGap", gap + "px");
+      cardBody.style.setProperty("--cardFitLineHeight", String(lineHeight));
+    }
+
+    apply();
+
+    let guard = 0;
+    while(cardBody.scrollHeight > cardBody.clientHeight && guard < 100){
+      if(gap > minGap){
+        gap -= 1;
+      } else if(descSize > minDescSize){
+        descSize -= 0.25;
+      } else if(titleSize > minTitleSize){
+        titleSize -= 0.25;
+      } else if(lineHeight > minLineHeight){
+        lineHeight -= 0.01;
+      } else {
+        break;
+      }
+      apply();
+      guard++;
+    }
+  }
+
+  function generateCardPage(){
+    const feats = selected.map(getFeatById).filter(Boolean);
+
+    // Populate warband title
+    const titleEl = document.getElementById("cardWarbandTitle");
+    const tn = (teamName && teamName.value) ? teamName.value.trim() : "";
+    titleEl.textContent = tn;
+
+    // Populate card with ONLY feat title + description
+    const cardBody = document.getElementById("cardBody");
+    cardBody.innerHTML = "";
+
+    if(feats.length === 0){
+      const empty = document.createElement("div");
+      empty.className = "cardFeatBlock";
+      empty.innerHTML = '<div class="cardFeatDesc">No feats selected.</div>';
+      cardBody.appendChild(empty);
+    } else {
+      feats.forEach(f => {
+        const block = document.createElement("div");
+        block.className = "cardFeatBlock";
+
+        const t = document.createElement("div");
+        t.className = "cardFeatTitle";
+        t.textContent = f.name;
+
+        const d = document.createElement("div");
+        d.className = "cardFeatDesc";
+        d.innerHTML = f.text; // already has spaces instead of \n in this file
+
+        block.appendChild(t);
+        block.appendChild(d);
+        cardBody.appendChild(block);
+      });
+    }
+
+    // Toggle to card view
+    document.getElementById("pickerPage").style.display = "none";
+    const cp = document.getElementById("cardPage");
+    cp.style.display = "block";
+    cp.setAttribute("aria-hidden", "false");
+
+    requestAnimationFrame(() => {
+      fitGeneratedCardText();
+      requestAnimationFrame(fitGeneratedCardText);
+    });
+  }
+
+  // Card buttons
+  document.getElementById("btnCardBack").addEventListener("click", () => {
+    document.getElementById("cardPage").style.display = "none";
+    document.getElementById("cardPage").setAttribute("aria-hidden", "true");
+    document.getElementById("pickerPage").style.display = "block";
+    window.scrollTo(0, 0);
+  });
+
+  document.getElementById("btnCardPrint").addEventListener("click", () => {
+    fitGeneratedCardText();
+    window.print();
+  });
+
+  btnGenerate.addEventListener("click", () => {
+    if(selected.length === 0){
+      showToast("Choose at least 1 feat first.");
+      return;
+    }
+    generateCardPage();
+  });
+
+
+  if(teamName){
+    teamName.addEventListener("input", saveFeatSheetState);
+  }
+
+  const btnSaveFeatSheet = document.getElementById("saveFeatSheetBtn");
+  const btnLoadFeatSheet = document.getElementById("loadFeatSheetBtn");
+  const btnClearFeatSheet = document.getElementById("clearFeatSheetBtn");
+  const featSheetLoadInput = document.getElementById("featSheetLoadInput");
+
+  if(btnSaveFeatSheet){
+    btnSaveFeatSheet.addEventListener("click", downloadFeatSheetState);
+  }
+
+  if(btnLoadFeatSheet && featSheetLoadInput){
+    btnLoadFeatSheet.addEventListener("click", () => featSheetLoadInput.click());
+    featSheetLoadInput.addEventListener("change", (e) => {
+      const file = e.target.files && e.target.files[0];
+      readFeatSheetFile(file);
+      featSheetLoadInput.value = "";
+    });
+  }
+
+  if(btnClearFeatSheet){
+    btnClearFeatSheet.addEventListener("click", () => {
+      if(!confirm("Clear Feat Sheet?")) return;
+      localStorage.removeItem(FEAT_SHEET_STORAGE_KEY);
+      selected = [];
+      max = 4;
+      if(elMax) elMax.value = "4";
+      if(teamName) teamName.value = "";
+      render();
+    });
+  }
+
+  loadFeatSheetState();
+
+  if(document.fonts && document.fonts.ready){
+    document.fonts.ready.then(fitGeneratedCardText).catch(() => {});
+  }
+
+  render();
+});
+</script>
+<input id="featSheetLoadInput" type="file" accept=".json,application/json" style="display:none;">
+
+</body>
+</html>
