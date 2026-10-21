@@ -4603,6 +4603,7 @@ document.addEventListener("DOMContentLoaded", function () {
     box-shadow: 0 10px 30px rgba(0,0,0,.18);
     background-repeat: no-repeat;
     background-size: cover;
+    background-color: #fff; /* shows if the texture is off or fails to load */
   }
 
   /* --- Big portrait behind header + stat pills (stops before options pill) --- */
@@ -4806,12 +4807,10 @@ document.addEventListener("DOMContentLoaded", function () {
     /* Scalable typography */
     --opt-scale: 1;
     font-size: calc(13px * var(--opt-scale));
-    line-height: calc(1.25 * var(--opt-scale));
+    line-height: 1.15; /* unitless, so it already scales with the font size */
     padding-bottom: 10px;
-}
-
   }
-  .cc-sec{break-inside:auto; page-break-inside:auto; margin: 0 0 18px 0;}
+  .cc-sec{break-inside:auto; page-break-inside:auto; margin: 0 0 0.9em 0;}
   .cc-sec-title{font-weight:900; margin: 0 0 6px 0; color:#111; font-size:1.15em;}
 
   .cc-sec + .cc-sec{
@@ -4837,7 +4836,7 @@ document.addEventListener("DOMContentLoaded", function () {
 }
 
   .cc-list{margin:0; padding-left: 18px;}
-  .cc-item{margin: 0 0 6px 0;}
+  .cc-item{margin: 0 0 0.45em 0;}
 
   .cc-muted{color:#555; font-weight: 600;}
 
@@ -5394,8 +5393,16 @@ addSection("Abilities", fighter.abilities);
           var availH = Math.max(0, optPill.clientHeight - padT - padB);
           var availW = Math.max(0, optPill.clientWidth  - padL - padR);
 
+          // Printing re-lays out the text with slightly different font metrics than
+          // the screen, so lines can wrap a little later and push the last entries
+          // past the bottom. Fit the text into a slightly shorter box to leave
+          // headroom for that. (Overflow in the two-column layout spills sideways
+          // into extra columns, so it is detected through the width.)
+          var safetyH = Math.max(12, availH * 0.04);
+          var fitH = Math.max(0, availH - safetyH);
+
           optInner.style.boxSizing = "border-box";
-          optInner.style.height = availH + "px";
+          optInner.style.height = fitH + "px";
           optInner.style.width  = availW + "px";
 
           function applyScale(s){
@@ -5405,23 +5412,19 @@ addSection("Abilities", fighter.abilities);
             // With font-size scaling, scrollWidth/scrollHeight reflect the real layout.
             var w = optInner.scrollWidth || 0;
             var h = optInner.scrollHeight || 0;
-            return (w <= availW + 1) && (h <= availH + 1);
+            return (w <= availW + 1) && (h <= fitH + 1);
           }
 
           applyScale(1.0);
           if (fits()) return;
 
-          // Allow deeper shrinking to guarantee fit (prevents text escaping below pill)
-          var lo = 0.20, hi = 1.0, best = 0.20;
-          for (var i=0;i<14;i++){
-            var mid = (lo + hi) / 2;
-            applyScale(mid);
-            if (fits()){
-              best = mid;
-              lo = mid;
-            } else {
-              hi = mid;
-            }
+          // Step down from full size and keep the first size that fits.
+          // (A binary search can skip good sizes here, because entries jump between
+          // the two columns as the text shrinks, so "fits" doesn't change smoothly.)
+          var best = 0.20;
+          for (var sc = 0.99; sc >= 0.20; sc -= 0.01){
+            applyScale(sc);
+            if (fits()){ best = sc; break; }
           }
           applyScale(best);
 
