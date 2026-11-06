@@ -1,0 +1,700 @@
+{
+  "app": "Mortalis / Dark Realms Team Builder",
+  "version": 1,
+  "savedAt": "2026-04-25T23:11:23.580Z",
+  "warbandName": "Eldar Aspect Team",
+  "limit": 400,
+  "fighters": [
+    {
+      "sourceFileName": "mortalis_fighter.json",
+      "fighterFile": {
+        "app": "Mortalis Fighter Builder",
+        "version": 1,
+        "savedAt": "2026-04-25T23:09:59.094Z",
+        "fighter": {
+          "name": "Wraithseer",
+          "isWarlock": false,
+          "isMasterWarlock": true,
+          "portraitDataUrl": "",
+          "portraitKey": "",
+          "stats": {
+            "move": 6,
+            "def": 6,
+            "ap": 3,
+            "hp": 12,
+            "atk": 4,
+            "fight": 6,
+            "shoot": 6
+          },
+          "ccWeapons": [
+            {
+              "id": "psychicStaff",
+              "name": "Psychic Staff",
+              "baseProfile": "ATK User, Hit User, DMG 4/6, Crits on 9+, Fire",
+              "profile": "ATK User, Hit User, DMG 4/6, Crits on 9+, Fire",
+              "basePoints": 8,
+              "points": 8,
+              "upgrades": {
+                "poison": false,
+                "enchanted": false,
+                "cursed": false,
+                "truestrike": false,
+                "masterCrafted": false
+              },
+              "displayNameOverride": "Seer Staff"
+            }
+          ],
+          "rangedWeapons": [
+            {
+              "id": "boltPistol",
+              "name": "Bolt Pistol",
+              "baseProfile": "ATK 4, Hit User, DMG 3/4, Rng 8\", Piercing Crits (-2), Quick",
+              "profile": "ATK 4, Hit User, DMG 3/4, Rng 8\", Piercing Crits (-2), Quick",
+              "basePoints": 3,
+              "points": 3,
+              "upgrades": {
+                "poison": false,
+                "enchanted": false,
+                "cursed": false,
+                "truestrike": false,
+                "masterCrafted": false
+              },
+              "displayNameOverride": "Shuriken Pistol"
+            }
+          ],
+          "abilities": [
+            {
+              "id": "fast",
+              "name": "Fast",
+              "points": 2,
+              "effect": "This Fighter may perform a free Dash action during its activation (no AP cost)."
+            }
+          ],
+          "leaderAbilities": [
+            {
+              "id": "guidance",
+              "name": "Guidance",
+              "points": 0,
+              "effect": "1 AP: Choose a friendly Fighter within Line of Sight. That Fighter gains 1 AP until end of turn."
+            },
+            {
+              "id": "masterTactician",
+              "name": "Master Tactician",
+              "points": 0,
+              "effect": "1 AP: You immediately gain 1 FP."
+            }
+          ],
+          "spells": [
+            {
+              "id": "twistOfWill",
+              "name": "TWIST OF WILL",
+              "points": 0,
+              "effect": "Range: 12\"<br><br>Target must reroll all successful attack rolls on its next activation.<br><br>Power Surge (MV 9): Target also cannot Charge until next turn.",
+              "cv": 7
+            },
+            {
+              "id": "lightningBolt",
+              "name": "LIGHTNING BOLT",
+              "points": 0,
+              "effect": "Range: —<br><br>Target suffers D3+2 MW.<br><br>Power Surge (MV 10): D3+3 MW.",
+              "cv": 8
+            },
+            {
+              "id": "mendFlesh",
+              "name": "MEND FLESH",
+              "points": 0,
+              "effect": "Range: 12\"<br><br>Restore D3+1 HP to a friendly Fighter.<br><br>Power Surge (MV 10): Restore D3+2 HP and remove 1 Poison/Burning token.",
+              "cv": 6
+            }
+          ],
+          "equipment": [],
+          "points": {
+            "base": 16,
+            "stats": 18,
+            "warlock": 23,
+            "ccWeapons": 8,
+            "rangedWeapons": 3,
+            "abilities": 2,
+            "leaderAbilities": 0,
+            "spells": 0,
+            "equipment": 0
+          }
+        }
+      }
+    },
+    {
+      "sourceFileName": "mortalis_fighter.json",
+      "fighterFile": {
+        "app": "Mortalis Fighter Builder",
+        "version": 1,
+        "savedAt": "2026-04-25T23:11:10.861Z",
+        "fighter": {
+          "name": "Warp Spider Exarch",
+          "isWarlock": false,
+          "isMasterWarlock": false,
+          "portraitDataUrl": "",
+          "portraitKey": "",
+          "stats": {
+            "move": 7,
+            "def": 7,
+            "ap": 2,
+            "hp": 11,
+            "atk": 5,
+            "fight": 5,
+            "shoot": 11
+          },
+          "ccWeapons": [
+            {
+              "id": "powerWeapon",
+              "name": "Power Weapon",
+              "baseProfile": "ATK User, Hit User, DMG 4/6, Crits on 9+",
+              "profile": "ATK User, Hit User, DMG 4/6, Crits on 9+",
+              "basePoints": 7,
+              "points": 7,
+              "upgrades": {
+                "poison": false,
+                "enchanted": false,
+                "cursed": false,
+                "truestrike": false,
+                "masterCrafted": false
+              },
+              "displayNameOverride": "Spider Talons"
+            }
+          ],
+          "rangedWeapons": [],
+          "abilities": [
+            {
+              "id": "fast",
+              "name": "Fast",
+              "points": 2,
+              "effect": "This Fighter may perform a free Dash action during its activation (no AP cost)."
+            }
+          ],
+          "leaderAbilities": [],
+          "spells": [],
+          "equipment": [
+            {
+              "id": "flightDevice",
+              "name": "Jump Pack/Rokkit Pack/Wings",
+              "points": 10,
+              "effect": "Gains Jump Move: +3\" Move and may ignore terrain and vertical height when repositioning.",
+              "dynamicType": "percentStats",
+              "dynamicFactor": 0.3333333333333333,
+              "displayNameOverride": "Blink Pack"
+            }
+          ],
+          "points": {
+            "base": 16,
+            "stats": 14,
+            "warlock": 0,
+            "ccWeapons": 7,
+            "rangedWeapons": 0,
+            "abilities": 2,
+            "leaderAbilities": 0,
+            "spells": 0,
+            "equipment": 10
+          }
+        }
+      }
+    },
+    {
+      "sourceFileName": "mortalis_fighter.json",
+      "fighterFile": {
+        "app": "Mortalis Fighter Builder",
+        "version": 1,
+        "savedAt": "2026-04-25T23:10:45.621Z",
+        "fighter": {
+          "name": "Dark Reaper (Wraith Cannon)",
+          "isWarlock": false,
+          "isMasterWarlock": false,
+          "portraitDataUrl": "",
+          "portraitKey": "",
+          "stats": {
+            "move": 6,
+            "def": 7,
+            "ap": 2,
+            "hp": 10,
+            "atk": 4,
+            "fight": 6,
+            "shoot": 6
+          },
+          "ccWeapons": [
+            {
+              "id": "beastClawsBite",
+              "name": "Beast Claws/Bite",
+              "baseProfile": "ATK User, Hit User, DMG 3/4",
+              "profile": "ATK User, Hit User, DMG 3/4",
+              "basePoints": 2,
+              "points": 2,
+              "upgrades": {
+                "poison": false,
+                "enchanted": false,
+                "cursed": false,
+                "truestrike": false,
+                "masterCrafted": false
+              },
+              "displayNameOverride": "Blades"
+            }
+          ],
+          "rangedWeapons": [
+            {
+              "id": "wraithCannon",
+              "name": "Wraith Cannon",
+              "baseProfile": "ATK 4, Hit User, DMG 6/3, MW (3), Heavy (Dash), Piercing (-4), Crits on 9+",
+              "profile": "ATK 4, Hit User, DMG 6/3, MW (3), Heavy (Dash), Piercing (-4), Crits on 9+",
+              "basePoints": 13,
+              "points": 13,
+              "upgrades": {
+                "poison": false,
+                "enchanted": false,
+                "cursed": false,
+                "truestrike": false,
+                "masterCrafted": false
+              }
+            }
+          ],
+          "abilities": [
+            {
+              "id": "fast",
+              "name": "Fast",
+              "points": 2,
+              "effect": "This Fighter may perform a free Dash action during its activation (no AP cost)."
+            }
+          ],
+          "leaderAbilities": [],
+          "spells": [],
+          "equipment": [],
+          "points": {
+            "base": 16,
+            "stats": 11,
+            "warlock": 0,
+            "ccWeapons": 2,
+            "rangedWeapons": 13,
+            "abilities": 2,
+            "leaderAbilities": 0,
+            "spells": 0,
+            "equipment": 0
+          }
+        }
+      }
+    },
+    {
+      "sourceFileName": "mortalis_Wraith_guard.json",
+      "fighterFile": {
+        "app": "Mortalis Fighter Builder",
+        "version": 1,
+        "savedAt": "2026-04-25T23:07:58.580Z",
+        "fighter": {
+          "name": "Wraithguard (Blades)",
+          "isWarlock": false,
+          "isMasterWarlock": false,
+          "portraitDataUrl": "",
+          "portraitKey": "",
+          "stats": {
+            "move": 6,
+            "def": 5,
+            "ap": 2,
+            "hp": 15,
+            "atk": 4,
+            "fight": 5,
+            "shoot": 11
+          },
+          "ccWeapons": [
+            {
+              "id": "monstrousClaws",
+              "name": "Monstrous Claws",
+              "baseProfile": "ATK User, Hit User, DMG 5/6, MW (1)",
+              "profile": "ATK User, Hit User, DMG 5/6, MW (1)",
+              "basePoints": 6,
+              "points": 8,
+              "upgrades": {
+                "poison": false,
+                "enchanted": true,
+                "cursed": false,
+                "truestrike": false,
+                "masterCrafted": false
+              },
+              "displayNameOverride": "Wraith Blades"
+            }
+          ],
+          "rangedWeapons": [],
+          "abilities": [
+            {
+              "id": "extremelyResilient",
+              "name": "Extremely Resilient",
+              "points": 5,
+              "effect": "Whenever this Fighter takes damage from an attack, remove 1 point of damage from the Normal/Crit Damage characteristic of the weapon, to a minimum of 1. (Eg. Damage 3/4 becomes Damage 2/3, etc.)",
+              "dynamicType": "percentHp",
+              "dynamicFactor": 0.3333333333333333
+            }
+          ],
+          "leaderAbilities": [],
+          "spells": [],
+          "equipment": [],
+          "points": {
+            "base": 16,
+            "stats": 14,
+            "warlock": 0,
+            "ccWeapons": 8,
+            "rangedWeapons": 0,
+            "abilities": 5,
+            "leaderAbilities": 0,
+            "spells": 0,
+            "equipment": 0
+          }
+        }
+      }
+    },
+    {
+      "sourceFileName": "mortalis_Wraith_guard.json",
+      "fighterFile": {
+        "app": "Mortalis Fighter Builder",
+        "version": 1,
+        "savedAt": "2026-04-25T23:11:04.126Z",
+        "fighter": {
+          "name": "Wraithguard (Gun)",
+          "isWarlock": false,
+          "isMasterWarlock": false,
+          "portraitDataUrl": "",
+          "portraitKey": "",
+          "stats": {
+            "move": 6,
+            "def": 5,
+            "ap": 2,
+            "hp": 15,
+            "atk": 3,
+            "fight": 6,
+            "shoot": 5
+          },
+          "ccWeapons": [
+            {
+              "id": "chainsword",
+              "name": "Chainsword",
+              "baseProfile": "ATK User, Hit User, DMG 4/5",
+              "profile": "ATK User, Hit User, DMG 4/5",
+              "basePoints": 4,
+              "points": 4,
+              "upgrades": {
+                "poison": false,
+                "enchanted": false,
+                "cursed": false,
+                "truestrike": false,
+                "masterCrafted": false
+              },
+              "displayNameOverride": "Fists"
+            }
+          ],
+          "rangedWeapons": [
+            {
+              "id": "wraithCannon",
+              "name": "Wraith Cannon",
+              "baseProfile": "ATK 4, Hit User, DMG 6/3, MW (3), Heavy (Dash), Piercing (-4), Crits on 9+",
+              "profile": "ATK 4, Hit User, DMG 6/3, MW (3), Heavy (Dash), Piercing (-4), Crits on 9+",
+              "basePoints": 13,
+              "points": 13,
+              "upgrades": {
+                "poison": false,
+                "enchanted": false,
+                "cursed": false,
+                "truestrike": false,
+                "masterCrafted": false
+              }
+            }
+          ],
+          "abilities": [
+            {
+              "id": "extremelyResilient",
+              "name": "Extremely Resilient",
+              "points": 5,
+              "effect": "Whenever this Fighter takes damage from an attack, remove 1 point of damage from the Normal/Crit Damage characteristic of the weapon, to a minimum of 1. (Eg. Damage 3/4 becomes Damage 2/3, etc.)",
+              "dynamicType": "percentHp",
+              "dynamicFactor": 0.3333333333333333
+            }
+          ],
+          "leaderAbilities": [],
+          "spells": [],
+          "equipment": [],
+          "points": {
+            "base": 16,
+            "stats": 18,
+            "warlock": 0,
+            "ccWeapons": 4,
+            "rangedWeapons": 13,
+            "abilities": 5,
+            "leaderAbilities": 0,
+            "spells": 0,
+            "equipment": 0
+          }
+        }
+      }
+    },
+    {
+      "sourceFileName": "mortalis_fighter.json",
+      "fighterFile": {
+        "app": "Mortalis Fighter Builder",
+        "version": 1,
+        "savedAt": "2026-04-25T23:08:44.175Z",
+        "fighter": {
+          "name": "Howling Banshee ",
+          "isWarlock": false,
+          "isMasterWarlock": false,
+          "portraitDataUrl": "",
+          "portraitKey": "",
+          "stats": {
+            "move": 6,
+            "def": 7,
+            "ap": 2,
+            "hp": 10,
+            "atk": 4,
+            "fight": 6,
+            "shoot": 6
+          },
+          "ccWeapons": [
+            {
+              "id": "powerWeapon",
+              "name": "Power Weapon",
+              "baseProfile": "ATK User, Hit User, DMG 4/6, Crits on 9+",
+              "profile": "ATK User, Hit User, DMG 4/6, Crits on 9+",
+              "basePoints": 7,
+              "points": 7,
+              "upgrades": {
+                "poison": false,
+                "enchanted": false,
+                "cursed": false,
+                "truestrike": false,
+                "masterCrafted": false
+              }
+            }
+          ],
+          "rangedWeapons": [
+            {
+              "id": "arcPistol",
+              "name": "Arc Pistol",
+              "baseProfile": "ATK 4, Hit User, DMG 4/5, Rng 8\", Piercing (-3)",
+              "profile": "ATK 4, Hit User, DMG 4/5, Rng 8\", Piercing (-3)",
+              "basePoints": 6,
+              "points": 6,
+              "upgrades": {
+                "poison": false,
+                "enchanted": false,
+                "cursed": false,
+                "truestrike": false,
+                "masterCrafted": false
+              },
+              "displayNameOverride": "Triskele"
+            }
+          ],
+          "abilities": [
+            {
+              "id": "fast",
+              "name": "Fast",
+              "points": 2,
+              "effect": "This Fighter may perform a free Dash action during its activation (no AP cost)."
+            },
+            {
+              "id": "terrifying",
+              "name": "Terrifying",
+              "points": 3,
+              "effect": "Enemy Fighters within 1\" of this Fighter have -2 to hit in Close Combat.",
+              "displayNameOverride": "Banshee Mask"
+            }
+          ],
+          "leaderAbilities": [],
+          "spells": [],
+          "equipment": [],
+          "points": {
+            "base": 16,
+            "stats": 11,
+            "warlock": 0,
+            "ccWeapons": 7,
+            "rangedWeapons": 6,
+            "abilities": 5,
+            "leaderAbilities": 0,
+            "spells": 0,
+            "equipment": 0
+          }
+        }
+      }
+    },
+    {
+      "sourceFileName": "mortalis_fighter.json",
+      "fighterFile": {
+        "app": "Mortalis Fighter Builder",
+        "version": 1,
+        "savedAt": "2026-04-25T23:09:01.012Z",
+        "fighter": {
+          "name": "Warp Spider (Web Spinner) ",
+          "isWarlock": false,
+          "isMasterWarlock": false,
+          "portraitDataUrl": "",
+          "portraitKey": "",
+          "stats": {
+            "move": 7,
+            "def": 7,
+            "ap": 2,
+            "hp": 10,
+            "atk": 3,
+            "fight": 7,
+            "shoot": 6
+          },
+          "ccWeapons": [
+            {
+              "id": "beastClawsBite",
+              "name": "Beast Claws/Bite",
+              "baseProfile": "ATK User, Hit User, DMG 3/4",
+              "profile": "ATK User, Hit User, DMG 3/4",
+              "basePoints": 2,
+              "points": 2,
+              "upgrades": {
+                "poison": false,
+                "enchanted": false,
+                "cursed": false,
+                "truestrike": false,
+                "masterCrafted": false
+              },
+              "displayNameOverride": "Blades"
+            }
+          ],
+          "rangedWeapons": [
+            {
+              "id": "heavyFlamer",
+              "name": "Heavy Flamer",
+              "baseProfile": "ATK 4, Hit User+2, DMG 5/5, Rng 10\", Ignores Cover, Piercing (-2), Torrent (2\"), Fire",
+              "profile": "ATK 4, Hit User+2, DMG 5/5, Rng 10\", Ignores Cover, Piercing (-2), Torrent (2\"), Fire",
+              "basePoints": 11,
+              "points": 11,
+              "upgrades": {
+                "poison": false,
+                "enchanted": false,
+                "cursed": false,
+                "truestrike": false,
+                "masterCrafted": false
+              },
+              "displayNameOverride": "Death Spinner"
+            }
+          ],
+          "abilities": [
+            {
+              "id": "fast",
+              "name": "Fast",
+              "points": 2,
+              "effect": "This Fighter may perform a free Dash action during its activation (no AP cost)."
+            }
+          ],
+          "leaderAbilities": [],
+          "spells": [],
+          "equipment": [
+            {
+              "id": "flightDevice",
+              "name": "Jump Pack/Rokkit Pack/Wings",
+              "points": 9,
+              "effect": "Gains Jump Move: +3\" Move and may ignore terrain and vertical height when repositioning.",
+              "dynamicType": "percentStats",
+              "dynamicFactor": 0.3333333333333333,
+              "displayNameOverride": "Blink Pack"
+            }
+          ],
+          "points": {
+            "base": 16,
+            "stats": 11,
+            "warlock": 0,
+            "ccWeapons": 2,
+            "rangedWeapons": 11,
+            "abilities": 2,
+            "leaderAbilities": 0,
+            "spells": 0,
+            "equipment": 9
+          }
+        }
+      }
+    },
+    {
+      "sourceFileName": "mortalis_fighter.json",
+      "fighterFile": {
+        "app": "Mortalis Fighter Builder",
+        "version": 1,
+        "savedAt": "2026-04-25T23:08:31.405Z",
+        "fighter": {
+          "name": "Howling Banshee",
+          "isWarlock": false,
+          "isMasterWarlock": false,
+          "portraitDataUrl": "",
+          "portraitKey": "",
+          "stats": {
+            "move": 6,
+            "def": 7,
+            "ap": 2,
+            "hp": 10,
+            "atk": 4,
+            "fight": 6,
+            "shoot": 6
+          },
+          "ccWeapons": [
+            {
+              "id": "powerWeapon",
+              "name": "Power Weapon",
+              "baseProfile": "ATK User, Hit User, DMG 4/6, Crits on 9+",
+              "profile": "ATK User, Hit User, DMG 4/6, Crits on 9+",
+              "basePoints": 7,
+              "points": 7,
+              "upgrades": {
+                "poison": false,
+                "enchanted": false,
+                "cursed": false,
+                "truestrike": false,
+                "masterCrafted": false
+              }
+            }
+          ],
+          "rangedWeapons": [
+            {
+              "id": "boltPistol",
+              "name": "Bolt Pistol",
+              "baseProfile": "ATK 4, Hit User, DMG 3/4, Rng 8\", Piercing Crits (-2), Quick",
+              "profile": "ATK 4, Hit User, DMG 3/4, Rng 8\", Piercing Crits (-2), Quick",
+              "basePoints": 3,
+              "points": 3,
+              "upgrades": {
+                "poison": false,
+                "enchanted": false,
+                "cursed": false,
+                "truestrike": false,
+                "masterCrafted": false
+              },
+              "displayNameOverride": "Shuriken Pistol"
+            }
+          ],
+          "abilities": [
+            {
+              "id": "fast",
+              "name": "Fast",
+              "points": 2,
+              "effect": "This Fighter may perform a free Dash action during its activation (no AP cost)."
+            },
+            {
+              "id": "terrifying",
+              "name": "Terrifying",
+              "points": 3,
+              "effect": "Enemy Fighters within 1\" of this Fighter have -2 to hit in Close Combat.",
+              "displayNameOverride": "Banshee Mask"
+            }
+          ],
+          "leaderAbilities": [],
+          "spells": [],
+          "equipment": [],
+          "points": {
+            "base": 16,
+            "stats": 11,
+            "warlock": 0,
+            "ccWeapons": 7,
+            "rangedWeapons": 3,
+            "abilities": 5,
+            "leaderAbilities": 0,
+            "spells": 0,
+            "equipment": 0
+          }
+        }
+      }
+    }
+  ]
+}
